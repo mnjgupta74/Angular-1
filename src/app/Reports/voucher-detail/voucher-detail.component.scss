@@ -1,0 +1,10 @@
+.isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+    text-decoration: none;
+  }
+
+  .btn_custome_r{ background-color:#ff150059 !important;}
+.btn_custome_r:hover{filter: grayscale(100%);}

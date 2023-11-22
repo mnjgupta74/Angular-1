@@ -1,0 +1,115 @@
+<div  class="container-fluid ">
+    
+ 
+        <mat-card>
+        <div class="row ">
+            <div class="col ">
+               
+                
+                    <div class="heading-1 mt-2 primary mb-2 text-center">
+                        Verify Contact
+                    </div>
+                    <form [formGroup]="MobileOtpForm" autocomplete="off">
+                        <!-- <h3 style="margin: 0 auto;" class=" text-center"><mat-label class="d-block" >Enter User Mobile No</mat-label></h3> -->
+                        <div class="row"  >
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-center " >
+                                <mat-form-field appearance="outline" class=" w-50  inline">
+                                    <mat-label class="custom-input-lable">Enter User Mobile No.</mat-label>
+                                    <input matInput placeholder="0123456789" maxlength="10" type="tel" formControlName="PhoneNumber" (keypress)="onkeyPress($event)">
+                                    </mat-form-field>
+                                    
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-center" >
+                                <!-- <button  class=" mt-1 "  mat-raised-button color="primary"
+                                (click)="verifyContact()"  >Verify Contact</button>
+                            </ngx-otp-input> --> 
+                            <div class="d-flex justify-content-between  w-50 " style="margin: 0 auto;">
+                                <button  class="px-2  " mat-raised-button color="primary"
+                              (click)="verifyContact()"  >Verify Contact</button>
+                                <button *ngIf="!childComp" class="px-2  " mat-raised-button color="primary"
+                              (click)="dialogRef?.close()"  >Exit</button>
+                              </div>
+                              
+                         <!-- <span> -->
+                            <!-- <div class="d-flex justify-content-end my-3">
+                             <button  class="px-2  " mat-raised-button color="primary"
+                           (click)="verifyContact()"  >Verify Contact</button>
+                           </div>
+                          </span> -->
+      
+                            </div>
+                            
+                     </div>
+                    </form>   
+
+                     <div class="row text-center"   [hidden]="!show"   class="fade"
+                     [@state]="state"
+                     (@state.done)="animationDone($event)" >
+                     <div class="heading-1 m-4 primary mb-2 text-center text-dark">
+                        Enter verification code
+                    </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12  text-center" >
+                            <form [formGroup]="OTPForm" autocomplete="off">
+                            <mat-form-field appearance="outline" class=" w-50  inline">
+                                <!-- <mat-label class="custom-input-lable">Enter User Mobile No.</mat-label> -->
+                                <input matInput placeholder="0123456789" maxlength="10" type="tel" autofocus formControlName="otp" (keypress)="onkeyPress($event)">
+                                </mat-form-field>
+</form>
+                                <!-- <ngx-otp-input [config]="otpInputConfig" (otpChange)="handeOtpChange($event)" (fill)="handleFillEvent($event)">
+                              n        </ngx-otp-input> -->
+                                <div class="d-flex justify-content-between  w-50 " style="margin: 0 auto;">
+                                    <button  class="px-2  " mat-raised-button color="primary"
+                                  (click)="Submit()"  >Submit</button>
+                                    <button  class="px-2  " mat-raised-button color="primary" *ngIf="!childComp"
+                                  (click)="dialogRef?.close()"  >Exit</button>
+                                  </div>
+                        </div>
+                        
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6  " >
+                            
+                       
+                        
+                        
+                </div>                              
+                            </div>
+
+                  
+                
+            </div>
+        </div>
+    </mat-card>
+        <!-- <mat-card *ngIf="show"   class="fade"
+        [@state]="state"
+        (@state.done)="animationDone($event)">
+        <div class="row ">
+            <div class="col align-items-center">
+               
+                
+                    <div class="heading-1 m-4 primary mb-2 text-center text-dark">
+                        Enter verification code
+                    </div>
+                  
+                    <div  class=" text-center  align-items-center mb-1" mat-dialog-title cdkDrag
+      cdkDragRootElement=".cdk-overlay-pane">
+
+    <div  class="wrapper {{config?.containerClass}}" id="c_{{componentKey}}" *ngIf="otpForm?.controls"
+    style="height: 50px;height: 50px;">
+        <input  pattern='\\d*'  style="height: 50px;width: 50px; border: 2px solid black; margin: 2px; border-radius: 2px;" [type]="inputType" numberOnly [placeholder]="config?.placeholder || ''"
+       maxlength="1"
+          class="otp-input {{config.inputClass}}" autocomplete="off" *ngFor="let item of key ;let i=index"
+          [formControl]="otpForm?.controls[item]" id="otp_{{i}}_{{componentKey}}" (keydown)="onKeyDown($event)" (keypress)="onkeyPress($event)"
+          (keyup)="onKeyUp($event,i)">
+      </div>
+    </div>
+  
+    <div class="text-center mt-3 auto">
+        <button type="submit"  mat-raised-button color="primary"
+        (click)="myDialogRef?.close()">Re-Send OTP</button>
+        </div>
+                   </div>
+            </div>
+       
+    </mat-card> -->
+   
+
+</div>

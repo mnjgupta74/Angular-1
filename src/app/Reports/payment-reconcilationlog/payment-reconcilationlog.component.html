@@ -1,0 +1,331 @@
+<div class="container-fluid">
+    <mat-card>
+        <form [formGroup]="paymentReconciliationreportform "  #options="ngForm">
+            <h2> Payment Reconciliation Log Report</h2>
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" aria-label="Number" matInput (paste)="(false)" formControlName="treasuryval"
+                            [matAutocomplete]="auto" placeholder="Treasury">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaytreasury">
+                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                {{option.TreasuryName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="paymentReconciliationreportform.invalid">Please Select Treasury ! </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" placeholder="FinYear" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="finyear">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label> From Date*</mat-label>
+                        <input matInput [max]="paymentReconciliationreportform.controls.toDate.value"
+                        (dateChange)="onChangeValidation()"  [matDatepicker]="fromDatepicker" title="Date From" formControlName='fromDate'>
+                        <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #fromDatepicker></mat-datepicker>
+                        <mat-error *ngIf="paymentReconciliationreportform.invalid">Please select the from date </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>To Date*</mat-label>
+                        <input matInput [min]="paymentReconciliationreportform.controls.fromDate.value"
+                        (dateChange)="onChangeValidation()" [matDatepicker]="picker2" formControlName="toDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2 ></mat-datepicker>
+                        <mat-error *ngIf="paymentReconciliationreportform.invalid">Please select the to date </mat-error>
+                    </mat-form-field>
+                </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Cde_Ref No.</mat-label>
+                        <input matInput type="number" placeholder="Enter Number" formControlName='Referenceno'
+                            onKeyPress="if(this.value.length==16) return false;"(keypress)="onchange()"/>
+                        <mat-error *ngIf="paymentReconciliationreportform.invalid">Please Enter Valid Value ! </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-primary" mat-raised-button color="primary"
+                    [disabled]="!paymentReconciliationreportform.valid" (click)="getPfmspaymnetlogreport()">Show</button>
+                <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+            </div>
+        </form>
+    </mat-card>
+    <mat-card class="mt-3" *ngIf="showReconciliationTable">
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field appearance="standard" role="search" class="w-75">
+                    <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                        (keyup)="applyFilter($any($event.target).value)">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+
+            <div class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+                <button (click)="exportToPdf()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"> 
+                    <img alt="Download RBI Paymet Files Pdf Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+                </button>
+                <button mat-raised-button class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"
+                (click)="exportexcel(this.exportcompletedata, this.filename)">
+                <img alt="Download RBI Paymet Files Excel Report" src="./assets\images\icons8-export-excel-24.png"  matTooltip="Click here to export Excel"></button>
+            </div>
+<!-- default table start --------------------------------------------------------------------------------............-->
+    <!-- <div class="scroll-container tab-container mt-4" style="overflow: auto">
+            <table width="100%" mat-table matSort matTableExporter [dataSource]="GetReconciliationdata"
+                class="mat-elevation-z8" style="width: 100%;" id="LIST" #LIST>
+                <ng-container matColumnDef="SrNo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Sr No.
+                    </th>
+                    <td mat-cell *matCellDef="let item; let j = index">{{(j+1)+
+                        (myPaginator.pageIndex * myPaginator.pageSize)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id">
+                        File Id</th>
+                    <td mat-cell *matCellDef="let element"> {{element.Id }} </td>
+                </ng-container>
+                <ng-container matColumnDef="bill_number">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by bill_number">
+                        Bill Number</th>
+                    <td mat-cell *matCellDef="let element"> {{element.bill_number }} </td>
+                </ng-container>
+                <ng-container matColumnDef="token_no">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by token_no">
+                        Token No</th>
+                    <td mat-cell *matCellDef="let element"> {{element.token_no }} </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="file_name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by file_name">
+                        File Name</th>
+                    <td mat-cell *matCellDef="let element"> {{element.file_name }} </td>
+                </ng-container>
+                            
+                <ng-container matColumnDef="rjected_reason">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by rjected_reason">
+                        Rejected Reason</th>
+                    <td mat-cell *matCellDef="let element"
+                        (click)="expandedElement = expandedElement === element ? null : element">
+                        <div *ngIf="element !== expandedElement" class="content"> {{element.rjected}}<span
+                                class="hyperlink btn-look f-12 bold-font ms-2">+</span></div>
+                        <div class="example-element-detail"
+                            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                            <div class="example-element-description ">
+                                {{element.rjected_reason}}
+                            </div>
+                        </div>
+                    </td>
+                </ng-container> 
+                <ng-container matColumnDef="sanction_date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sanction_date">
+                        Sanction Date</th>
+                    <td mat-cell *matCellDef="let element"> {{element.sanction_date }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sanction_no">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sanction_no">
+                        Sanction No</th>
+                    <td mat-cell *matCellDef="let element"> {{element.sanction_no }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="file_req_date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by file_req_date">
+                        File Request Date</th>
+                    <td mat-cell *matCellDef="let element"> {{element.file_req_date }} </td>
+                </ng-container>
+                <ng-container matColumnDef="sign_date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sign_date">
+                        Sign Date</th>
+                    <td mat-cell *matCellDef="let element"> {{element.sign_date }} </td>
+                </ng-container>
+
+               
+                <ng-container matColumnDef="request_id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by request_id">
+                        Request Id</th>
+                    <td mat-cell *matCellDef="let element"> {{element.request_id }} </td>
+                </ng-container>
+                <ng-container matColumnDef="file_rcvd_date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by file_rcvd_date">
+                        File received Date</th>
+                    <td mat-cell *matCellDef="let element"> {{element.file_rcvd_date }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by status">
+                        Status</th>
+                    <td mat-cell *matCellDef="let element"> {{element.status }} </td>
+                </ng-container>
+                <ng-container matColumnDef="gross_amount">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by gross_amount">
+                        Gross Amount</th>
+                    <td mat-cell *matCellDef="let element"> {{element.gross_amount }} </td>
+                </ng-container>
+                <ng-container matColumnDef="net_amount">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by net_amount">
+                        Net Amount</th>
+                    <td mat-cell *matCellDef="let element"> {{element.net_amount }} </td>
+                </ng-container>
+                <ng-container matColumnDef="Action">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Action">
+                        Action</th>
+                    <td mat-cell *matCellDef="let element">                              
+                        <mat-icon class="action-icon rotate-image" (click)="toggleRow(element)">keyboard_arrow_down</mat-icon>
+                     </td>
+                                  </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>  -->
+ <!------------------------------------------------------ default table EnD--------------------------------............-->
+ 
+
+
+ 
+
+
+  <!------------------------------------------------------ Nested table Start--------------------------------............-->
+
+
+       <table mat-table [dataSource]="GetReconciliationdata" multiTemplateDataRows matSort class="tableone" >
+       <ng-container matColumnDef="SrNo" >
+        <th mat-header-cell *matHeaderCellDef  class="first-table"></th>
+        <!-- <td mat-cell *matCellDef="let element"  (click)="toggleRow(element)"> <mat-icon
+          [class.example-element-row]="element.addresses?.length" [class.example-expanded-row]="element?.expanded"
+          (click)="element.expanded = !element?.expanded">{{element.expanded ?'minimize':'add'}}</mat-icon>
+         </td> -->
+         <td mat-cell *matCellDef="let element"  (click)="toggleRow(element)"> <mat-icon
+            [class.example-element-row]="element.addresses?.length" [class.example-expanded-row]="element?.expanded"
+            (click)="element.expanded = !element?.expanded">{{this.expandedElement === element  ?'minimize':'add'}}</mat-icon>
+           </td>
+      </ng-container>
+
+     <ng-container matColumnDef="ref_no" >
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header class="first-table"> Reference No </th>
+        <td mat-cell *matCellDef="let element"> {{element["ref_no"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="file_name" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> File Name </th>
+        <td mat-cell *matCellDef="let element"> {{element["file_name"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="status" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> Status </th>
+        <td mat-cell *matCellDef="let element"> {{element["status"]}}</td>
+      </ng-container>
+<!-- 
+      <ng-container matColumnDef="rjected_reason">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by rjected_reason">
+            Rejected Reason</th>
+        <td mat-cell *matCellDef="let element"
+            (click)="expandedElement = expandedElement === element ? null : element">
+            <div *ngIf="element !== expandedElement" class="content"> {{element.rjected}}<span
+                    class="hyperlink btn-look f-12 bold-font ms-2">+</span></div>
+            <div class="example-element-detail"
+                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                <div class="example-element-description ">
+                    {{element.rjected_reason}}
+                </div>
+            </div>
+        </td>
+    </ng-container>  -->
+
+    <ng-container matColumnDef="rjected_reason" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> Rejected Reason </th>
+        <td mat-cell *matCellDef="let element" (click)="viewReasonDetailPopup(element,$event)" >  <button mat-icon-button>
+            <img width="30px" src="./assets/images/icon_edit.svg" alt="click to check Rejected Reason">
+        </button></td>
+      </ng-container>
+
+    
+
+     <ng-container matColumnDef="request_id" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> Request Id </th>
+        <td mat-cell *matCellDef="let element"> {{element["request_id"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="file_req_date" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> Request Date </th>
+        <td mat-cell *matCellDef="let element"> {{element["file_req_date"]|date:"dd-MM-YYYY"}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="file_rcvd_date" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> Received Date</th>
+        <td mat-cell *matCellDef="let element"> {{element["file_rcvd_date"]|date:"dd-MM-YYYY"}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Payload" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> Payload </th>
+        <td mat-cell *matCellDef="let element" (click)="viewBillDetailPopup(element,$event)" >  <button mat-icon-button>
+            <img width="30px" src="./assets/images/icon_edit.svg" alt="click to check payload">
+        </button></td>
+      </ng-container>
+
+
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+            <div class="example-element-detail overflow-auto" *ngIf="element.file_name"
+                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                <div class="inner-table w-100" *ngIf="expandedElement">
+
+                    <!-- heading 
+                    <p class="bodytext-color medium-font p-0 m-0 f-16 my-2">Payload</p>-->
+
+                    <!-- inner table -->
+                    <div class="overflow-auto" style=" height: 300px;">
+                        <table #innerTables mat-table [dataSource]="GetReconciliationdatapayload" class="w-100">
+                     <ng-container matColumnDef="{{innerColumn}}" *ngFor="let innerColumn of innerTableDisplayedColumns">
+                                <th mat-header-cell *matHeaderCellDef> {{innerColumn}} </th>
+                                <td mat-cell *matCellDef="let element;let i=index"> 
+                                    <!-- <span *ngIf="innerColumn === 'SrNo'">{{i+1}}</span>     -->
+                                  <div style="width: 400px;"> <span  *ngIf="innerColumn !== 'SrNo' && innerColumn !== 'Action'">{{element[innerColumn]}}</span> </div>    
+                                    <span *ngIf="innerColumn === 'Action'">
+                                      </span>
+                                </td>
+                            </ng-container> 
+
+                            <tr mat-header-row *matHeaderRowDef="innerTableDisplayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: innerTableDisplayedColumns"></tr>
+
+                        </table>
+                    </div>
+                 </div>
+            </div>
+
+        </td>
+    </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" [class.example-element-row]="element.addresses?.data.length"
+      [class.example-expanded-row]="expandedElement === element" (click)="toggleRow(element)">
+     </tr> -->
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+
+     <!------------------------------------------------------ Nested table EnD--------------------------------............-->
+        <mat-paginator #myPaginator [length]="5" [pageSize]="5" [pageSizeOptions]="[5,10,15,20,50,100]" showFirstLastButtons>
+        </mat-paginator>
+    </mat-card>
+</div>
+
+<!-- <mat-spinner color="warn"></mat-spinner> -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

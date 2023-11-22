@@ -1,0 +1,665 @@
+<div class="content-wrapper ms-3" appNoRightClick>
+    <section class="content">
+        <mat-card>
+            <div class="light-blue-bg">
+
+                <h2>Token Entry</h2>
+
+            </div>
+
+
+            <div class="col-md-12 col-12 ">
+                <div class="fieldset">
+                    <div class="row mt-3">
+
+                        <!-- <div class="col-md-12 col-sm-12 col-12 d-flex "> -->
+                        <mat-radio-group aria-label="Select an option" (change)="radioButtonGroupChange($event)">
+                            <mat-radio-button color="primary" [checked]="mat_radio_1" value="1">Token By
+                                Reference No</mat-radio-button>
+                            <mat-radio-button color="primary" [checked]="mat_radio_2" class="ms-3" value="2">Token By
+                                Offline</mat-radio-button>
+                        </mat-radio-group>
+                        <!-- </div> -->
+                        <ng-container *ngIf="display==true; then onlineBlock else offlineBlock">
+
+                        </ng-container>
+                        <ng-template #onlineBlock>
+
+                            <!-- <div class="col-md-12 col-sm-12 col-12 d-flex mt-5 ">
+                                    <mat-radio-group aria-label="Select an option"
+                                        (change)="radioinnerGroupChange($event)">
+                                        <mat-radio-button color="primary" [checked]="pay_radio" value="1">Pay
+                                            Manager</mat-radio-button>
+                                        <mat-radio-button color="primary" [checked]="budget_radio" class="ms-3"
+                                            value="2">Budget</mat-radio-button>
+                                    </mat-radio-group>
+                                </div> -->
+                            <ng-container *ngIf="indisplay==true; then PayManagerBlock ">
+
+                            </ng-container>
+                            <ng-template #PayManagerBlock>
+                                <form [formGroup]="tokenonlineForm">
+                                    <div class="row mt-3">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <mat-label>Reference No</mat-label>
+                                                <!-- <input matInput type="text" placeholder="Reference No" name="payRef"
+                                                    (paste)="(true)" formControlName="payRef" /> -->
+                                                <input matInput type="text" placeholder="Reference No" name="payRef"
+                                                    autocomplete="off" (paste)="(false)" formControlName="payRef" />
+
+                                                <div *ngIf="payRef && payRef.invalid &&  payRef.touched"
+                                                    class="text-danger error_msg">
+
+                                                    <div *ngIf="payRef.errors?.['maxLength'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="payRef.errors?.['SpecialChar'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="payRef.errors?.['Numeric'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="payRef.errors?.['cannotContainSpace'] as error">
+                                                        {{error}}
+                                                    </div>
+
+                                                </div>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div>
+                                    <button class="btn btn-primary" mat-raised-button (click)="onSearch()"
+                                        color="primary">Search</button>
+                                </div>
+
+                                <!-- tokenonlineform -->
+                                <div *ngIf="PayinputForm" class="mt-4">
+
+
+                                    <div>
+                                        <mat-card class="mt-2">
+
+                                            <h2 class="mb-3">Bill Detail</h2>
+
+
+                                            <div class="col-md-12 col-12">
+                                                <form [formGroup]="tokenonlineForm">
+                                                    <div class="row mt-2">
+
+                                                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                                    <mat-form-field class="w-100" appearance="outline">
+                                                                        <mat-label>Date</mat-label>
+                                                                        <input matInput type="tel" placeholder="Date" name="Date"
+                                                                            (paste)="(false)" formControlName="Date" />
+                                                                    </mat-form-field>
+                                                                </div> -->
+
+                                                        <div
+                                                            class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                                                            <mat-form-field class="w-100" appearance="legacy">
+                                                                <mat-label>DDO Code</mat-label>
+
+                                                                <input matInput type="text" placeholder="DDO Code"
+                                                                    (paste)="(false)" name="NDdoCode"
+                                                                    formControlName="NDdoCode" />
+
+                                                                <div *ngIf="NDdoCode && NDdoCode.invalid &&  NDdoCode.touched"
+                                                                    class="text-danger error_msg">
+                                                                    <div *ngIf="NDdoCode.errors?.['Required'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div
+                                                                        *ngIf="NDdoCode.errors?.['maxLength'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div
+                                                                        *ngIf="NDdoCode.errors?.['SpecialChar'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div *ngIf="NDdoCode.errors?.['Numeric'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div
+                                                                        *ngIf="NDdoCode.errors?.['cannotContainSpace'] as error">
+                                                                        {{error}}
+                                                                    </div>
+
+                                                                </div>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div
+                                                            class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                            <mat-form-field class="w-100" appearance="legacy">
+                                                                <mat-label>DDO Name</mat-label>
+
+                                                                <input matInput type="text" placeholder="DDO Name"
+                                                                    (paste)="(false)" name="NDdoName"
+                                                                    formControlName="NDdoName" />
+
+                                                                <div *ngIf="NDdoName && NDdoName.invalid &&  NDdoName.touched"
+                                                                    class="text-danger error_msg">
+                                                                    <div *ngIf="NDdoName.errors?.['Required'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div
+                                                                        *ngIf="NDdoName.errors?.['maxLength'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div
+                                                                        *ngIf="NDdoName.errors?.['SpecialChar'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                </div>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div
+                                                            class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                            <mat-form-field class="w-100" appearance="legacy">
+                                                                <mat-label>Bill Type</mat-label>
+                                                                <input matInput type="tel" placeholder="Bill Type"
+                                                                    name="NBillType" formControlName="NBillType" />
+                                                                <mat-icon class=""
+                                                                    style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                                </mat-icon>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div
+                                                            class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                            <mat-form-field class="w-100" appearance="legacy">
+                                                                <mat-label>Major Head</mat-label>
+                                                                <input matInput type="tel" placeholder="Major Head"
+                                                                    (paste)="(false)" name="NMajorHead"
+                                                                    formControlName="NMajorHead" />
+                                                                <mat-icon class=""
+                                                                    style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                                </mat-icon>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div
+                                                            class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                            <mat-form-field class="w-100" appearance="legacy">
+                                                                <mat-label>Net Amount</mat-label>
+
+                                                                <input matInput type="tel" placeholder="Net Amount"
+                                                                    (paste)="(false)" name="NNetAmt"
+                                                                    formControlName="NNetAmt" />
+
+                                                                <div *ngIf="NNetAmt && NNetAmt.invalid &&  NNetAmt.touched"
+                                                                    class="text-danger error_msg">
+                                                                    <div *ngIf="NNetAmt.errors?.['Required'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div *ngIf="NNetAmt.errors?.['minLength'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div *ngIf="NNetAmt.errors?.['maxLength'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div *ngIf="NNetAmt.errors?.['Numeric'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                </div>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div
+                                                            class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                                                            <mat-form-field class="w-100" appearance="legacy">
+                                                                <mat-label>Gross Amount</mat-label>
+
+                                                                <input matInput type="text" placeholder="Gross Amount"
+                                                                    (paste)="(false)" name="NGrossAmt"
+                                                                    formControlName="NGrossAmt" />
+
+                                                                <div *ngIf="NGrossAmt && NGrossAmt.invalid &&  NGrossAmt.touched"
+                                                                    class="text-danger error_msg">
+                                                                    <div
+                                                                        *ngIf="NGrossAmt.errors?.['Required'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div *ngIf="NGrossAmt.errors?.['Numeric'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                    <div
+                                                                        *ngIf="NGrossAmt.errors?.['maxLength'] as error">
+                                                                        {{error}}
+                                                                    </div>
+                                                                </div>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+
+                                                <div class="d-flex justify-content-end gap-2">
+                                                    <div *ngIf="!tokenonlineForm.invalid">
+                                                        <button class="btn btn-primary" mat-raised-button
+                                                            color="primary" (click)="onPayManagerSave()">Save</button>
+                                                        <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </mat-card>
+
+                                    </div>
+
+
+
+
+                                </div>
+
+
+                            </ng-template>
+                            <!-- <ng-template #BudgetBlock>
+                                    <form [formGroup]="tokenonlineForm">
+                                        <div class="row mt-5">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                <div class="input-group mb-3 ">
+                                                    <mat-form-field class="w-100" appearance="outline">
+                                                        <mat-label>Reference No</mat-label>
+
+                                                        <input matInput type="text" placeholder="Reference No" autocomplete="off" 
+                                                            (paste)="(false)" name="BudgetRef"
+                                                            formControlName="BudgetRef" />
+
+                                                        <div *ngIf="BudgetRef && BudgetRef.invalid &&  BudgetRef.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="BudgetRef.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="BudgetRef.errors?.['SpecialChar'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="BudgetRef.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="BudgetRef.errors?.['cannotContainSpace'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                    <button class="btn btn-primary" mat-raised-button
+                                                        (click)="onGetBudget()" color="primary">Get Budget
+                                                        Ref No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div id="myelem" class="mt-5 container" *ngIf="showtrantab">
+                                        <table class="table" *ngIf="BudgetRefListarr.length>0">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col">Sr.no</th>
+                                                    <th scope="col">Reference No</th>
+                                                    <th scope="col">Major Head </th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let BudgetRef of BudgetRefListarr; let indexOfelement=index;">
+                                                    <td>{{indexOfelement+1}} </td>
+                                                    <td>{{ BudgetRef.RefNo }}</td>
+                                                    <td>{{ BudgetRef.MajorHead }}</td>
+                                                    <td>{{ BudgetRef.Amount }}</td>
+                                                    <td style="color: blue;text-decoration:none;cursor: pointer;"> -->
+                            <!-- <a >Select</a> -->
+                            <!-- <button class="btn btn-primary" mat-raised-button
+                                                            (click)="onSelectBudget(BudgetRef)"
+                                                            color="primary">Select</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p *ngIf="BudgetRefListarr.length==0"
+                                            style="text-align: center; font-size: 400;">
+                                            No
+                                            Data Found</p>
+
+                                    </div> -->
+                            <!-- <div *ngIf="budgetinputForm">
+                                        <form [formGroup]="tokenonlineForm">
+                                            <div class="row mt-5">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="outline">
+                                                        <mat-label>Date</mat-label>
+                                                        <input matInput type="tel" placeholder="Date" name="Date"
+                                                            (paste)="(false)" formControlName="Date" />
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                                                    <mat-form-field class="w-100" appearance="outline">
+                                                        <mat-label>DDO Code</mat-label>
+
+                                                        <input matInput type="text" placeholder="DDO Code"
+                                                            (paste)="(false)" name="NDdoCode"
+                                                            formControlName="NDdoCode" />
+
+                                                        <div *ngIf="NDdoCode && NDdoCode.invalid &&  NDdoCode.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="NDdoCode.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NDdoCode.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NDdoCode.errors?.['SpecialChar'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NDdoCode.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NDdoCode.errors?.['cannotContainSpace'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="outline">
+                                                        <mat-label>DDO Name</mat-label>
+
+                                                        <input matInput type="text" placeholder="DDO Name"
+                                                            (paste)="(false)" name="NDdoName"
+                                                            formControlName="NDdoName" />
+
+                                                        <div *ngIf="NDdoName && NDdoName.invalid &&  NDdoName.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="NDdoName.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NDdoName.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NDdoName.errors?.['SpecialChar'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="outline">
+                                                        <mat-label>Bill Type</mat-label>
+                                                        <input matInput type="tel" placeholder="Bill Type"
+                                                            (paste)="(false)" name="NBillType"
+                                                            formControlName="NBillType" />
+                                                        <mat-icon class=""
+                                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                        </mat-icon>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="outline">
+                                                        <mat-label>Major Head</mat-label>
+                                                        <input matInput type="tel" placeholder="Major Head"
+                                                            (paste)="(false)" name="NMajorHead"
+                                                            formControlName="NMajorHead" />
+                                                        <mat-icon class=""
+                                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                        </mat-icon>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="outline">
+                                                        <mat-label>Net Amount</mat-label>
+
+                                                        <input matInput type="tel" placeholder="Net Amount"
+                                                            (paste)="(false)" name="NNetAmt"
+                                                            formControlName="NNetAmt" />
+
+                                                        <div *ngIf="NNetAmt && NNetAmt.invalid &&  NNetAmt.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="NNetAmt.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NNetAmt.errors?.['minLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NNetAmt.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NNetAmt.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                                                    <mat-form-field class="w-100" appearance="outline">
+                                                        <mat-label>Gross Amount</mat-label>
+
+                                                        <input matInput type="text" placeholder="Gross Amount"
+                                                            (paste)="(false)" name="NGrossAmt"
+                                                            formControlName="NGrossAmt" />
+
+                                                        <div *ngIf="NGrossAmt && NGrossAmt.invalid &&  NGrossAmt.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="NGrossAmt.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NGrossAmt.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NGrossAmt.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                        <div class="float-end">
+                                            <div class="float-end" *ngIf="!tokenonlineForm.invalid">
+                                                <button class="btn btn-primary" mat-raised-button color="primary"
+                                                    (click)="onBudgetSave()">Save</button>
+                                                <button class="btn btn-primary" style="margin-inline: 5px;"
+                                                    mat-raised-button color="primary" (click)="onReset()">Reset</button>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                        </ng-template>
+
+                        <!-- </ng-template> -->
+                        <ng-template #offlineBlock>
+
+
+                            <form [formGroup]="tokenofflineForm">
+                                <div class="row mt-5">
+                                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                <mat-form-field class="w-100" appearance="outline">
+                                                    <mat-label>Date</mat-label>
+                                                    <input matInput type="tel" placeholder="Date" name="Date"
+                                                        (paste)="(false)" formControlName="Date" />
+                                                </mat-form-field>
+                                            </div> -->
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>DDO Code</mat-label>
+
+                                            <input matInput type="text" placeholder="DDO Code" name="DdoCode"
+                                                (paste)="(false)" (focusout)="onFocusOutEvent($event)"
+                                                formControlName="DdoCode" />
+
+                                            <div *ngIf="DdoCode && DdoCode.invalid &&  DdoCode.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="DdoCode.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="DdoCode.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="DdoCode.errors?.['SpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="DdoCode.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="DdoCode.errors?.['cannotContainSpace'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>DDO Name</mat-label>
+
+                                            <input matInput type="text" placeholder="DDO Name" name="DdoName"
+                                                (paste)="(false)" formControlName="DdoName" />
+
+                                            <div *ngIf="DdoName && DdoName.invalid &&  DdoName.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="DdoName.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="DdoName.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="DdoName.errors?.['SpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Bill Type</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                (paste)="(false)" formControlName="BillTypeControl"
+                                                [matAutocomplete]="auto" [(ngModel)]="SelectBilltype">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                                <mat-option *ngFor="let option of BillTypeoptions | async"
+                                                    [value]="option" (click)="OnBillTypeSelected(SelectBilltype)">
+                                                    {{option.BillType}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+
+                                    </div>
+
+
+
+
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Major Head</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="text" matInput
+                                                (paste)="(false)" formControlName="MajorHeadControl"
+                                                [matAutocomplete]="auto1" [(ngModel)]="SelectMajorHead">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayMajor">
+                                                <mat-option *ngFor="let option of MajorHeadoptions | async"
+                                                    [value]="option" (click)="OnMajorHeadSelected(SelectMajorHead)">
+                                                    {{option.majorheadcode}}
+                                                    {{option.majorheadname}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Net Amount</mat-label>
+
+                                            <input matInput type="tel" placeholder="Net Amount" name="NetAmt"
+                                                (paste)="(false)" formControlName="NetAmt" />
+
+                                            <div *ngIf="NetAmt && NetAmt.invalid &&  NetAmt.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="NetAmt.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="NetAmt.errors?.['minLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="NetAmt.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="NetAmt.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Gross Amount</mat-label>
+
+                                            <input matInput type="text" placeholder="Gross Amount" name="GrossAmt"
+                                                (paste)="(false)" formControlName="GrossAmt" />
+
+                                            <div *ngIf="GrossAmt && GrossAmt.invalid &&  GrossAmt.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="GrossAmt.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GrossAmt.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GrossAmt.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                            </form>
+                            <div class="float-end">
+                                <div class="float-end" *ngIf="!tokenofflineForm.invalid">
+                                    <button class="btn btn-primary" mat-raised-button color="primary"
+                                        (click)="OnSaveOffline()">Save</button>
+                                    <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </section>
+</div>
+
+
+
+
+<!-- <mat-spinner color="warn"></mat-spinner> -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>
+
+
+<!-- <script>
+    function openmenu() {
+        document.getElementById("Sidenav").style.width = "285px";
+    }
+
+    function closemenu() {
+        document.getElementById("Sidenav").style.width = "0";
+    }
+</script> -->

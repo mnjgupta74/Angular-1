@@ -1,0 +1,207 @@
+<div class="content-wrapper pb-5" appNoRightClick>
+    <section class="container-fluid">
+
+        <mat-card>
+            <mat-label><b>Voucher Detail Report</b></mat-label>
+            <form [formGroup]="VoucherDetailForm" #options="ngForm" >
+                <div class="row mt-4">
+                        <div class="row">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                            <mat-form-field class="w-100" appearance="legacy">
+                                <mat-label> Treasury</mat-label>
+                                <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                    formControlName="TreasuryControl" [matAutocomplete]="auto" [(ngModel)]="ChooseOption">
+                                <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                </mat-icon>
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                    <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                        {{option.TreasuryName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="VoucherDetailForm.invalid">Please Select Treasury ! </mat-error>
+                            </mat-form-field>
+                        </div>
+ 
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                              <mat-form-field class="w-100" appearance="legacy">
+                                  <mat-label> Fin Year</mat-label>
+                                  <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)" formControlName="Year">
+                            </mat-form-field>
+                          </div>
+
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                                <mat-form-field class="w-100" appearance="legacy">
+                                    <mat-label>Date From:</mat-label>
+                                    <input matInput [matDatepicker]="fromDatepicker" title="Date From"
+                                        formControlName='fromDate'>
+                                    <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #fromDatepicker></mat-datepicker>
+                                    <mat-error *ngIf="VoucherDetailForm.invalid">Please Select From Date ! </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                                <mat-form-field class="w-100" appearance="legacy">
+                                    <mat-label>To:</mat-label>
+                                    <input matInput [matDatepicker]="picker2" formControlName="toDate">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                    <mat-error *ngIf="VoucherDetailForm.invalid">Please Select To Date ! </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                  
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                        <div class="float-end">
+                            <button mat-raised-button color="primary" class="big-btn-with-icon-padding"
+                                [disabled]="!options.valid" (click)="GetVoucherDetail()">Show</button>
+                            <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()"
+                                type="button">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </mat-card>
+        <mat-card class="mt-3" *ngIf="showTab_Table">
+
+
+              <!--<div class=" mt-2  d-flex justify-content-end">
+             <button mat-raised-button color="primary" (click)="makePdf()">
+                pdf </button> 
+                <button mat-raised-button color="primary" (click)="Export()">
+                 Export pdf </button>
+            </div>-->
+        
+            
+           <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field appearance="standard" role="search" class="w-75">
+                    <input matInput type="search"
+                        placeholder="Enter For Search" aria-label="Search"
+                        (keyup)="applyFilter($any($event.target).value)">
+                        <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+                 </div>
+                 <div class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+                  <button (click)="Export()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"> 
+                      <img alt="Download Track Of Transaction  Pdf Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+                  </button>
+                   <button mat-raised-button class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"
+                  (click)="exportexcel(this.exportcompletedata, this.filename)">
+                  <img alt="Download Track Of Transaction Excel Report" src="./assets\images\icons8-export-excel-24.png"  matTooltip="Click here to export Excel"></button>
+                </div>
+        
+          
+            <div class="scroll-container tab-container mt-4" style="overflow: auto">
+           
+            <!-- <table mat-table [dataSource]="GetAutoProcessListdata" matSort matTableExporter 
+              (matSortChange)="announceSortChange($event)" class="family-details-table" style="width: 100%;" id="test" > -->
+        
+              <table width="100%" mat-table matSort matTableExporter [dataSource]="GetVoucherDetaildata"
+              (matSortChange)="announceSortChange($event)" class="mat-elevation-z8"   style="width: 100%;" id="test">
+        
+                    <!-- Note that these columns can be defined in any order.
+                           The actual rendered columns are set as a property on the row definition"  -->
+                 
+        
+                           <ng-container matColumnDef="SrNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                              Sr No.
+                            </th>
+                            <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                              (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                          </ng-container>
+        
+                   <!-- Position Column -->
+                   <ng-container matColumnDef="CDE_REFNO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                      Cde_Reference No.
+                    </th>
+                    <td mat-cell *matCellDef="let element"><a class="primary hyperlink"
+                    [ngClass]="{'isDisabled':element.CDE_REFNO==0}" (click)="viewDocumentPopup(element)" [routerLink]="">
+                    {{element.CDE_REFNO}}   </a> </td>
+                </ng-container>
+                   <!-- <ng-container matColumnDef="CDE_REFNO">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillNoId"> CDE_REFNO </th>
+                     <td mat-cell *matCellDef="let element" > {{element.CDE_REFNO}}
+                        <!-- <a class="primary hyperlink" [routerLink]=""> {{element.BillNoId}}</a> -->
+                   <!-- </ng-container> --> -->
+                   <!-- Position Column -->
+                   
+                   <ng-container matColumnDef="BillNo">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillNo"> BillNo </th>
+                     <td mat-cell *matCellDef="let element">{{element.BillNo}}
+                    </td>
+
+
+                   </ng-container> 
+                   <ng-container matColumnDef="BillType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillNo"> BillType </th>
+                    <td mat-cell *matCellDef="let element">{{element.BillType}}
+                   </td>
+                  </ng-container> 
+        
+                 
+                   <!-- Name Column -->
+                   <ng-container matColumnDef="BillDate">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillDate"> BillDate </th>
+                     <td mat-cell *matCellDef="let element"> {{element.BillDate}}</td>
+                   </ng-container>  
+                 
+                        <ng-container matColumnDef="MajorHead">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by MajorHead"> MajorHead  </th>
+                     <td mat-cell *matCellDef="let element"> {{element.MajorHead}} </td>
+                   </ng-container>
+                 
+                   <!-- Relation Column -->
+                   <!-- <ng-container matColumnDef="DDOCode">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by DDOCode"> DDOCode </th>
+                    <td mat-cell *matCellDef="let element">₹ {{element.NetAmt }} </td>
+                  </ng-container>
+
+                   <ng-container matColumnDef="BillType">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillType"> BillType </th>
+                     <td mat-cell *matCellDef="let element">₹ {{element.NetAmt }} </td>
+                   </ng-container> -->
+
+                   <ng-container matColumnDef="VoucherNo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by VoucherNo"> VoucherNo </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VoucherNo }} </td>
+                  </ng-container>
+
+                  
+                  <ng-container matColumnDef="VoucherDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by VoucherDate"> VoucherDate </th>
+                    <td mat-cell *matCellDef="let element"> {{element.VoucherDate }} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="CashAmt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by CashAmt"> CashAmount </th>
+                    <td mat-cell *matCellDef="let element">₹ {{element.CashAmt }} </td>
+                  </ng-container>
+                 
+                   <!-- Main Column -->
+                   <ng-container matColumnDef="GrossAmt">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by GrossAmt"> Gross Amt </th>
+                     <td mat-cell *matCellDef="let element"> ₹ {{element.GrossAmt}} </td>
+                   </ng-container>
+                 
+                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                 </table>
+                </div> 
+        
+                 <mat-paginator #myPaginator [length]="10" [pageSize]="5"
+                 [pageSizeOptions]="[5,10,15,20]" showFirstLastButtons>
+             </mat-paginator>
+        
+           
+        
+          </mat-card>
+    </section>
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

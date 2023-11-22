@@ -1,0 +1,240 @@
+<div class="container-fluid">
+    <mat-card>
+        <h2>Treasury Closing </h2>
+  
+        <form [formGroup]="BankEntryForm" #options="ngForm" >
+            <div class="row mt-4">
+  
+              <div class="col-12 col-sm-3 col-md-3 col-lg-3">
+                <mat-form-field class="w-100" appearance="fill">
+                    <mat-label for="permission">--Select Month--</mat-label>
+                    <mat-select disableOptionCentering panelClass="myPanelClass" id="permission" name="mat-select-2"
+                        formControlName="selcetedMonth">
+                        <mat-option *ngFor="let option of monthData" [value]="option">{{option.month}}
+                            {{option.year}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+  
+            <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+              <div class="d-flex justify-content-around ">
+                  <button type="button" mat-raised-button color="primary" (click)="closeIListAC()">Close I List A/C</button>
+  
+                  <button type="button" mat-raised-button color="primary" (click)="closeIIListAC()">Close II List A/C</button>
+  
+              </div>
+  
+          </div>
+  
+            </div>
+  
+        </form>
+  
+    </mat-card>
+  
+    <mat-card class="mt-3">
+        <div class="container-fluid" *ngIf="dataSource.data.length > 0;">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4" >
+                    <mat-form-field appearance="standard"  role="search" class="w-100">
+                        <input matInput type="search" placeholder="Enter For Search"
+                            aria-label="Search" (keyup)="applyFilter($any($event.target).value)">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <form [formGroup]="BankEntryForm" #options="ngForm">
+  
+  
+            <div class="scroll-container tab-container mt-4" style="overflow: auto"   *ngIf="dataSource.data.length > 0; else emptyTableMsg">
+  
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="dataSource"
+                    class="mat-elevation-z8" style="width: 100%;" id="test">
+  
+                    <ng-container matColumnDef="SrNo" >
+  
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        S.No
+                    </th>
+                    <td mat-cell *matCellDef="let element; let j = index"   [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]"  > {{ (j+1) }} </td> </ng-container>
+  
+  
+                    <ng-container matColumnDef="treasuryName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by treasuryName" class="OBListHdrFont">
+                          Treasury Code
+                        </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]" > {{element.treasuryName}} </td>
+                    </ng-container>
+  
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="payDayClose">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            sortActionDescription="Sort by payDayClose">
+                            Pay Day Close </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]" >
+                            <div *ngIf="element.RFLAG">
+                              <mat-form-field>
+                                <input matInput [matDatepicker]="picker" formControlName="payDayClose" placeholder="MM/DD/YYYY" >
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.payDayClose | date: 'dd-MM-yyyy' }}
+                            </div>
+                            </td>
+                                </ng-container>
+                    <!-- Position Column -->
+  
+                    <ng-container matColumnDef="receiptDayClose">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by receiptDayClose">
+                          Receipt Day Close </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]" >
+                            <div *ngIf="element.RFLAG">
+                                <!-- <input type="text" formControlName="ADDRESS" class="form-control" maxlength="50" /> -->
+                                <mat-form-field>
+                                  <input matInput [matDatepicker]="picker" formControlName="receiptDayClose" placeholder="MM/DD/YYYY" >
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.RFLAG" style="color: Purple;">
+                                {{element.receiptDayClose | date: 'dd-MM-yyyy' }}
+                            </div>
+                        </td>
+                    </ng-container>
+  
+  
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="unBlockDay">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by unBlockDay">
+                          UnBlockDay
+                        </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]" >
+                            <div *ngIf="element.RFLAG">
+                                <!-- <input type="text" formControlName="IFSCCode" class="form-control" maxlength="11" /> -->
+  
+                                <mat-form-field>
+                                  <input matInput [matDatepicker]="picker" formControlName="unBlockDay" placeholder="MM/DD/YYYY" >
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.unBlockDay | date: 'dd-MM-yyyy'}}
+                            </div>
+                    </ng-container>
+  
+                    <ng-container matColumnDef="effectiveDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by effectiveDate">
+                          Effective Day
+                        </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]" >
+                            <div *ngIf="element.RFLAG">
+                                <!-- <input type="text" formControlName="MICRCode" class="form-control" maxlength="9" /> -->
+  
+                                <mat-form-field>
+                                  <input matInput [matDatepicker]="picker" formControlName="effectiveDate" placeholder="MM/DD/YYYY" >
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+  
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.effectiveDate | date: 'dd-MM-yyyy'}}
+                            </div>
+                        </td>
+                    </ng-container>
+  
+  
+  
+  
+                    <ng-container matColumnDef="OpenFOR">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by OpenFOR">
+                          Open FOR
+                        </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]" >
+                            <div *ngIf="element.RFLAG" class="mt-3">
+                                <mat-form-field class="w-100 pad" appearance="outline">
+                                    <mat-label> Setect </mat-label>
+                                    <mat-select formControlName="flag">
+                                        <mat-option *ngFor="let type of BankType"
+                                            [value]="type.TypeC">{{type.Type}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.flag }}
+                            </div>
+                        </td>
+                    </ng-container>
+  
+  
+                    <ng-container matColumnDef="adminModifyDate">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by adminModifyDate">
+                        Admin Modified Date
+                      </th>
+                      <td mat-cell *matCellDef="let element" [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]" >
+                          <div *ngIf="element.RFLAG">
+                              <!-- <input type="text" formControlName="MICRCode" class="form-control" maxlength="9" /> -->
+  
+                              <mat-form-field>
+                                <input matInput [matDatepicker]="picker" formControlName="adminModifyDate" placeholder="MM/DD/YYYY" >
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+  
+                          </div>
+                          <div *ngIf="!element.RFLAG">
+                              {{element.adminModifyDate | date: 'dd-MM-yyyy'}}
+                          </div>
+                      </td>
+                  </ng-container>
+  
+  
+  
+  
+  
+                    <ng-container matColumnDef="Action">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by CashAmt">
+                            Action
+                        </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="[element.adminModifyDate ==null ? '': 'adminModifyDateColour' ]" >
+  
+                            <div *ngIf="!element.RFLAG">
+                                <button class="btn btn-sm btn-success" (click)="onEdit(element)">Edit
+                                </button>
+                            </div>
+                            <div *ngIf="element.RFLAG">
+                                <button class="btn btn-sm btn-success" (click)="onUpdate(element)">Update</button>
+                                <button class="btn btn-sm btn-danger" (click)="onCancel(element)">Cancel</button>
+                            </div>
+                        </td>
+                    </ng-container>
+  
+  
+  
+  
+                    <tr mat-header-row *matHeaderRowDef="BillStatusTable" ></tr>
+                    <tr mat-row *matRowDef="let row; columns: BillStatusTable;" ></tr>
+                </table>
+            </div>
+            <div [hidden]="dataSource.data.length <= 0">
+  
+            <mat-paginator #myPaginator [length]="10" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]">
+            </mat-paginator>
+            </div>
+        </form>
+  
+        <ng-template #emptyTableMsg>
+          <div class="empty-message">No Pendency Found !</div>
+      </ng-template>
+  
+    </mat-card>
+  </div>
+  
+  <div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+  </div>
+  

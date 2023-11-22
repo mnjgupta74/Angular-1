@@ -1,0 +1,176 @@
+<div appNoRightClick>
+  <div class="container-fluid">
+ 
+            <mat-card>
+              <mat-label> <b>Account Ceiling</b></mat-label>
+              <form [formGroup]="Accountceilingform">
+                <div class="row mt-4">
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label>Date From:</mat-label>
+                     <input matInput [matDatepicker]="picker1" 
+                      title="Date From" formControlName='fromDate' placeholder="DD/MM/YYYY">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                    <!-- <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label>Date From:</mat-label>
+                      <input matInput [matDatepicker]="picker1" 
+                        title="Date From" formControlName="fromDate" 
+                        placeholder="DD/MM/YYYY" [value]="FormatDate(fromDate.value)">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field> -->
+                  </div>
+
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label>To:</mat-label>
+                      <input matInput [matDatepicker]="picker2" [(ngModel)]="accountceiling.toDate"
+                      formControlName="toDate" placeholder="DD/MM/YYYY">
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label>SelectBillType</mat-label>
+                      <mat-select (selectionChange)="GetBillTypeListCode()" placeholder="bill list" matInput
+                        (paste)="(false)" formControlName="BillTypeControl">
+                        <mat-option *ngFor="let Bill of BillTypelist" [value]="Bill.Ncode">
+                          {{Bill.BillType}}
+                        </mat-option>
+                      </mat-select>
+                      <!-- <select matNativeControl required [(ngModel)]="SelectBilltype"
+                          formControlName="BillTypeControl">
+                          <option *ngFor="let fieldname of BillTypelist" value={{fieldname.NCode}}>
+                            {{fieldname.BillType}} </option>
+                        </select> -->
+                    </mat-form-field>
+                  </div>
+
+
+
+
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                    <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label> Amount</mat-label>
+
+                      <input matInput type="text" placeholder="Amount" name="Amount" (paste)="(false)"
+                        formControlName="Amount"  />
+
+                      <div *ngIf="Amount && Amount.invalid &&  Amount.touched" class="text-danger error_msg">
+                        <div *ngIf="Amount.errors?.['Required'] as error">
+                          {{error}}
+                        </div>
+                        <div *ngIf="Amount.errors?.['Numeric'] as error">
+                          {{error}}
+                        </div>
+                        <div *ngIf="Amount.errors?.['maxLength'] as error">
+                          {{error}}
+                        </div>
+                      </div>
+                    </mat-form-field>
+                  </div>
+
+
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <button mat-raised-button color="primary" (click)="onShow()" [disabled]="!Accountceilingform.valid" >Show</button>
+                  </div>
+                </div>
+                <!-- <button mat-raised-button color="primary" (click)="exportexcel()"style="margin-right:2%;">export
+                          to excel</button>
+                          <button mat-raised-button color="primary" (click)="makePdf()">export to pdf</button> -->
+                          
+                <br />
+              </form>
+              <span id="labelbold" class="search_no_results" *ngIf="Accountceilingform.valid" [hidden]="hideButton1">
+                <b>Total Records - {{ max }} |  Sum Of GrossAmt - {{ sumof }}</b>
+              </span>
+
+            </mat-card>
+          
+       
+    
+
+    
+      
+          
+            
+            <mat-card class="mt-3" [hidden]="hideButton1">
+              
+              <h2 class="example-h2">Set Transaction Limit</h2>
+
+              <section class="example-section" style="height:inherit;">
+                <div class="row w-100">
+                  <div class="col-lg-6" >
+                    <div class="row">                      
+                      <div class="col-lg-3">
+                        <mat-form-field class="example-full-width">
+                          <input type="number" matInput style="font-weight: bold;" placeholder="Records in percent(%)" (input)="onInput($event)" [(ngModel)]="perval" [disabled]="!Accountceilingform.valid" min="0" max="100" required>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-lg-2 py-4 text-center">
+                        <strong>OR</strong>
+                      </div>
+
+                      <div class="col-lg-7">
+                        <mat-card-content>
+                          <label> <b>{{min}}</b> </label>
+                          <mat-slider  class="example-margin" [max]="max" [min]="min"  [(ngModel)]="slidevalue" (change)=onSliderChange($event) > </mat-slider>
+                          <label> <b>{{max}}</b> </label>
+                        </mat-card-content>
+                      </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="row">
+                      
+                      <div class="col-lg-2">
+                        <div class="d-inline-block">
+                          <label>Value</label>
+                          <h1 style="font-weight: bold; text-align: center;">{{slidevalue}}</h1>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-3">
+                        <div class="d-inline-block">
+                          <label>GrossAmount Total</label>
+                          <h1 style="font-weight: bold; text-align: center;">{{selectedsum}}</h1>
+                        </div>
+                      </div>
+
+                    <div class="col-lg-4">
+
+                      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!Accountceilingform.valid" [hidden]="hideButton1">Submit</button>
+                    </div>
+                  </div>
+                  </div>
+                  
+                </div>
+               
+               
+                
+                
+              </section>
+              
+             
+              
+              
+            </mat-card>
+          
+     
+ 
+   
+</div>
+</div>
+
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+   <div class="cssload-speeding-wheel"></div>
+</div>
+
+ 
+ 

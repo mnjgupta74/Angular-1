@@ -1,0 +1,206 @@
+
+
+
+
+
+
+<div class="container-fluid">
+    <mat-card>
+      <mat-label><b>PD CALCULATION</b></mat-label>
+      <form [formGroup]="pdCalculationForm" #options="ngForm">
+        <div class="row mt-4">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>Date From:</mat-label>
+              <input matInput [matDatepicker]="fromDatepicker" [max]="max" title="Date From" formControlName='fromDate'>
+              <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+              <mat-datepicker #fromDatepicker (closed)="validateDates('fromDate')"></mat-datepicker>
+              <mat-error *ngIf="pdCalculationForm.invalid">Please Select From Date ! </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>To:</mat-label>
+              <input matInput [matDatepicker]="picker2" [max]="max" formControlName="toDate">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2 (closed)="validateDates('toDate')"></mat-datepicker>
+              <mat-error *ngIf="pdCalculationForm.invalid">Please Select To Date ! </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+  
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Treasury</mat-label>
+              <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                formControlName="TreasaryCode" [matAutocomplete]="autoTreas" [(ngModel)]="ChooseOption">
+              <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                  {{option.TreasuryName}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="pdCalculationForm.invalid">Please Select Treasury ! </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>Select Budget Head</mat-label>
+              <input type="tel" placeholder="Select bUDGET Head" aria-label="Number" matInput (paste)="(false)"
+                formControlName="budgetHead" [matAutocomplete]="autoBudgetHead" />
+              <mat-icon style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete #autoBudgetHead="matAutocomplete" [displayWith]="displayBudgetHead">
+                <mat-option *ngFor="let option of budgetHeadlist | async" [value]="option"
+                  (click)="onBudgetHeadSelected()">
+                  {{ option.groupsubheadname }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>Select Pd Account No</mat-label>
+              <input type="tel" placeholder="Select Pd Account No" aria-label="Number" matInput (paste)="(false)"
+                formControlName="pdAccNum" [matAutocomplete]="autoPdAccountNo" />
+              <mat-icon style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete #autoPdAccountNo="matAutocomplete" [displayWith]="displayPdAccountNo">
+                <mat-option *ngFor="let option of PdAccountNolist | async" [value]="option">
+                  {{ option.PdAccName }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>Interest</mat-label>
+              <input type="tel" placeholder="Enter the Interest Value" aria-label="Number" matInput (paste)="(false)"
+                formControlName="interest" />
+                <mat-error *ngIf="pdCalculationForm.invalid">Please Enter Numeric Only ! </mat-error>
+              <!-- <mat-icon style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete #autoPdAccountNo="matAutocomplete" [displayWith]="displayPdAccountNo">
+                <mat-option *ngFor="let option of PdAccountNolist | async" [value]="option">
+                  {{ option.PdAccName }}
+                </mat-option>
+              </mat-autocomplete> -->
+            </mat-form-field>
+          </div>
+       
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="float-end">
+              <button mat-raised-button color="primary" class="big-btn-with-icon-padding" [disabled]="!options.valid"
+                (click)="onShowCalculations()" type="button"> Show</button>
+              <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()" type="button">Reset</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+  <!-- REPORT Details -->
+  <div class="container-fluid" *ngIf="reportDetailsCard">
+    <div class="row" *ngIf="this.reportDetails.data ">
+  <!-- <div class="container-fluid" >
+    <div class="row" > -->
+      <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+        <mat-card class="mt-0">
+          <!-- <div class="text-center ">
+            <h2>Report Details</h2>
+          </div>
+          <mat-divider></mat-divider> -->
+          <div class="row ">
+            <div class="col-6 col-sm-6 col-lg-6 p-2 border-right text-center">
+              <strong matListItemTitle>Interest Rate : </strong>&nbsp;&nbsp;
+              <span matListItemLine> 
+                {{ this.reportDetails.rateofintrest }}
+            
+            </span>
+            </div>
+            <div class="col-6 col-sm-6  col-lg-6 p-2 text-left">
+              <strong matListItemTitle>Formula : </strong>&nbsp;&nbsp;
+              <span matListItemLine> 
+                {{ this.reportDetails.formula }}
+                
+           </span>
+            </div>
+          
+          </div>
+        </mat-card>
+  
+      </div>
+    </div>
+  </div>
+  
+  <!-- Report Table code -->
+  <div class="container-fluid" *ngIf="transactionref">
+    <mat-card class="mt-2 mb-3" *ngIf="ReportData.data.length > 0 ">
+  <!-- <div class="container-fluid" >
+    <mat-card class="mt-2 mb-3" > -->
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-form-field appearance="standard" role="search" class="w-75">
+            <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+              (keyup)="applyFilter($any($event.target).value)">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class=" mt-2  container-fluid scroll-container" style="overflow: auto">
+        <table width="100%" mat-table matSort matTableExporter [dataSource]="ReportData" class="mat-elevation-z8"
+          id="test" #test>
+  
+          <ng-container matColumnDef="SrNo">
+            <th mat-header-cell *matHeaderCellDef class="OBListHdrFont">
+              Sr No.
+            </th>
+            <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+              (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+            <td mat-footer-cell *matFooterCellDef>Total </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="transDate">
+            <th mat-header-cell  class=" border" *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                Date
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.transDate |date : 'dd-MM-yyyy'}} </td>
+            <td mat-footer-cell *matFooterCellDef> </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="minBalance">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+             Balance
+            </th>
+            <td mat-cell *matCellDef="let element,let j = index"> <a mat-list-item routerLinkActive="active-link" class="primary hyperlink"  [routerLink]="" style="text-decoration: none;">{{element.minBalance |number:'1.0-2':'en-US' }}</a> </td>
+            <td mat-footer-cell *matFooterCellDef> </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="intrestAmount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+              Interest
+            </th>
+            <td mat-cell *matCellDef="let element">  {{element.intrestAmount |number:'1.0-2':'en-US' }} </td>
+            <td mat-footer-cell *matFooterCellDef> {{calculateTotal() | number:'1.0-2':'en-US'}} </td>
+  
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+        </table>
+      </div>
+      <mat-paginator #myPaginator [length]="5" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]" showFirstLastButtons>
+      </mat-paginator>
+    </mat-card>
+  
+  </div>
+  <!-- table End -->
+  
+  <!-- loader start -->
+  <div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+  </div>
+  <!-- loader End -->
+  

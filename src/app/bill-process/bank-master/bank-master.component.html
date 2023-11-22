@@ -1,0 +1,423 @@
+<div class="container-fluid">
+    <mat-card>
+        <h2>Bank Master Entry </h2>
+
+        <form [formGroup]="BankEntryForm" #options="ngForm" (ngSubmit)="OnSave()">
+            <div class="row mt-4">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" aria-label="Number" matInput (paste)="(false)" placeholder="Treasury"
+                            formControlName="TreasuryControl" [matAutocomplete]="auto">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaytreasury">
+                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                {{option.TreasuryName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="BankEntryForm.invalid">Please Select Treasury ! </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field appearance="legacy" class="w-100">
+                        <mat-label class="custom-input-lable">Branch
+                            Name</mat-label>
+                        <input matInput formControlName="BranchName" placeholder="Placeholder" maxlength="40"
+                            (change)="validate(BranchName)">
+                        <div *ngIf="BranchName && BranchName.invalid &&  BranchName.touched"
+                            class="text-danger error_msg">
+                            <div *ngIf="BranchName.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="BranchName.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="BranchName.errors?.['Alphabet'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="BranchName.errors?.['BeginSpace'] as error">
+                                {{error}}
+                            </div>
+
+                        </div>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field appearance="legacy" class="w-100">
+                        <mat-label>Select Bank</mat-label>
+                        <mat-select formControlName="bankName">
+                            <mat-option *ngFor="let Bank of BankList" [value]="Bank">{{Bank.Bank}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field appearance="legacy" class="w-100">
+                        <mat-label class="custom-input-lable">Address</mat-label>
+                        <input matInput formControlName="Address" placeholder="Placeholder" maxlength="200"
+                            (change)="validate(Address)">
+                        <div *ngIf="Address && Address.invalid &&  Address.touched" class="text-danger error_msg">
+                            <div *ngIf="Address.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="Address.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="Address.errors?.['NotHtmlTag'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="Address.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="Address.errors?.['SpecialChar'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="Address.errors?.['Number_Wordsallowed'] as error">
+                                {{error}}
+                            </div>
+                        </div>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field appearance="legacy" class="w-100">
+                        <mat-label class="custom-input-lable">IFSC Code</mat-label>
+                        <input matInput formControlName="IFSC" placeholder="Placeholder" maxlength="11">
+                        <div *ngIf="IFSC && IFSC.invalid &&  IFSC.touched" class="text-danger error_msg">
+                            <div *ngIf="IFSC.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="IFSC.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="IFSC.errors?.['IFSCFormat'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="IFSC.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                        </div>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field appearance="legacy" class="w-100">
+                        <mat-label class="custom-input-lable">MICR Code</mat-label>
+                        <input matInput formControlName="MICR" placeholder="Placeholder" maxlength="9">
+                        <div *ngIf="MICR && MICR.invalid &&  MICR.touched" class="text-danger error_msg">
+                            <div *ngIf="MICR.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="MICR.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="MICR.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="MICR.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                        </div>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field appearance="legacy" class="w-100">
+                        <mat-label class="custom-input-lable">BSR Code</mat-label>
+                        <input matInput formControlName="BSR" placeholder="Placeholder" maxlength="7">
+                        <div *ngIf="BSR && BSR.invalid &&  BSR.touched" class="text-danger error_msg">
+                            <div *ngIf="BSR.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="BSR.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="BSR.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="BSR.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                        </div>
+                    </mat-form-field>
+                </div>
+                <div class="col-6 col-sm-6  mt-4 ">
+                    <mat-radio-group aria-label="Select an option" (change)="OnPensionFlagChange($event)" tab=truer>
+                        <mat-radio-button color="primary" class="ms-3" value="P">
+                            payment</mat-radio-button>
+                        <mat-radio-button color="primary" [checked]="true" class="ms-3"
+                            value="R">Receipt</mat-radio-button>
+                        <mat-radio-button color="primary" class="ms-3" value="V">
+                            Pension Voucher Only</mat-radio-button>
+                        <mat-radio-button color="primary" class="ms-3" value="B">
+                            Pymt & Rcpt Both</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+
+            <div style="color: red;">* BSR Code Should be in 7 digit length ! <br> * Starting Digit of BSR Code should
+                be match with BankCode !
+            </div>
+
+            <div class="d-flex justify-content-end gap-1">
+                <div *ngIf="!BankEntryForm.invalid">
+                    <button mat-raised-button color="primary" type="submit">Submit</button>
+                </div>
+                <button mat-stroked-button color="primary" (click)="onReset()" class="ms-3">Reset</button>
+            </div>
+
+        </form>
+
+    </mat-card>
+
+    <!-- <mat-card class="mt-3">
+        <div style="color: red;">* BSR Code Should be in 7 digit length ! <br> * Starting Digit of BSR Code should be match with BankCode ! 
+        </div>
+    </mat-card> -->
+
+    <mat-card class="mt-3">
+        <div class="container-fluid" *ngIf="dataSource.data.length > 0;">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                    <mat-form-field appearance="standard" role="search" class="w-100">
+                        <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                            (keyup)="applyFilter($any($event.target).value)">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <form [formGroup]="BankEditForm" #options="ngForm">
+
+
+            <div class="scroll-container tab-container mt-4" style="overflow: auto">
+
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="dataSource"
+                    class="mat-elevation-z8" style="width: 100%;" id="test">
+
+
+                    <ng-container matColumnDef="BankName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Bank Name
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.BankName}}
+                    </ng-container>
+
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="BranchName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            sortActionDescription="Sort by BranchName">
+                            Branch Name </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.RFLAG">
+                                <input type="text" formControlName="BRANCHNAME" class="form-control" maxlength="20"
+                                    (change)="validate(BRANCHNAME)" />
+                            </div>
+                            <div *ngIf="BRANCHNAME && BRANCHNAME.invalid &&  BRANCHNAME.touched && element.RFLAG"
+                                class="text-danger error_msg">
+                                <div *ngIf="BRANCHNAME.errors?.['minLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="BRANCHNAME.errors?.['Alphabet'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="BRANCHNAME.errors?.['BeginSpace'] as error">
+                                    {{error}}
+                                </div>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.BRANCHNAME }}
+                            </div>
+
+                    </ng-container>
+                    <!-- Position Column -->
+
+                    <ng-container matColumnDef="Address">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Address">
+                            Address </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.RFLAG">
+                                <input type="text" formControlName="ADDRESS" class="form-control" maxlength="50"
+                                    (change)="validate(ADDRESS)" />
+                            </div>
+                            <div *ngIf="ADDRESS && ADDRESS.invalid &&  ADDRESS.touched && element.RFLAG "
+                                class="text-danger error_msg">
+                                <div *ngIf="ADDRESS.errors?.['maxLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="ADDRESS.errors?.['NotHtmlTag'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="ADDRESS.errors?.['minLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="ADDRESS.errors?.['SpecialChar'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="ADDRESS.errors?.['Number_Wordsallowed'] as error">
+                                    {{error}}
+                                </div>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.ADDRESS }}
+                            </div>
+                        </td>
+                    </ng-container>
+
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="IFSCCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by IFSCCode">
+                            IFSC Code
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.RFLAG">
+                                <input type="text" formControlName="IFSCCode" class="form-control" maxlength="11"
+                                    (change)="validate(IFSCCode)" />
+                            </div>
+                            <div *ngIf="IFSCCode && IFSCCode.invalid &&  IFSCCode.touched && element.RFLAG"
+                                class="text-danger error_msg">
+                                <div *ngIf="IFSCCode.errors?.['maxLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="IFSCCode.errors?.['IFSCFormat'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="IFSCCode.errors?.['minLength'] as error">
+                                    {{error}}
+                                </div>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.IFSC}}
+                            </div>
+                    </ng-container>
+
+                    <ng-container matColumnDef="MICRCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by MICRCode">
+                            MICR Code
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.RFLAG">
+                                <input type="text" formControlName="MICRCode" class="form-control" maxlength="9"
+                                    (change)="validate(MICRCode)" />
+                            </div>
+                            <div *ngIf="MICRCode && MICRCode.invalid &&  MICRCode.touched && element.RFLAG"
+                                class="text-danger error_msg">
+                                <div *ngIf="MICRCode.errors?.['maxLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="MICRCode.errors?.['Numeric'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="MICRCode.errors?.['minLength'] as error">
+                                    {{error}}
+                                </div>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.MICRCode}}
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="BSRCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BSRCode">
+                            BSR Code
+                        </th>
+                        <td mat-cell *matCellDef="let element">{{element.BSRCode}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Treasury">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by CashAmt">
+                            Treasury
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.RFLAG" class="mt-3">
+                                <mat-form-field class="w-100 pad" appearance="outline">
+                                    <mat-label>Treasury</mat-label>
+                                    <mat-select formControlName="Treasury">
+                                        <mat-option *ngFor="let Tres of TreasuryListarr"
+                                            [value]="Tres.TreasuryCode">{{Tres.TreasuryName}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.TreasuryCode }}-{{element.TreasuryName }}
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="BankType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by CashAmt">
+                            Bank Type
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.RFLAG" class="mt-3">
+                                <mat-form-field class="w-100 pad" appearance="outline">
+                                    <mat-label>Bank Type</mat-label>
+                                    <mat-select formControlName="BankType">
+                                        <mat-option *ngFor="let type of BankType"
+                                            [value]="type.TypeC">{{type.Type}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.BankType }}
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ChequePrint">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            sortActionDescription="Sort by ChequePrint">
+                            Cheque Print
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.RFLAG">
+                                <!-- <input formControlName="ChequePrint" class="form-check-input" type="checkbox"  checked="true"
+                                    (change)="onItemChange($event.target)" value="" /> Print -->
+                                <mat-checkbox class="example-margin" (change)="onChange($event)"
+                                    [checked]="element.ChequePrint==0?!myModel:myModel">
+                                    Print</mat-checkbox>
+                            </div>
+                            <div *ngIf="!element.RFLAG">
+                                {{element.ChequePrint2}}
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Action">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by CashAmt">
+                            Action
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+
+                            <div *ngIf="!element.RFLAG">
+                                <button class="btn btn-sm btn-success" (click)="onEdit(element)">Edit
+                                </button>
+                            </div>
+                            <div *ngIf="element.RFLAG && !BankEditForm.invalid">
+                                <button class="btn btn-sm btn-success" (click)="onUpdate(element)">Update</button>
+                                <button class="btn btn-sm btn-danger ms-3" (click)="onCancel(element)">Cancel</button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Deactive">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Deactive
+                        </th>
+                        <td mat-cell *matCellDef="let element"><button mat-icon-button (click)="onDelete(element)">
+                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                            </button> </td>
+                    </ng-container>
+
+
+                    <tr mat-header-row *matHeaderRowDef="BillStatusTable"></tr>
+                    <tr mat-row *matRowDef="let row; columns: BillStatusTable;"></tr>
+                </table>
+            </div>
+
+            <mat-paginator #myPaginator [length]="10" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]">
+            </mat-paginator>
+        </form>
+    </mat-card>
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

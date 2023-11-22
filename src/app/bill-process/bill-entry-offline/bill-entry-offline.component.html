@@ -1,0 +1,2417 @@
+<div class="container-fluid">
+
+    <mat-card>
+        <mat-label><b>Bill Entry</b></mat-label>
+        <div id="myelem" *ngIf="BillEntry_flag==1">
+
+
+            <form class="p-3" [formGroup]="BillTypeForm" (ngSubmit)="OnShowDetails()">
+                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <p class="f-14" placeholder="Treasury" name="Treasury" (paste)="(false)"><b>Treasury :
+                            </b>{{this.Tcode.Treasury_Code}} </p>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <p class="f-14"><b>Year : </b>{{this.Tcode.currentYear}}</p>
+                    </div> -->
+
+
+                <div class="row mt-2">
+
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> Treasury</mat-label>
+                            <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                formControlName="TreasuryControl" [matAutocomplete]="auto" [(ngModel)]="ChooseOption">
+                            <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn_tres">
+                                <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                    {{option.TreasuryName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="BillTypeForm.invalid">Please Select Treasury ! </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> Fin Year</mat-label>
+                            <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                formControlName="Year">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Token No.*</mat-label>
+
+                            <input matInput type="tel" placeholder="Token No." name="Token Number" (paste)="(false)"
+                                formControlName="TokenNum" />
+                            <div *ngIf="TokenNum && TokenNum.invalid &&  TokenNum.touched"
+                                class="text-danger error_msg">
+                                <div *ngIf="TokenNum.errors?.['Required'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="TokenNum.errors?.['maxLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="TokenNum.errors?.['Numeric'] as error">
+                                    {{error}}
+                                </div>
+                            </div>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 mt-4" *ngIf="!BillTypeForm.invalid"> 
+                        <div class="float-end">
+                        <button type="submit" class="btn btn-primary float-end" mat-raised-button color="primary">Show
+                            details</button>
+                    </div> 
+                </div>
+                </div>
+
+            </form>
+        </div>
+
+    </mat-card>
+
+
+
+    <!-- *ngIf="BillEntry_flag==2" -->
+
+
+
+    <mat-card class="mt-3 mb-5" *ngIf="BillEntry_flag==2">
+        <div class="section-title" (click)="tokenStatus('','','')" *ngIf="this.Popup_error_list.length>0">
+            <h2>
+                <span style="color:red;" class="blink">See Error Details</span>
+            </h2>
+        </div>
+        <!-- <div class="float-end custome_btn_doc" (click)="viewDocument()">
+            <span class="f-14" *ngIf="!IsOpen">Show Docs</span>
+            <span class="f-14" *ngIf="IsOpen">Hide Docs</span>
+            <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                [ngClass]="{'mat-icone': IsOpen === true}">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+        </div> -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="left-bill-entry-container">
+                    <div class="left-bill-entry-header pb-2">
+                        <div class="col-lg-7">
+                            <p class="m-0 d-inline f-14">Token Number: <span class="medium-font">
+                                    {{TokenNo}} </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="all-input-field-container mt-4">
+                    <div class="scrollable-height-container">
+                        <div class="basic-input-field-container">
+                            <form class="p-3" [formGroup]="BillEntryForm">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label>Select Bank</mat-label>
+                                                <mat-select formControlName="bankName">
+                                                    <mat-option *ngFor="let Bank of BankList"
+                                                        [value]="Bank.BankBranchCode">{{Bank.BANKNAME}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <mat-label>DDO Name</mat-label>
+                                                <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                    formControlName="DdoName" (paste)="(false)"
+                                                    [matAutocomplete]="auto3">
+                                                <mat-icon class=""
+                                                    style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                </mat-icon>
+                                                <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn3">
+                                                    <mat-option *ngFor="let option of DodoNameList | async"
+                                                        [value]="option" (click)="OnDdoNameSelected()">
+                                                        {{option.DDO_NAME}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label class="custom-input-lable">DDO BIll
+                                                    No.*</mat-label>
+                                                <input matInput formControlName="DdoBillNo" placeholder="Placeholder">
+                                                <div *ngIf="DdoBillNo && DdoBillNo.invalid &&  DdoBillNo.touched"
+                                                    class="text-danger error_msg">
+                                                    <div *ngIf="DdoBillNo.errors?.['Required'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="DdoBillNo.errors?.['Numeric'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                </div>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <mat-label>BillType</mat-label>
+                                                <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                    (paste)="(false)" formControlName="Billtype"
+                                                    [matAutocomplete]="auto">
+                                                <mat-icon class=""
+                                                    style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                </mat-icon>
+                                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                                    <mat-option *ngFor="let option of BillTypeList | async"
+                                                        [value]="option" (click)="OnBilltypeSelected()">
+                                                        {{option.BillType}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <mat-label>Bill-SubType</mat-label>
+                                                <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                    (paste)="(false)" formControlName="BillSubType"
+                                                    [matAutocomplete]="auto1" [(ngModel)]="SelectBillSubtype">
+                                                <mat-icon class=""
+                                                    style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                </mat-icon>
+                                                <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn1">
+                                                    <mat-option *ngFor="let option of BillSubTypeList | async"
+                                                        [value]="option"
+                                                        (click)="OnSubBilltypeSelected(SelectBillSubtype)">
+                                                        {{option.SubType}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label class="custom-input-lable">DDO Bill
+                                                    Date*</mat-label>
+                                                <input matInput formControlName='DdoBillDate'
+                                                    [matDatepicker]="DDoDatepick" placeholder="MM/DD/YYYY">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="DDoDatepick"></mat-datepicker-toggle>
+                                                <mat-datepicker #DDoDatepick></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="accordions-input-container">
+                            <div class="accordion-item mb-2">
+                                <mat-accordion>
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title class="medium-font">
+                                                Budget Details
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <form class="p-3" [formGroup]="BillEntryForm">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Detail
+                                                            Head</mat-label>
+                                                        <input matInput placeholder="DetailHead" maxlength="13"
+                                                            formControlName="DetailHead">
+                                                        <div *ngIf="DetailHead && DetailHead.invalid &&  DetailHead.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="DetailHead.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="DetailHead.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="DetailHead.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="legacy">
+                                                        <mat-label>Object Head</mat-label>
+                                                        <input type="text" placeholder="Pick one" aria-label="Number"
+                                                            matInput (paste)="(false)" formControlName="ObjectHead"
+                                                            [matAutocomplete]="auto2" [(ngModel)]="SelectObjectHead">
+                                                        <mat-icon class=""
+                                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                        </mat-icon>
+                                                        <mat-autocomplete #auto2="matAutocomplete"
+                                                            [displayWith]="displayFn2">
+                                                            <mat-option *ngFor="let option of ObjectHeadList | async"
+                                                                [value]="option"
+                                                                (click)="OnObjectHeadSelected(SelectObjectHead)">
+                                                                {{option.objectHeadCodeName}}
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Office
+                                                            Id.</mat-label>
+                                                        <input matInput placeholder="officeid"
+                                                            formControlName="officeid">
+                                                        <div *ngIf="officeid && officeid.invalid &&  officeid.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="officeid.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="officeid.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div
+                                                                *ngIf="officeid.errors?.['cannotContainSpace'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="officeid.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Head
+                                                            Office</mat-label>
+                                                        <input matInput placeholder="Placeholder"
+                                                            formControlName="HeadOffice">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label>BFC Type</mat-label>
+                                                        <mat-select formControlName="PlanNonPlan">
+                                                            <mat-option value="P">Plan</mat-option>
+                                                            <mat-option value="N">Non Plan</mat-option>
+                                                            <mat-option value="C">Central Assistance</mat-option>
+                                                            <mat-option value="A">N.A.</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label>Head Type</mat-label>
+                                                        <mat-select formControlName="VotedCharged">
+                                                            <mat-option value="V">Voted</mat-option>
+                                                            <mat-option value="C">Charged</mat-option>
+                                                            <mat-option value="A">N.A.</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+                            <div class="accordion-item mb-2">
+                                <mat-accordion>
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title class="medium-font">
+                                                Amount Details
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <form class="p-3" [formGroup]="BillEntryForm">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">₹ Gross
+                                                            Amount (A)</mat-label>
+                                                        <input matInput formControlName="GrossAmt">
+                                                        <div *ngIf="GrossAmt && GrossAmt.invalid &&  GrossAmt.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="GrossAmt.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="GrossAmt.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="GrossAmt.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">₹ Head
+                                                            Gross</mat-label>
+                                                        <input matInput formControlName="HeadGross">
+                                                        <div *ngIf="HeadGross && HeadGross.invalid &&  HeadGross.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="HeadGross.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="HeadGross.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="HeadGross.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">₹ Net
+                                                            Amount (B)</mat-label>
+                                                        <input matInput formControlName="NetAmt"
+                                                            (ngModelChange)='onChange($event)'>
+                                                        <div *ngIf="NetAmt && NetAmt.invalid &&  NetAmt.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="NetAmt.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NetAmt.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="NetAmt.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Balance
+                                                            Budget</mat-label>
+                                                        <input matInput placeholder="Placeholder"
+                                                            formControlName="BudgetBal">
+                                                        <mat-icon class="" (click)="BalanceBudgetCheck()"
+                                                            style=" position: absolute;right:2px; top:0px">send
+                                                        </mat-icon>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">(A)-(B)</mat-label>
+                                                        <input matInput placeholder="Placeholder"
+                                                            formControlName="budgetval">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+                            <div>
+                                <div class="section-title mt-3 ms-2" *ngIf="budget_Status">
+                                    <h3 class="error-text"> {{LableMsg.BuType}} </h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="BillNoDuplicate">
+                                    <h3 class="error-text">{{LableMsg.B6Type}}</h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="Tcode.CommonErr4">
+                                    <h3 class="error-text">{{LableMsg.CE4Type}} </h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error6">
+                                    <h3 class="error-text"> {{LableMsg.BE6Type}}</h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf=" Tcode.CommonErr8">
+                                    <h3 class="error-text">{{LableMsg.CE8Type}} </h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="Tcode.CommonErr9">
+                                    <h3 class="error-text">{{LableMsg.CE9Type}} </h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error1">
+                                    <h3 class="error-text">{{LableMsg.BE1Type}} </h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error2">
+                                    <h3 class="error-text">{{LableMsg.BE2Type}} </h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error4">
+                                    <h3 class="error-text">{{LableMsg.BE4Type}} </h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error5">
+                                    <h3 class="error-text">{{LableMsg.BE5Type}} </h3>
+                                </div>
+                            </div>
+                            <div class="accordion-item mb-2">
+                                <mat-accordion>
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title class="medium-font">
+                                                Payment Details
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <form class="p-3" [formGroup]="BillEntryForm">
+                                            <div class="row">
+                                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Pay
+                                                            Month</mat-label>
+                                                        <input matInput formControlName="BillMonth"
+                                                            placeholder="Placeholder">
+                                                    </mat-form-field>
+                                                </div> -->
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label>Pay Month</mat-label>
+                                                        <mat-select formControlName="BillMonth">
+                                                            <mat-option *ngFor="let Month of MonthList"
+                                                                [value]="Month.MonthCode">{{Month.MonthName}}</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Pay
+                                                            Year</mat-label>
+                                                        <input matInput formControlName="BillYear"
+                                                            placeholder="Placeholder">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Choose a
+                                                            date</mat-label>
+                                                        <input matInput formControlName='toDate' [max]="maxDate"
+                                                            [matDatepicker]="picker" placeholder="MM/DD/YYYY">
+                                                        <mat-datepicker-toggle matSuffix
+                                                            [for]="picker"></mat-datepicker-toggle>
+                                                        <mat-datepicker #picker></mat-datepicker>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Pay
+                                                            Mode</mat-label>
+                                                        <input matInput formControlName="payMode"
+                                                            placeholder="Placeholder">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label>Mode Of Payment</mat-label>
+                                                        <mat-select formControlName="ECSNONECS">
+                                                            <mat-option value="E">ECS</mat-option>
+                                                            <mat-option value="C">Cheque</mat-option>
+                                                            <mat-option value="A">N.A.</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+
+
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+
+                            <div class="accordion-item mb-2">
+                                <mat-accordion>
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title class="medium-font">
+                                                Other Details
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <form class="p-3" [formGroup]="BillEntryForm">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">PD A/C
+                                                            No.</mat-label>
+                                                        <input matInput formControlName="PdAcc"
+                                                            placeholder="Placeholder">
+                                                        <div *ngIf="PdAcc && PdAcc.invalid &&  PdAcc.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="PdAcc.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="PdAcc.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="PdAcc.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Division</mat-label>
+                                                        <input matInput formControlName="Division"
+                                                            placeholder="Placeholder">
+                                                        <div *ngIf="Division && Division.invalid &&  Division.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="Division.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="Division.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="Division.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+
+                            <div class="row">
+                                <div class="d-flex align-items-center">
+                                    <h2 class="m-0">Add More Budget Head</h2>
+                                    <mat-icon class="ms-2" color="primary" (click)="Show_moreBudgetHEad()"> add_circle
+                                    </mat-icon>
+                                </div>
+                            </div>
+                            <div class="accordion-item mt-4" *ngIf="MBHAutoCHeck">
+                                <mat-accordion>
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title class="medium-font">
+                                                Add More Budget Head Details
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <form class="p-3" [formGroup]="MoreHForm">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Detail
+                                                            Head</mat-label>
+                                                        <input matInput placeholder="DetailHead" maxlength="13"
+                                                            formControlName="MB_DetailHead">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="legacy">
+                                                        <mat-label>Object Head</mat-label>
+                                                        <input type="text" placeholder="Pick one" aria-label="Number"
+                                                            matInput formControlName="MB_ObjectHead"
+                                                            [(ngModel)]="SelectMBObjectHead" (paste)="(false)"
+                                                            [matAutocomplete]="ObjectMB">
+                                                        <mat-icon class=""
+                                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                        </mat-icon>
+                                                        <mat-autocomplete #ObjectMB="matAutocomplete"
+                                                            [displayWith]="MBdisplayObecthead">
+                                                            <mat-option *ngFor="let option of MBObjectHeadList | async"
+                                                                [value]="option"
+                                                                (click)="OnMBObjectHeadSelected(SelectMBObjectHead)">
+                                                                {{option.objectHeadNameHindi}}
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100" disable="true">
+                                                        <mat-label>BFC Type</mat-label>
+                                                        <mat-select formControlName="MB_PlanNonPlan">
+                                                            <mat-option value="P">Plan</mat-option>
+                                                            <mat-option value="N">Non Plan</mat-option>
+                                                            <mat-option value="C">Central Assistance</mat-option>
+                                                            <mat-option value="A">N.A.</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label>Head Type</mat-label>
+                                                        <mat-select formControlName="MB_VotedCharged">
+                                                            <mat-option value="V">Voted</mat-option>
+                                                            <mat-option value="C">Charged</mat-option>
+                                                            <mat-option value="A">N.A.</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Amount</mat-label>
+                                                        <input matInput placeholder="Amount"
+                                                            formControlName="MB_Amount">
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                        <div class="float-end">
+                                            <button class="btn" (click)="Add_MoreH()" mat-stroked-button
+                                                color="primary">Add</button>
+                                        </div>
+
+                                        <div class="overflow-auto mt-8" *ngIf="MorehAddNewflag">
+                                            <table mat-table [dataSource]="MoreHDeatls" class="w-100">
+                                                <ng-container matColumnDef="BuddgetHead">
+                                                    <th mat-header-cell *matHeaderCellDef>Buddget Head</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.BUDGETHEAD1}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="ObjectHead">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Object
+                                                        Head</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.OBJECT_HEAD}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="BFC">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">BFC
+                                                        Type</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.BFC_TYPE}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="Head">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">Head
+                                                        Type</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.HEAD_TYPE}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="Amount">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Amount</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.AMOUNT}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="Budget_Amount">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Budget Amount</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">₹ {{element.BUDGET_AMOUNT}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="Action">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let element let i=index"
+                                                        class="table-col-padding">
+                                                        <div (click)="OnMOreHead_Delete(element,i)">
+                                                            <img width="20px" src="./assets/images/delete.svg" alt="">
+                                                        </div>
+                                                    </td>
+                                                </ng-container>
+                                                <tr mat-header-row *matHeaderRowDef="displayedMoreH"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: displayedMoreH"
+                                                    [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                                <tr class="mat-row" *matNoDataRow>
+                                                    <td class="mat-cell" colspan="4">
+                                                        No data matching the filter.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </mat-expansion-panel>
+
+                                </mat-accordion>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+            <div class="accordion-item mt-4" *ngIf="BTAutoCHeck">
+                <mat-accordion>
+                    <mat-expansion-panel [expanded]="true">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="medium-font">
+                                Book Transfer Details
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <form class="p-3" [formGroup]="BookTForm">
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Major Head</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            formControlName="BTMajorHead" [(ngModel)]="SelectMajorHead"
+                                            (paste)="(false)" [matAutocomplete]="auto3">
+                                        <mat-icon class=""
+                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #auto3="matAutocomplete" [displayWith]="display_Major">
+                                            <mat-option *ngFor="let option of BTMajorHeadList | async" [value]="option"
+                                                (click)="OnBtMajorHeadSelected(SelectMajorHead)">
+                                                {{option.MajorHeadCodeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Detail Head</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            formControlName="BTDetailHead" [(ngModel)]="SelectDetailHeadd"
+                                            (paste)="(false)" [matAutocomplete]="Detailsauto">
+                                        <mat-icon class=""
+                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #Detailsauto="matAutocomplete"
+                                            [displayWith]="display_BTDetailhead">
+                                            <mat-option *ngFor="let option of BTDetailHeadList | async" [value]="option"
+                                                (click)="OnBTDetailHeadSelected(SelectDetailHeadd)">
+                                                {{option.groupsubheadname}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Object Head</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            formControlName="BTObjectHead" [(ngModel)]="SelecBTObjecthead"
+                                            (paste)="(false)" [matAutocomplete]="Objectauto">
+                                        <mat-icon class=""
+                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #Objectauto="matAutocomplete"
+                                            [displayWith]="BTdisplayObecthead">
+                                            <mat-option *ngFor="let option of BTObjectHeadList | async" [value]="option"
+                                                (click)="OnBTObjectHeadSelected(SelecBTObjecthead)">
+                                                {{option.objectHeadNameHindi}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Division</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            formControlName="BTDivision" (paste)="(false)" [matAutocomplete]="auto5"
+                                            [(ngModel)]="SelectDivision">
+                                        <mat-icon class=""
+                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #auto5="matAutocomplete" [displayWith]="display_BTDivision">
+                                            <mat-option *ngFor="let option of BTDivisionListList | async"
+                                                [value]="option" (click)="OnBtDivisionSelected(SelectDivision)">
+                                                {{option.DivisionName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field appearance="legacy" class="w-100" disable="true">
+                                        <mat-label>BFC Type</mat-label>
+                                        <mat-select formControlName="BTPlanNonPlan">
+                                            <mat-option value="P">Plan</mat-option>
+                                            <mat-option value="N">Non Plan</mat-option>
+                                            <mat-option value="C">Central Assistance</mat-option>
+                                            <mat-option value="A">N.A.</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field appearance="legacy" class="w-100">
+                                        <mat-label>Head Type</mat-label>
+                                        <mat-select formControlName="BTVotedCharged">
+                                            <mat-option value="V">Voted</mat-option>
+                                            <mat-option value="C">Charged</mat-option>
+                                            <mat-option value="A">N.A.</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field appearance="legacy" class="w-100">
+                                        <mat-label class="custom-input-lable">Amount</mat-label>
+                                        <input matInput placeholder="Amount" formControlName="BTAmount">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field appearance="legacy" class="w-100">
+                                        <mat-label class="custom-input-lable">Sanction No.</mat-label>
+                                        <input matInput placeholder="Sanction No." formControlName="BTSanctionNo">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field appearance="legacy" class="w-100">
+                                        <mat-label class="custom-input-lable">Sanction No
+                                            Date</mat-label>
+                                        <input matInput formControlName='BTSancationDate' [matDatepicker]="BTSdatepick"
+                                            placeholder="MM/DD/YYYY">
+                                        <mat-datepicker-toggle matSuffix [for]="BTSdatepick"></mat-datepicker-toggle>
+                                        <mat-datepicker #BTSdatepick></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field appearance="legacy" class="w-100">
+                                        <mat-label class="custom-input-lable">Purpose</mat-label>
+                                        <input matInput placeholder="Purpose" formControlName="BTPurpose">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Pd A/c</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            formControlName="BTPdAcc" [(ngModel)]="SelectPdAcc" (paste)="(false)"
+                                            [matAutocomplete]="BtPdauto">
+                                        <mat-icon class=""
+                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #BtPdauto="matAutocomplete" [displayWith]="display_BTPdAcc">
+                                            <mat-option *ngFor="let option of BTPdAccList | async" [value]="option"
+                                                (click)="OnBtPdAccSelected(SelectPdAcc)">
+                                                {{option.PDAccName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <mat-card>
+                                <div style="background-color:rgb(187, 221, 243);width: auto;height: 25px;">
+                                    <p class="text-center fs-6 mt-1">Reverse Entry</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Concerned Major Head</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="BTConMajorHead" [(ngModel)]="SelectBTConMajorHead"
+                                                (paste)="(false)" [matAutocomplete]="ConMaj">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #ConMaj="matAutocomplete"
+                                                [displayWith]="display_ConMajor">
+                                                <mat-option *ngFor="let option of BTConMajorHeadList | async"
+                                                    [value]="option"
+                                                    (click)="OnBTConMajorHeadSelected(SelectBTConMajorHead)">
+                                                    {{option.MajorHeadCodeName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Concerned Detail Head</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="BTConDetailHead" [(ngModel)]="SelectBTConDetailHead"
+                                                (paste)="(false)" [matAutocomplete]="ConDetail">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #ConDetail="matAutocomplete"
+                                                [displayWith]="display_BTConDetailhead">
+                                                <mat-option *ngFor="let option of BTConDetailHeadList | async"
+                                                    [value]="option"
+                                                    (click)="OnBTConDetailHeadSelected(SelectBTConDetailHead)">
+                                                    {{option.groupsubheadname}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Concerned Object Head</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="BTConObjectHead" [(ngModel)]="SelecBTConObjecthead"
+                                                (paste)="(false)" [matAutocomplete]="ConObject">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #ConObject="matAutocomplete"
+                                                [displayWith]="BTdisplayConObecthead">
+                                                <mat-option *ngFor="let option of BTConObjectHeadList | async"
+                                                    [value]="option"
+                                                    (click)="OnBTConObjectHeadSelected(SelecBTConObjecthead)">
+                                                    {{option.objectHeadNameHindi}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Object Head</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="BTObjectHead" [(ngModel)]="SelecBTObjecthead"
+                                                (paste)="(false)" [matAutocomplete]="Objectauto">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #Objectauto="matAutocomplete"
+                                                [displayWith]="BTdisplayObecthead">
+                                                <mat-option *ngFor="let option of BTObjectHeadList | async" [value]="option"
+                                                    (click)="OnBTObjectHeadSelected(SelecBTObjecthead)">
+                                                    {{option.objectHeadNameHindi}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div> -->
+
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Concerned Division</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="BTConDivision" (paste)="(false)"
+                                                [matAutocomplete]="ConDivision" [(ngModel)]="SelectConDivision">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #ConDivision="matAutocomplete"
+                                                [displayWith]="display_BTConDivision">
+                                                <mat-option *ngFor="let option of BTConDivisionListList | async"
+                                                    [value]="option"
+                                                    (click)="OnBtConDivisionSelected(SelectConDivision)">
+                                                    {{option.DivisionName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100" disable="true">
+                                            <mat-label>Concerned BFC Type</mat-label>
+                                            <mat-select formControlName="BTConPlanNonPlan">
+                                                <mat-option value="P">Plan</mat-option>
+                                                <mat-option value="N">Non Plan</mat-option>
+                                                <mat-option value="C">Central Assistance</mat-option>
+                                                <mat-option value="A">N.A.</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label>Concerned Head Type</mat-label>
+                                            <mat-select formControlName="BTConVotedCharged">
+                                                <mat-option value="V">Voted</mat-option>
+                                                <mat-option value="C">Charged</mat-option>
+                                                <mat-option value="A">N.A.</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Concerned Pd A/c</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="BTConPdAcc" [(ngModel)]="SelectConPdAcc"
+                                                (paste)="(false)" [matAutocomplete]="BtConPdauto">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #BtConPdauto="matAutocomplete"
+                                                [displayWith]="display_BTConPdAcc">
+                                                <mat-option *ngFor="let option of BTConPdAccList | async"
+                                                    [value]="option" (click)="OnBtConPdAccSelected(SelectConPdAcc)">
+                                                    {{option.PDAccName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </form>
+                        <div class="float-end">
+                            <button class="btn" (click)="onadd_NewBt()" mat-stroked-button color="primary">Add New
+                                BT</button>
+                        </div>
+
+                        <div class="overflow-auto mt-8" *ngIf="BtAddNewflag">
+                            <table mat-table [dataSource]="OtherBTDeatls" class="w-100">
+                                <ng-container matColumnDef="BudgetHead">
+                                    <th mat-header-cell *matHeaderCellDef>Buddget Head</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.BUDGETHEAD}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="ObjectHead">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        Object
+                                        Head</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.OBJECT_HEAD}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Concern Pnp">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">Concern BFC
+                                        Type</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.Concern_BFC_TYPE}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Concern Vnc">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">Concern Head
+                                        Type</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.Concern_HEAD_TYPE}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="PDAcNo">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">PDAcNo</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.PDAcNo}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Concern Division">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        Concern Division</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.Concern_Division}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Amount">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        Amount</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">₹ {{element.AMOUNT}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Sanction No">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        Sanction No</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.Sanction_No}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Sanction Date">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        Sanction Date</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.Sanction_Date}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="For Treasury">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        For Treasury</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.For_Treasury}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Concern PDAcNo">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        Concern PDAcNo</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.Concern_PDAcNo}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Concern BudgetHead">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        Concern BudgetHead</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.Concern_BudgetHead}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Concern ObjectHead">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                        Concern ObjectHead</th>
+                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                        <p class="m-0">{{element.Concern_ObjectHead}}</p>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Action">
+                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding"></th>
+                                    <td mat-cell *matCellDef="let element let i= index" class="table-col-padding">
+                                        <div (click)="OnBTDelete(element,i)">
+                                            <img width="20px" src="./assets/images/delete.svg" alt="">
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedBookT"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedBookT"
+                                    [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="4">
+                                        No data matching the filter.
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+            </div>
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="Loan_flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Loan Book Details
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="LoanBForm">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">G.F.C/Policy No./Emp.ID</mat-label>
+                                            <input matInput placeholder="GPF_Policy" maxlength="13"
+                                                formControlName="GPFPolicy">
+
+                                            <div *ngIf="GPFPolicy && GPFPolicy.invalid &&  GPFPolicy.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="GPFPolicy.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GPFPolicy.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GPFPolicy.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Employee Name</mat-label>
+                                            <input matInput placeholder="Amount" formControlName="EmployeeN">
+                                            <div *ngIf="EmployeeN && EmployeeN.invalid &&  EmployeeN.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="EmployeeN.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="EmployeeN.errors?.['NotSpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Authority No.</mat-label>
+                                            <input matInput placeholder="Amount" formControlName="AuthorityNo">
+                                            <div *ngIf="AuthorityNo && AuthorityNo.invalid &&  AuthorityNo.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="AuthorityNo.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="AuthorityNo.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="AuthorityNo.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="ACBlock_flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Advance Contingency Block
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="AdvanceC_Form" (ngSubmit)="ACBill_Add()">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4 mt-4">
+                                        <mat-checkbox formControlName="AC_DC_Pending"> Dc Pending
+                                        </mat-checkbox>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Sanction No.</mat-label>
+                                            <input matInput placeholder="Sanction No" formControlName="AC_Sanction_No">
+
+                                            <div *ngIf="AC_Sanction_No && AC_Sanction_No.invalid &&  AC_Sanction_No.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="AC_Sanction_No.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="AC_Sanction_No.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="AC_Sanction_No.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Sanction
+                                                Date</mat-label>
+                                            <input matInput formControlName='AC_Sanction_Date'
+                                                [matDatepicker]="AcSDatepick" [max]="maxDate" placeholder="MM/DD/YYYY">
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="AcSDatepick"></mat-datepicker-toggle>
+                                            <mat-datepicker #AcSDatepick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Sanction Authority</mat-label>
+                                            <input matInput placeholder="Sanction Authority"
+                                                formControlName="AC_Sanction_Authority">
+                                            <div *ngIf="AC_Sanction_Authority && AC_Sanction_Authority.invalid &&  AC_Sanction_Authority.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="AC_Sanction_Authority.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="AC_Sanction_Authority.errors?.['NotSpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Purpose.</mat-label>
+                                            <input matInput placeholder="Purpose" formControlName="AC_Purpose">
+                                            <div *ngIf="AC_Purpose && AC_Purpose.invalid &&  AC_Purpose.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="AC_Purpose.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="AC_Purpose.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="AC_Purpose.errors?.['NotSpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="float-end" *ngIf="!AdvanceC_Form.invalid">
+                                    <button class="btn" mat-stroked-button color="primary">Add AC
+                                        Bill</button>
+                                </div>
+                            </form>
+
+                            <div class="overflow-auto mt-8" *ngIf="ACBIllTableflag">
+                                <table mat-table [dataSource]="ACBillSource" class="w-100">
+                                    <ng-container matColumnDef="Dc Pending">
+                                        <th mat-header-cell *matHeaderCellDef>DC Pending</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.DC_Pending}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Sanction No">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                            Sanction No</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Sanction_No}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Sanction Date">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Sanction Date
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Sanction_Date}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Purpose">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Purpose</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Purpose}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Action">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding"></th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <div (click)="OnACBillDelete()">
+                                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedACBill"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedACBill"
+                                        [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="4">
+                                            No data matching the filter.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="Grant_in_aid_flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Grant In Aid Bill
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="GrantInAid_Form" (ngSubmit)="GrantInAid_Add()">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4 mt-4">
+                                        <mat-checkbox formControlName="Uc_Required"> UC Required
+                                        </mat-checkbox>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Sanction No.</mat-label>
+                                            <input matInput placeholder="Sanction No" formControlName="GA_Sanction_No">
+
+                                            <div *ngIf="GA_Sanction_No && GA_Sanction_No.invalid &&  GA_Sanction_No.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="GA_Sanction_No.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GA_Sanction_No.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GA_Sanction_No.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Sanction
+                                                Date</mat-label>
+                                            <input matInput formControlName='GA_Sanction_Date'
+                                                [matDatepicker]="SDatepick" [max]="maxDate" placeholder="MM/DD/YYYY">
+                                            <div *ngIf="GA_Sanction_Date && GA_Sanction_Date.invalid &&  GA_Sanction_Date.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="GA_Sanction_Date.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                            <mat-datepicker-toggle matSuffix [for]="SDatepick"></mat-datepicker-toggle>
+                                            <mat-datepicker #SDatepick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Sanction
+                                                Date Validity</mat-label>
+                                            <input matInput formControlName='GA_Sanction_Valid_Date'
+                                                [matDatepicker]="SDateValpick" [max]="maxDate" placeholder="MM/DD/YYYY">
+                                            <div *ngIf="GA_Sanction_Valid_Date && GA_Sanction_Valid_Date.invalid &&  GA_Sanction_Valid_Date.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="GA_Sanction_Valid_Date.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="SDateValpick"></mat-datepicker-toggle>
+                                            <mat-datepicker #SDateValpick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Sanction Authority</mat-label>
+                                            <input matInput placeholder="Sanction Authority"
+                                                formControlName="GA_Sanction_Authority">
+                                            <div *ngIf="GA_Sanction_Authority && GA_Sanction_Authority.invalid &&  GA_Sanction_Authority.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="GA_Sanction_Authority.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GA_Sanction_Authority.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GA_Sanction_Authority.errors?.['NotSpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Purpose.</mat-label>
+                                            <input matInput placeholder="Purpose" formControlName="GA_Purpose">
+
+                                            <div *ngIf="GA_Purpose && GA_Purpose.invalid &&  GA_Purpose.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="GA_Purpose.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="GA_Purpose.errors?.['NotSpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="float-end" *ngIf="!GrantInAid_Form.invalid">
+                                    <button class="btn" mat-stroked-button color="primary">Add Grant In Aid</button>
+                                </div>
+                            </form>
+
+                            <div class="overflow-auto mt-8" *ngIf="GrantIn_Aid_Tableflag">
+                                <table mat-table [dataSource]="GrantAidSource" class="w-100">
+                                    <ng-container matColumnDef="UC Required">
+                                        <th mat-header-cell *matHeaderCellDef>UC Required</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.UC_Required}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Sanction No">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                            Sanction No</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Sanction_No}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Sanction Date">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Sanction Date
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Sanction_Date}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Sanction Date Validity">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Sanction Date
+                                            Validity
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Sanction_Date_Validity}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Sanction Authrity">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Sanction
+                                            Authrity
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Sanction_Authrity}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Purpose">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Purpose</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Purpose}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Action">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding"></th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <div (click)="GrantInAid_Delete()">
+                                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedGrant"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedGrant"
+                                        [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="4">
+                                            No data matching the filter.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="Institution_flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Instituion Record
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="Insitituion_Form" (ngSubmit)="Insitituion_Add()">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Insitituion Code</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="Insitituion_Code" (paste)="(false)"
+                                                [matAutocomplete]="InsititutionCode">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #InsititutionCode="matAutocomplete"
+                                                [displayWith]="Insitituion_dis">
+                                                <mat-option *ngFor="let option of InsitituionList | async"
+                                                    [value]="option" (click)="OnInsititutionSelect()">
+                                                    {{option.MajorHeadCodeName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Amount</mat-label>
+                                            <input matInput placeholder="Amount" formControlName="Amount">
+
+                                            <div *ngIf="Amount && Amount.invalid &&  Amount.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Amount.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Amount.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Amount.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="float-end" *ngIf="!Insitituion_Form.invalid">
+                                    <button class="btn" mat-stroked-button color="primary">Add Insitituion</button>
+                                </div>
+                            </form>
+
+                            <div class="overflow-auto mt-8" *ngIf="Insitituion_TabFlag">
+                                <table mat-table [dataSource]="InsitituionSource" class="w-100">
+                                    <ng-container matColumnDef="Insitituion Code">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                            Insititution Code</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Insitituion_Code}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Insitituion Name">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                            Insitituion Name</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Insitituion_Name}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Insitituion Amount">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Insitituion
+                                            Amount
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Insitituion_Amount}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Action">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding"></th>
+                                        <td mat-cell *matCellDef="let element let i=index" class="table-col-padding">
+                                            <div (click)="Insitituion_Delete(i,element)">
+                                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedInsitituion"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedInsitituion"
+                                        [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="4">
+                                            No data matching the filter.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="Pension_flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Pension Book
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="PensionBForm" (ngSubmit)="Pension_Add()">
+                                <div class="row">
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">PPO No.</mat-label>
+                                            <input matInput placeholder="PPo No." formControlName="PPoNo"
+                                                maxlength="10">
+
+                                            <div *ngIf="PPoNo && PPoNo.invalid &&  PPoNo.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="PPoNo.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="PPoNo.errors?.['NotSpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4 mt-4">
+                                        <mat-radio-group aria-label="Select an option"
+                                            (change)="OnPensionFlagChange($event)">
+                                            <mat-radio-button color="primary" [checked]="true" class="ms-3" value="P">
+                                                p</mat-radio-button>
+                                            <mat-radio-button color="primary" class="ms-3"
+                                                value="F">F</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Cash</mat-label>
+                                            <input matInput placeholder="Cash" formControlName="PPoCash" maxlength="10">
+
+                                            <div *ngIf="PPoCash && PPoCash.invalid &&  PPoCash.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="PPoCash.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="PPoCash.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="float-end" *ngIf="!PensionBForm.invalid">
+                                    <button class="btn" mat-stroked-button color="primary">Add Pension Detail</button>
+                                </div>
+                            </form>
+
+                            <div class="overflow-auto mt-8" *ngIf="Pension_Tableflag">
+                                <table mat-table [dataSource]="PensionSource" class="w-100">
+                                    <ng-container matColumnDef="PPO No">
+                                        <th mat-header-cell *matHeaderCellDef>PPO No.</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.PPO_No}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Cash Amount">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                            Cash Amount</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Cash_Amt}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="PPO Flag">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">PPO Flag
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.PPO_Flag}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Action">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding"></th>
+                                        <td mat-cell *matCellDef="let element let i=index" class="table-col-padding">
+                                            <div (click)="Pension_Delete(i,element)">
+                                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedPension"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedPension"
+                                        [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="4">
+                                            No data matching the filter.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="Section_flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Sanction Detail
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="SanctionDForm">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">FD Sanction No.</mat-label>
+                                            <input matInput placeholder="FD Sanction No"
+                                                formControlName="FD_SanctionNo">
+
+                                            <div *ngIf="FD_SanctionNo && FD_SanctionNo.invalid &&  FD_SanctionNo.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="FD_SanctionNo.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="FD_SanctionNo.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="FD_SanctionNo.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">FD Sanction
+                                                Date</mat-label>
+                                            <input matInput formControlName='FD_SanctionDate'
+                                                [matDatepicker]="FDSdatePick" [max]="maxDate" placeholder="MM/DD/YYYY">
+                                            <div *ngIf="FD_SanctionDate && FD_SanctionDate.invalid &&  FD_SanctionDate.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="FD_SanctionDate.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="FDSdatePick"></mat-datepicker-toggle>
+                                            <mat-datepicker #FDSdatePick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Order No.</mat-label>
+                                            <input matInput placeholder="Order No." formControlName="Order_NO">
+                                            <div *ngIf="Order_NO && Order_NO.invalid &&  Order_NO.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Order_NO.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Order_NO.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Order_NO.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">FD Sanction
+                                                Date</mat-label>
+                                            <input matInput formControlName='Order_Date' [matDatepicker]="SacDatepick"
+                                                [max]="maxDate" placeholder="MM/DD/YYYY">
+                                            <div *ngIf="Order_Date && Order_Date.invalid &&  Order_Date.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Order_Date.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="SacDatepick"></mat-datepicker-toggle>
+                                            <mat-datepicker #SacDatepick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="PDAcc_flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    PD Account
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="PDACCForm" (ngSubmit)="Get_AccName()">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">PD Account No.</mat-label>
+                                            <input matInput placeholder="PD Account No" formControlName="PDAccount_No">
+                                            <div *ngIf="PDAccount_No && PDAccount_No.invalid &&  PDAccount_No.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="PDAccount_No.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="PDAccount_No.errors?.['maxLength'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="PDAccount_No.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4 p-4">
+                                        {{PdAcc_Name}}
+                                    </div>
+                                </div>
+                                <div class="float-end" *ngIf="!PDACCForm.invalid">
+                                    <button class="btn" mat-stroked-button color="primary">Get A/C Name</button>
+                                </div>
+                            </form>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="Service_flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Service Head Block Details
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="ServiceBlockForm">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Major Head</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="ServiceMajorHead" [(ngModel)]="SelecService_Majorhead"
+                                                (paste)="(false)" [matAutocomplete]="Service_MajorH">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #Service_MajorH="matAutocomplete"
+                                                [displayWith]="Service_Major">
+                                                <mat-option *ngFor="let option of SBMajorHeadList | async"
+                                                    [value]="option"
+                                                    (click)="OnSBMajorHeadSelected(SelecService_Majorhead)">
+                                                    {{option.MajorHeadCodeName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>Detail Head</mat-label>
+                                            <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                formControlName="ServiceDetailsHead"
+                                                [(ngModel)]="SelectService_DetailHeadd" (paste)="(false)"
+                                                [matAutocomplete]="Details_service">
+                                            <mat-icon class=""
+                                                style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                            </mat-icon>
+                                            <mat-autocomplete #Details_service="matAutocomplete"
+                                                [displayWith]="Service_Detailhead">
+                                                <mat-option *ngFor="let option of SBDetailsHeadList | async"
+                                                    [value]="option"
+                                                    (click)="OnService_DetailHeadSelected(SelectService_DetailHeadd)">
+                                                    {{option.groupsubheadname}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="WorkB_Flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Work Detail Book
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="WorkDBForm">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Cheque No.</mat-label>
+                                            <input matInput placeholder="Cheque No." maxlength="6"
+                                                formControlName="Cheque_No">
+
+                                            <div *ngIf="Cheque_No && Cheque_No.invalid &&  Cheque_No.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Cheque_No.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Cheque_No.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Cheque Date</mat-label>
+                                            <input matInput formControlName='Cheque_Date'
+                                                [matDatepicker]="Cheque_DatePick" [max]="maxDate"
+                                                placeholder="MM/DD/YYYY">
+                                            <div *ngIf="Cheque_Date && Cheque_Date.invalid &&  Cheque_Date.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Cheque_Date.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="Cheque_DatePick"></mat-datepicker-toggle>
+                                            <mat-datepicker #Cheque_DatePick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="RDCCD_Flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    RDCCD Block
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="RDCCDForm" (ngSubmit)="RDCCD_Add()">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Challan No.</mat-label>
+                                            <input matInput placeholder="Challan No." maxlength="15"
+                                                formControlName="Challan_No">
+
+                                            <div *ngIf="Challan_No && Challan_No.invalid &&  Challan_No.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Challan_No.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Challan_No.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Challan Date</mat-label>
+                                            <input matInput formControlName='Challan_Date'
+                                                [matDatepicker]="Challan_DatePick" [max]="maxDate"
+                                                placeholder="MM/DD/YYYY">
+                                            <div *ngIf="Challan_Date && Challan_Date.invalid &&  Challan_Date.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Challan_Date.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="Challan_DatePick"></mat-datepicker-toggle>
+                                            <mat-datepicker #Challan_DatePick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Amount</mat-label>
+                                            <input matInput placeholder="Amount" maxlength="10"
+                                                formControlName="RDAmount">
+
+                                            <div *ngIf="RDAmount && RDAmount.invalid &&  RDAmount.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="RDAmount.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="RDAmount.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Sr.No</mat-label>
+                                            <input matInput placeholder="Sr No." maxlength="5" formControlName="Sr_No">
+
+                                            <div *ngIf="Sr_No && Sr_No.invalid &&  Sr_No.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Sr_No.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Sr_No.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Name</mat-label>
+                                            <input matInput placeholder="Name" maxlength="5" formControlName="Name">
+
+                                            <div *ngIf="Name && Name.invalid &&  Name.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Name.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Name.errors?.['NotSpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="float-end" *ngIf="!RDCCDForm.invalid">
+                                    <button class="btn" mat-stroked-button color="primary">Add RDCCD Detail</button>
+                                </div>
+                            </form>
+                            <div class="overflow-auto mt-8" *ngIf="RDCCD_Tableflag">
+                                <table mat-table [dataSource]="RDCCDSource" class="w-100">
+                                    <ng-container matColumnDef="SR. No.">
+                                        <th mat-header-cell *matHeaderCellDef>SR. No.</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.SRNo}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Challan No">
+                                        <th mat-header-cell *matHeaderCellDef>Challan No.</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Challan_No}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Challan Date">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                            Challan Date</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Challan_Date}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Amount">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Amount
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Amount}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Party Name">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Party Name
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Party_Name}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="GRN">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">GRN
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.GRN}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Action">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding"></th>
+                                        <td mat-cell *matCellDef="let element let i=index" class="table-col-padding">
+                                            <div (click)="RDCCD_Delete(i,element)">
+                                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedRDCCD"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedRDCCD"
+                                        [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="4">
+                                            No data matching the filter.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+
+            <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="WorkInv_Flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Work Invoice Detail
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="WorkInvForm" (ngSubmit)="WorkInvoice_Add()">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Invoice Date</mat-label>
+                                            <input matInput formControlName='Invoice_Date'
+                                                [matDatepicker]="Invoice_DatePick" [max]="maxDate"
+                                                placeholder="MM/DD/YYYY">
+                                            <div *ngIf="Invoice_Date && Invoice_Date.invalid &&  Invoice_Date.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Invoice_Date.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="Invoice_DatePick"></mat-datepicker-toggle>
+                                            <mat-datepicker #Invoice_DatePick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Invoice No.</mat-label>
+                                            <input matInput placeholder="Invoice No." maxlength="15"
+                                                formControlName="Invoice_No">
+
+                                            <div *ngIf="Invoice_No && Invoice_No.invalid &&  Invoice_No.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="Invoice_No.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="Invoice_No.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Work Order Date</mat-label>
+                                            <input matInput formControlName='WorkO_Date'
+                                                [matDatepicker]="WorkO_DatePick" [max]="maxDate"
+                                                placeholder="MM/DD/YYYY">
+                                            <div *ngIf="WorkO_Date && WorkO_Date.invalid &&  WorkO_Date.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="WorkO_Date.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="WorkO_DatePick"></mat-datepicker-toggle>
+                                            <mat-datepicker #WorkO_DatePick></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Work Order No.</mat-label>
+                                            <input matInput placeholder="Work Order No." maxlength="15"
+                                                formControlName="WorkO_No">
+
+                                            <div *ngIf="WorkO_No && WorkO_No.invalid &&  WorkO_No.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="WorkO_No.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="WorkO_No.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Name</mat-label>
+                                            <input matInput placeholder="Name" maxlength="5"
+                                                formControlName="WorkIName">
+
+                                            <div *ngIf="WorkIName && WorkIName.invalid &&  WorkIName.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="WorkIName.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="WorkIName.errors?.['NotSpecialChar'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="float-end" *ngIf="!WorkInvForm.invalid">
+                                    <button class="btn" mat-stroked-button color="primary">Add Work Invoice</button>
+                                </div>
+                            </form>
+                            <div class="overflow-auto mt-8" *ngIf="WorkITableflag">
+                                <table mat-table [dataSource]="WorkInvoiceSource" class="w-100">
+                                    <ng-container matColumnDef="Invoice No">
+                                        <th mat-header-cell *matHeaderCellDef>Invoice No.</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Invoice_No}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Invoice Date">
+                                        <th mat-header-cell *matHeaderCellDef>Invoice Date</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Invoice_Date}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Work Order No">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                            Work Order No.</th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.WorkO_No}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Work Order Date">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Work Order Date
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.WorkO_Date}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Party Name">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding">Party Name
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                            <p class="m-0">{{element.Party_Name}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Action">
+                                        <th mat-header-cell *matHeaderCellDef class="table-col-padding"></th>
+                                        <td mat-cell *matCellDef="let element let i=index" class="table-col-padding">
+                                            <div (click)="WorkInvoice_Delete()">
+                                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedWorkInvoice"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedWorkInvoice"
+                                        [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell" colspan="4">
+                                            No data matching the filter.
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </div>
+            </div>
+             <div class="accordions-input-container">
+                <div class="accordion-item mt-4" *ngIf="PayAllow_Flag">
+                    <mat-accordion>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="medium-font">
+                                    Pay Allowances (Alt+Y)
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form class="p-3" [formGroup]="PayallowForm">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Pay Id</mat-label>
+                                            <input matInput placeholder="Pay Id" maxlength="6" formControlName="PayId">
+                                            <div *ngIf="PayId && PayId.invalid &&  PayId.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="PayId.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="PayId.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field appearance="legacy" class="w-100">
+                                            <mat-label class="custom-input-lable">Amount</mat-label>
+                                            <input matInput placeholder="Amount" maxlength="13"
+                                                formControlName="PayAmount">
+                                            <div *ngIf="PayAmount && PayAmount.invalid &&  PayAmount.touched"
+                                                class="text-danger error_msg">
+                                                <div *ngIf="PayAmount.errors?.['Required'] as error">
+                                                    {{error}}
+                                                </div>
+                                                <div *ngIf="PayAmount.errors?.['Numeric'] as error">
+                                                    {{error}}
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="float-end" *ngIf="!PayallowForm.invalid">
+                                    <button class="btn" (click)="getNewFinalBHList()" mat-stroked-button
+                                        color="primary">Add Pay
+                                        Allowances</button>
+                                </div>
+                                <div>
+                                    <mat-card class="scrollable-height-container">
+                                        <mat-label class="p-3"><b>(Alt+Y)</b></mat-label>
+                                        <div *ngFor="let item of PayAllowData" class="mt-4">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                <mat-form-field appearance="legacy" class="w-100">
+                                                    <mat-label class="custom-input-lable">{{item.name}}</mat-label>
+                                                    <input matInput placeholder="Enter Amount" [ngModel]="item.Amount"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                </mat-form-field>
+
+                                            </div>
+                                        </div>
+
+                                        <mat-label>Total: {{PayAllowSum}}</mat-label>
+                                    </mat-card>
+                                </div>
+                            </form>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div> 
+
+            <div class="float-end mt-2" *ngIf="BillEntry_flag == 2">
+
+                <div class="float-end" *ngIf="!BillEntryForm.invalid && ButtonDisable">
+
+                    <button (click)="Save_objectionDetails()" class="btn ml-2 ms-3" mat-stroked-button
+                        color="primary">Put
+                        Objection</button>
+
+                    <button (click)="Save()" class="btn ms-3" mat-raised-button color="primary">Submit</button>
+                </div>
+                <div class="float-end" *ngIf="BillEntry_flag == 2">
+                    <button class="btn" mat-stroked-button (click)="onReset()" color="primary">Reset</button>
+                </div>
+            </div>
+
+
+
+            <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4" *ngIf="IsOpen">
+                <app-view-document [billNo]="RefNo"></app-view-document>
+            </div> -->
+            <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4" *ngIf="IsObjectionOpen">
+                <app-bill-entry-objection [ObjBillType]="IsObjectionBill"
+                    [Billcode]="BillvoucheList.billCode"></app-bill-entry-objection>
+            </div> -->
+            <div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4" *ngIf="IsObjectionOpen">
+                    <app-objectiondialog [ObjBillDetails]="IsObjectionBill"></app-objectiondialog>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+
+
+</div>
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

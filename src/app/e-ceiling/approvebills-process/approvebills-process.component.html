@@ -1,0 +1,303 @@
+
+<div class="container-fluid ">
+    <mat-card class="card-shadow mb-1">
+        <!-- <img src="./assets/images/Management_icon.svg">
+        <span class="ms-3 font-weight-bold"><strong>Get Record Details</strong> </span> -->
+        <div class="d-flex justify-content-between my-3">
+                
+            <span><img src="./assets/images/Management_icon.svg">  <span class="ms-3 font-weight-bold"><strong>e-Ceiling DTA </strong> </span></span> 
+               <!-- <button  class="px-2 float-start" mat-stroked-button color="primary"
+               ><strong class="p-2">Process Level</strong>  </button> -->
+               </div>
+    
+       <div>
+        <!-- approveBillForm -->
+        <form class=" " [formGroup]="RecordDateForm"  (ngSubmit)="getRecords()" autocomplete="off">
+            <div class="row   ">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              
+                <mat-label for="fromDate" >Permission Date:</mat-label>
+                <input matInput [matDatepicker]="RecordDatepicker"  [max]="maxDate" name="fromDate" title="Record Date"
+                    formControlName='recordDate'>
+                <mat-datepicker-toggle matSuffix [for]="RecordDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #RecordDatepicker ></mat-datepicker>
+                <mat-error *ngIf="RecordDateForm.invalid">Please enter valid Permission date</mat-error>
+            </mat-form-field>
+            </div>
+          
+        </div>
+        <!-- Filter Expension Panel -->
+        <mat-expansion-panel  class="mt-2">
+        
+            <mat-expansion-panel-header>
+                <mat-panel-title> Bill Filter... </mat-panel-title>
+                <button mat-icon-button variant="icon-button" (keydown.enter)="$event.stopPropagation();"
+                    (click)="$event.stopPropagation();">
+                    <!-- <mat-icon> vertical_align_bottom</mat-icon> -->
+                </button>
+            </mat-expansion-panel-header>
+
+            <div class="row" >
+
+              
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+             
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label for="recBillType">Set Bill Type</mat-label>
+                            <input type="tel" placeholder="Select  Bill Type" aria-label="Number" matInput
+                                (paste)="(false)" formControlName="recBillType" [matAutocomplete]="autoRecBillType"  />
+                            <mat-icon style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #autoRecBillType="matAutocomplete" [displayWith]="displayBillType"    (closed)="onBillTypeSelected('recordDate')">
+                                <mat-option   *ngFor="let option of recBillTypelist | async" [value]="option">
+                                    {{ option.BillType }}
+                                </mat-option>
+                            </mat-autocomplete>
+                         
+                        </mat-form-field>
+                    </div>
+        
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4" >
+                        <mat-form-field class="w-100">
+                            <mat-label>Set Sub Bill Type</mat-label>
+                            <mat-select disableOptionCentering panelClass="myPanelClass" formControlName="recSubBillType">
+                                <mat-option value="">select </mat-option>
+                                <mat-option *ngFor="let option of recSubBillTypeData "
+                                    [value]="option">{{option.SubType}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4" >
+                        <mat-form-field class="w-100" appearance="legacy">
+                          
+                            <mat-label>Select Budget Head</mat-label>
+                            <input type="tel" placeholder="Select Budget Head" aria-label="Number" matInput
+                                (paste)="(false)" formControlName="recBudgetHead" [matAutocomplete]="autoRecBudgetHead" (keyup)="applyFilter($any($event.target).value,'recorddate')">
+                            <mat-icon style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #autoRecBudgetHead="matAutocomplete" [displayWith]="displayBudgetHead">
+                                <mat-option *ngFor="let option of recBudgetHeadlist | async" [value]="option" >
+                                    {{ option.groupsubheadname }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4" >
+                        <mat-form-field class="w-100" appearance="legacy">
+
+                            <input type="text" placeholder="Select Object Head" aria-label="Number" matInput
+                                (paste)="(false)" formControlName="recObjectHead" [matAutocomplete]="autoObject" >
+                            <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #autoObject="matAutocomplete" [displayWith]="objectDisplayFn">
+                                <mat-option *ngFor="let option of recObjectHeadOptions | async" [value]="option">
+                                    {{option.objectHeadCodeName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                       
+                        </mat-form-field>
+                    </div>
+            </div>
+
+        </mat-expansion-panel>
+        <div class="d-flex justify-content-end my-3">
+            <button type="submit" class="px-2 float-start" mat-raised-button color="primary"
+            >Get Records</button>
+            </div>
+        </form>
+        </div>
+      
+ 
+    <!-- <div class="d-flex justify-content-between my-3" *ngIf=" (this.tableDataSource.data.length >0) ||(this.refNoWiseData.data.length > 0) ">
+        <button mat-raised-button color="primary" (click)="exportToPdf()">
+            pdf </button>
+            </div> -->
+      </mat-card>
+<mat-card class="card-shadow mt-1" [hidden]="!(this.tableDataSource.data.length >0)"   class="fade"
+    [@state]="state" (@state.done)="animationDone($event)" >
+
+   
+
+     
+
+        <div class="table-container mt-4">
+            <h3><mat-label  for="fromDate" >CD Reference Number Wise ECS Permission</mat-label></h3>  
+            <div class="col-12 cl-sm-12 col-md-6">
+                <mat-form-field class="example-chip-list w-100 search_token_search_bar"
+                    appearance="legacy">
+                    <mat-icon matSuffix class=" primary mb-2">search</mat-icon>
+                    <input matInput (keyup)="applyFilter1($event)"
+                        placeholder="Search here"
+                        #input>
+                </mat-form-field>
+            </div>
+            
+            <div class="  container-fluid scroll-container align-items-left" ngClass="example-container" style="overflow: auto">   
+                <table mat-table [id]="table1" [dataSource]="tableDataSource"  matSort class="mat-elevation-z8 approve-id-table">
+
+                    <ng-container matColumnDef="SrNo" sticky>
+                        <th mat-header-cell *matHeaderCellDef  class="table-col-padding " style="text-align: left;">
+                          Sr No.
+                       </th>
+                       <td mat-cell *matCellDef="let item; let j = index" class="table-col-padding"  style="text-align: left;"> {{ (j+1) +
+                           (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                       <td mat-footer-cell *matFooterCellDef  style="text-align: left;">Total </td>
+                     </ng-container>
+                    <ng-container matColumnDef="SelectionList" sticky>
+                        <th mat-header-cell *matHeaderCellDef class="table-col-padding"  style="text-align: left;">
+                            <div class="checkbox-component m-0">
+                                <!-- <mat-checkbox class="component-border checkbox-radius-4" color="primary"></mat-checkbox> -->
+                                     
+                                <mat-checkbox
+                                class="component-border checkbox-radius-4"
+                                color="primary" (change)="$event ? masterToggle() : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()"> 
+                  </mat-checkbox>
+                            </div>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index" class="table-col-padding"  style="text-align: left;">
+                            <div class="checkbox-component m-0">
+                                <!-- <mat-checkbox class="component-border checkbox-radius-4" color="primary"></mat-checkbox> -->
+                                <mat-checkbox 
+                                class="component-border checkbox-radius-4"
+                                color="primary"
+                                (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(element) : null"
+                                [checked]="selection.isSelected(element)">
+                  </mat-checkbox>
+                            </div>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef  style="text-align: left;">Selected Bills : {{selectedBills?selectedBills:0}}</td>
+                    </ng-container>
+
+              
+                    <!-- <ng-container matColumnDef="FILTERID">
+                        <th mat-header-cell *matHeaderCellDef   mat-sort-header class="table-col-padding" style="text-align: left;">FILTER ID</th>
+                        <td mat-cell *matCellDef="let element" class="table-col-padding">
+                            <p class="m-0">{{element.FILTER_LOG_ID}}</p>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef> </td>
+                    </ng-container> -->
+
+                    <ng-container matColumnDef="CDE_REFNO"  stickyEnd>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-col-padding" style="text-align: left;">CDE Referece NO</th>
+                        <td mat-cell *matCellDef="let element" class="table-col-padding"  style="text-align: left;">
+                            <p class="m-0">{{element.CDE_REFNO}}</p>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="CEILING_TYPE"  >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-col-padding" style="text-align: left;"> CEILING TYPE</th>
+                        <td mat-cell *matCellDef="let element" class="table-col-padding"  style="text-align: left;">
+                            <p class="m-0">{{element.CEILING_TYPE}}</p>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <ng-container matColumnDef="Percentage/Range"  >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-col-padding" style="text-align: left;">Amount Percentage/Range</th>
+                        <td mat-cell *matCellDef="let element" class="table-col-padding"  style="text-align: left;">
+                            <p class="m-0">{{(element.AMOUNT_PERCENT !== 0)?(element.AMOUNT_PERCENT +'%'):(element.START_AMOUNT || element.END_AMOUNT)?((element.START_AMOUNT |  currency:'INR') +' - '+( element.END_AMOUNT |  currency:'INR')) :'-'}}</p>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <ng-container matColumnDef="BILL_COUNT"  >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-col-padding" style="text-align: left;"> BILLCOUNT</th>
+                        <td mat-cell *matCellDef="let element" class="table-col-padding"  style="text-align: left;">
+                            <p class="m-0">{{element.BILL_COUNT}}</p>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <ng-container matColumnDef="PERMISSION_DATE"  >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-col-padding" style="text-align: left;">PERMISSION DATE</th>
+                        <td mat-cell *matCellDef="let element" class="table-col-padding"  style="text-align: left;">
+                            <p class="m-0">{{element.PERMISSION_DATE | date :'short'}}</p>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <ng-container matColumnDef="CEILING VALUE"  >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-col-padding" style="text-align: left;">CEILING VALUE</th>
+                        <td mat-cell *matCellDef="let element" class="table-col-padding"  style="text-align: left;">
+                            <p class="m-0">{{element.BILL_TYPE}}{{element.BILL_SUBTYPE}}{{element.BUDGET_HEAD}}{{element.OBJECT_HEAD}}{{element.PD_ACCOUNT}}{{(element.CEILING_TYPE == 'ALL')?'   -':''}}</p>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="TOTAL_AMOUNT"   >
+                        <th mat-header-cell *matHeaderCellDef  mat-sort-header class="table-col-padding" style="text-align: left;">TOTAL AMOUNT</th>
+                        <td mat-cell *matCellDef="let element" class="table-col-padding"  style="text-align: left;">
+                            <p class="m-0">{{element.TOTAL_AMOUNT}}</p>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef  style="text-align: left;">{{  calculate('TOTAL_AMOUNT')}} </td>
+                    </ng-container>
+
+                    <!-- ['FILTER ID', 'CDE_REFNO', 'AMOUNT']; -->
+
+                    <ng-container matColumnDef="action" id="1" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">Action</th>
+                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                        <button class="btn action-icon p-0"><img  src="../../../assets/images/icon_eye.svg" alt=""></button>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef  style="text-align: left;"></td>
+                </ng-container> 
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns,sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                    <tr mat-footer-row *matFooterRowDef="displayedColumns,sticky: true" ></tr>
+                    <!-- <tr id="footer" mat-footer-row *matFooterRowDef="dynamicColumns1;sticky=true" ></tr> -->
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No data matching the filter</td>
+                    </tr>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </table>
+        </div>
+        </div>
+
+        <div>
+            <mat-paginator #myPaginator [length]="100" [hidden]="true" [pageSize]="5" [pageSizeOptions]="[5,10,15, 25, 100]"
+                aria-label="Select page" showFirstLastButtons>
+            </mat-paginator>
+        </div>
+
+       
+
+   
+</mat-card>
+</div>
+<div  class="container-fluid mt-1 ">
+
+    <div>
+        <div  *ngIf="this.refNoWiseData.data.length > 0" >
+            <mat-card class="card-shadow mt-1">
+            <h3 ><mat-label for="fromDate" >File Uploaded ECS Permission</mat-label> </h3>
+            <div class="  container-fluid scroll-container" style="overflow: auto">
+             <app-table [id]="table3" [datasource]="refNoWiseData" [columns]="displayedColumns4" [sticky]=true [filterField]="true" [checkList]="userType =='P'?false:true" [Total]="['TOTAL_AMOUNT']"   [pdfButton]=false (ParentComponet)="ParentComponent($event)"></app-table>  
+          </div>
+
+
+
+
+        </mat-card>
+          </div>
+        
+
+         
+
+    </div>
+<mat-card class="card-shadow mt-1 mb-2" *ngIf="this.refNoWiseData.data.length > 0 ||(this.tableDataSource.data.length >0) " >
+<div class="d-flex justify-content-end my-3 p-3">
+    <button mat-raised-button color="primary" type="submit" (click)="logSelection()">Process Request</button>
+</div>
+</mat-card>
+
+
+</div>
+
+<!-- loader start -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>
+<!-- loader End -->

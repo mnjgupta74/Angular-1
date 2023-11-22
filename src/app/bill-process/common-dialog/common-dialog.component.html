@@ -1,0 +1,965 @@
+
+<!------------------------------------------------------------------------------------------------------------------------------------>
+<!-- Open Popup For "BillEntry Remark Error Code Details"---------------------------begiN--->
+<div class="content-wrapper" id="{{message}}" *ngIf="id==='billError'">
+
+    <div class="d-flex justify-content-between align-item-center">
+        <h2 class="py-3 mb-0">Error Details</h2>
+        <span>
+            <div mat-dialog-close><img src="./assets/images/cross.svg" alt=""></div>
+        </span>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="col-md-12 col-12" *ngFor="let ErrList of errorlist">
+        <mat-card class="mb-3">
+            <h3 class="error-text"> *{{ErrList.MSG}} </h3>
+        </mat-card>
+    </div>
+</div>
+<!-- Open Popup For "BillEntry Remark Error Code Details"---------------------------enD--->
+
+
+
+<!------------------------------------------------------------------------------------------------------------------------------------>
+<!-- Open Popup For "TreasuryOfficerList Remark Details"---------------------------begiN--->
+<div class="content-wrapper" id="{{reasonBillCode}}" *ngIf="id=='TOReasonDialog'">
+    <div class="overlay">
+        <div class="popup">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Add Reason for Pending</h3>
+                <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+                    <!-- <mat-icon class="close-icon">close</mat-icon> -->
+                    <img src="./assets/images/cross.svg" alt="">
+                </button>
+            </div>
+
+            <div class="col-md-12 col-12">
+                <div class="fieldset">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-6 col-6">
+                        </div>
+                        <mat-card>
+                            <form class="example-container" #options="ngForm" [formGroup]="TreasOfficeFormRemark">
+                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"> -->
+                                <mat-form-field class="example-full-width w-100">
+                                    <mat-label>Enter Remark:</mat-label>
+                                    <textarea matInput name="Remark" cols="100" rows="5" formControlName="Remark"
+                                        placeholder="Please Enter Remark !" [(ngModel)]="remarkstatus"
+                                        required></textarea>
+                                    <!--<input matInput name="Remark" cols="200" rows="5" formControlName="Remark"  placeholder="Please Enter Remark !"  required/>-->
+                                </mat-form-field>
+
+                                <!-- </div> -->
+
+                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"> -->
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button mat-raised-button color="primary"
+                                        (click)="PutTORemark_Action(this.popup= false)" [disabled]="!options.valid"
+                                        type="submit"> Submit </button>
+                                    <!-- </div> <br> -->
+
+                                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"> -->
+                                    <button mat-raised-button color="primary" mat-raised-button color="primary"
+                                        (click)="PutTORemark_Reset()" type="submit">Reset</button>
+                                </div>
+                                <!-- </div> <br> -->
+                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <button mat-raised-button color="primary" mat-raised-button color="primary" (click)="popup = false" type="submit">Close</button>
+                                    </div> -->
+                            </form>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Open Popup For "TreasuryOfficerList Remark Details"---------------------------enD--->
+
+
+
+<!------------------------------------------------------------------------------------------------------------------------------------> 
+<!-- Open Popup For "BillEncashment View Details"---------------------------begiN--->
+<div class="content-wrapper" id="{{EncashfetchedBillCode}}" *ngIf="id=='EncashmentViewBillDialog'">
+    <div class="overlay">
+        <div class="popup">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Voucher Main Detail</h2>
+                <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+                    <!-- <mat-icon class="close-icon">close</mat-icon> -->
+                    <img src="./assets/images/cross.svg" alt="">
+                </button>
+            </div>
+
+            <div class="col-md-12 col-12">
+                <!-- <div class="fieldsetViewBill"> -->
+                <div class="row">
+
+                    <!-- <div class="card">  -->
+                    <!-- <form class="example-container" #options="ngForm" [formGroup]="BillEncashmentForm">  -->
+                    <mat-card class="mb-3">
+                        <form [formGroup]="BillEncashmentViewBillForm">
+
+                            <!-- <div class="row mt-2 scroll-container"  style="overflow: auto">  -->
+                            <div class="row mt-2">
+                                <!-- <div class="mt-2 container"> -->
+                                <div class="fieldsetViewBill row mt-1">
+                                    <h3><span>Bill Details:</span></h3>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>TokenNo*</mat-label>
+                                            <input matInput type="tel" placeholder="tokennoViewBill"
+                                                name="tokennoViewBill" (paste)="(false)"
+                                                formControlName="tokennoViewBill" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>BillNoId*</mat-label>
+                                            <input matInput type="tel" placeholder="Billnoid" name="Billnoid"
+                                                (paste)="(false)" formControlName="Billnoid" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>DDODetail*</mat-label>
+                                            <input matInput type="tel" placeholder="ddodetail" name="ddodetail"
+                                                (paste)="(false)" formControlName="ddodetail" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label>DDOBillDetail*</mat-label>
+                                            <input matInput type="tel" placeholder="ddobilldetail" name="ddobilldetail"
+                                                (paste)="(false)" formControlName="ddobilldetail" />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+
+                                <div class="fieldsetViewBill row mt-4">
+                                    <h3><span>Budget Details:</span></h3>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-90" appearance="legacy">
+                                            <mat-label>Budgethead*</mat-label>
+                                            <input matInput type="tel" placeholder="budgethead" name="budgethead"
+                                                (paste)="(false)" formControlName="budgethead" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-100" appearance="legacy">
+                                            <mat-label> BillType/SubType*</mat-label>
+                                            <input matInput type="tel" placeholder="billtypecode" name="billtypecode"
+                                                (paste)="(false)" formControlName="billtypecode" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-50" appearance="legacy">
+                                            <mat-label>officeId*</mat-label>
+                                            <input matInput type="tel" placeholder="officeid" name="officeid"
+                                                (paste)="(false)" formControlName="officeid" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-50" appearance="legacy">
+                                            <mat-label>DDOCode*</mat-label>
+                                            <input matInput type="tel" placeholder="ddocode" name="ddocode"
+                                                (paste)="(false)" formControlName="ddocode" />
+                                        </mat-form-field>
+                                    </div>
+
+
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-50" appearance="legacy">
+                                            <mat-label>DivisionCode*</mat-label>
+                                            <input matInput type="tel" placeholder="divisioncode" name="divisioncode"
+                                                (paste)="(false)" formControlName="divisioncode" />
+                                        </mat-form-field>
+                                    </div>
+
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-50" appearance="legacy">
+                                            <mat-label>PaymentMode*</mat-label>
+                                            <input matInput type="tel" placeholder="paymode" name="paymode"
+                                                (paste)="(false)" formControlName="paymode" />
+                                        </mat-form-field>
+                                    </div>
+
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-50" appearance="legacy">
+                                            <mat-label>GrossAmount*</mat-label>
+                                            <input matInput type="tel" placeholder="grossamount" name="grossamount"
+                                                (paste)="(false)" formControlName="grossamount" />
+                                        </mat-form-field>
+                                    </div>
+
+
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-form-field class="w-50" appearance="legacy">
+                                            <mat-label>NetAmount*</mat-label>
+                                            <input matInput type="tel" placeholder="netamount" name="netamount"
+                                                (paste)="(false)" formControlName="netamount" />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Open Popup For "BillEncashment View Details"---------------------------enD--->
+
+
+
+<!------------------------------------------------------------------------------------------------------------------------------------>
+<!-- Open Popup For "New Token Generate Print Details" --------------------------------------------begiN--->
+<div class="content-wrapper" *ngIf="id=='TokenReceipt'" id="Content" #Content>
+    <div class="overlay">
+        <div class="popup">
+            <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+                <!-- <mat-icon class="close-icon">close</mat-icon> -->
+                <img src="./assets/images/cross.svg" alt="">
+            </button>
+
+
+
+            <div class="col-md-12 col-12">
+                <div class="row">
+                    <h2 class="text-center text text-decoration-underline mt-3">Token Receipt</h2>
+                    <div class="d-flex justify-content-end">
+                        <button mat-raised-button color="primary" (click)=" ExporttoPdf() ">
+                            pdf
+                        </button>
+                    </div>
+
+                    <div class="box mb-3 mt-2">
+                        <!-- <mat-card class="mt-2 mb-3"> -->
+                        <form [formGroup]="tokenReceiptForm">
+                            <div class="row mt-2">
+                                <p placeholder="DDO" name="DDO" (paste)="(false)"><b>DDO : </b>{{DDOcode}} </p>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <mat-label>Token No :</mat-label>
+                                </div>
+                                <div class="col-3">
+                                    <input matInput type="tel" (paste)="(false)" name="Token No"
+                                        formControlName="TokenNo" />
+                                </div>
+                                <div class="col-3">
+                                    <mat-label>ReferenceNo:</mat-label>
+                                </div>
+                                <div class="col-3">
+                                    <p> <input matInput type="tel" (paste)="(false)" name="Receipt Date"
+                                            formControlName="RefNo" /></p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <mat-label>Major Head :</mat-label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="text" aria-label="text" matInput (paste)="(false)"
+                                        formControlName="MajorHead">
+                                </div>
+
+
+                                <div class="col-2">
+                                    <mat-label>Bill Type:</mat-label>
+                                </div>
+                                <div class="col-4">
+                                    <p><input type="text" aria-label="text" matInput (paste)="(false)"
+                                            formControlName="BillType"> </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <mat-label>Net Amount :</mat-label>
+                                </div>
+                                <div class="col-3">
+                                    <input matInput type="tel" name="NetAmt" (paste)="(false)"
+                                        formControlName="NetAmt" />
+                                </div>
+
+                                <div class="col-3">
+                                    <mat-label>GrossAmount:</mat-label>
+                                </div>
+                                <div class="col-3">
+                                    <p> <input matInput type="text" name="GrossAmt" (paste)="(false)"
+                                            formControlName="GrossAmt" /> </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <mat-label>Receipt Date :</mat-label>
+                                </div>
+                                <div class="col-3">
+                                    <input matInput type="tel" (paste)="(false)" name="Receipt Date"
+                                        formControlName="Receipt" />
+                                </div>
+                            </div>
+                        </form>
+                        <p class="text-end"><span>{{treasuryName}}</span></p>
+                        <!-- </mat-card> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Open Popup For "New Token Generate Print Details" --------------------------------------------enD--->
+
+
+
+ <!------------------------------------------------------------------------------------------------------------------------------------>
+ <!-- Open Popup For "Cheque Print Preview Details" --------------------------------------------begiN--->
+ <div class="content-wrapper" id="{{ChequePrintToken}}"  *ngIf="id=='ChequePrintPreviewDialog'"> 
+    <div class="overlay">
+        <div class="popup">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <!-- ChequePrintBtnType -->
+                <div *ngIf="this.ChequePrintBtnType ==='PrintOk'">
+                    <button mat-raised-button color="primary" (click)=" PageChequePrint() ">
+                        Print
+                    </button> 
+              </div>
+                <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+                    <!-- <mat-icon class="close-icon">close</mat-icon> -->
+                    <img src="./assets/images/cross.svg" alt="">
+                </button>
+               
+                   
+
+
+                    <!-- <h2 class="text-center text text-decoration-underline mt-3">Cheque Print Preview</h2>  -->
+           
+            </div>
+             
+        <div class="col-md-12 col-12">
+            <!-- <div class="fieldsetViewBill"> -->
+                <div class="row">
+                
+                <!-- <div class="card">  -->
+                    <!-- <form class="example-container" #options="ngForm" [formGroup]="BillEncashmentForm">  -->
+                        <!-- <mat-card class="mb-3"> -->
+                            <form [formGroup]="ChequePrintPreviewForm">
+
+                                <!-- <div class="row mt-2 scroll-container"  style="overflow: auto">  -->
+                                <div class="row mt-2">
+
+                                <!-- <div class="mt-2 container"> -->
+
+
+                                    <div class="fieldsetViewBill row mt-1">
+                                        <!-- <h3><span>Cheque Print Details:</span></h3> -->
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="legacy">
+                                                        <!-- <mat-label>TokenNo</mat-label> -->
+                                                        <input matInput type="tel" placeholder="Token No" name="TokenNo"
+                                                            (paste)="(false)" formControlName="TokenNo" />
+                                                    </mat-form-field> 
+                                        </div>
+
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <!-- <mat-label>EmployeeId</mat-label> -->
+                                                <input matInput type="tel" placeholder="User" name="EmployeeId"
+                                                    (paste)="(false)" formControlName="EmployeeId" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <!-- <mat-label>MajorHead</mat-label> -->
+                                                <input matInput type="tel" placeholder="Budget Head" name="MajorHead"
+                                                    (paste)="(false)" formControlName="MajorHead" />
+                                            </mat-form-field>
+                                        </div>
+
+
+                                        
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <!-- <mat-label>DDOCode</mat-label> -->
+                                                <input matInput type="tel" placeholder="DDO Code" name="DDOCode"
+                                                    (paste)="(false)" formControlName="DDOCode" />
+                                            </mat-form-field>
+                                        </div>
+
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <!-- <mat-label>DDOBillNo</mat-label> -->
+                                                <input matInput type="tel" placeholder="DDO Bill No" name="DDOBillNo"
+                                                    (paste)="(false)" formControlName="DDOBillNo" />
+                                            </mat-form-field>
+                                        </div>
+
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <!-- <mat-label>DDOBillDate</mat-label> -->
+                                                <input matInput type="tel" placeholder="DDO Bill Date" name="DDOBillDate"
+                                                    (paste)="(false)" formControlName="DDOBillDate" />
+                                            </mat-form-field>
+                                        </div>
+ 
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <!-- <mat-label>officename</mat-label> -->
+                                                <input matInput type="tel" placeholder="Office Name" name="officename"
+                                                    (paste)="(false)" formControlName="officename" />
+                                            </mat-form-field>
+                                        </div>
+ 
+                                       <!--                                         
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <input matInput type="tel" placeholder="ChequePrint" name="ChequePrint"
+                                                    (paste)="(false)" formControlName="ChequePrint" />
+                                            </mat-form-field>
+                                        </div> -->
+
+   
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <input matInput type="tel" placeholder="Running Cheque No" name="RunningCheque"
+                                                    (paste)="(false)" formControlName="RunningCheque" />
+                                            </mat-form-field>
+                                        </div>
+                                               
+
+                                        
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <!-- <mat-label>CashAmt</mat-label> -->
+                                                <input matInput type="tel" placeholder="Cash Amt" name="CashAmt"
+                                                    (paste)="(false)" formControlName="CashAmt" />
+                                            </mat-form-field>
+                                        </div>
+
+
+                                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <input matInput type="tel" placeholder="PayType" name="PayType"
+                                                    (paste)="(false)" formControlName="PayType" />
+                                            </mat-form-field>
+                                        </div> -->
+
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <!-- <mat-label>ChequeDate</mat-label> -->
+                                                <input matInput type="tel" placeholder="Cheque Date" name="ChequeDate"
+                                                    (paste)="(false)" formControlName="ChequeDate" />
+                                            </mat-form-field>
+                                        </div>
+ 
+                                  </div>
+                    
+                            </div>
+                            </form>
+                         <!-- </mat-card> -->
+
+        
+    </div>
+
+    </div>
+    </div>
+    </div>
+</div>
+ <!-- Open Popup For "Cheque Print Preview Details" --------------------------------------------enD--->
+
+
+ 
+<!------------------------------------------------------------------------------------------------------------------------------------>
+<!-- Open Popup For "PD Passbook Format Details" -----------------------------------------begiN--->
+<div class="container-fluid"  *ngIf="id == 5 ">
+    <div class="d-flex  justify-content-end align-items-center mb-3">
+           
+        <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+            <!-- <mat-icon class="close-icon">close</mat-icon> -->
+            <img src="./assets/images/cross.svg" alt="">
+        </button>
+    </div>
+    <mat-card class="mt-2 mb-3 "  *ngIf="datasource.data.length > 0 " >
+      
+    
+       
+        <!-- <div class="pop"> -->
+            <div class="row">
+       <h3 class="text-center">{{alldata.heading}}</h3>
+                <div class="col-sm-4">
+                  <mat-form-field appearance="standard" role="search" class="w-75">
+                    <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                      (keyup)="applyFilter($any($event.target).value)">
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+             
+              <div class=" container-fluid scroll-container " style="overflow: auto">
+               
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="datasource" class="mat-elevation-z8"
+                  id="test" #test>
+          
+               
+                  <div  *ngFor="let dynamicColumn of dynamicColumns;let i = index">
+                  
+                      <ng-container matColumnDef="SrNo"  *ngIf="dynamicColumn =='SrNo' ">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          Sr No.
+                       </th>
+                       <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                           (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                       <td mat-footer-cell *matFooterCellDef>Total </td>
+                     </ng-container>
+                    <ng-container [matColumnDef]="dynamicColumn"  *ngIf="!(dynamicColumn =='SrNo')  ">
+                     
+                        <th mat-header-cell *matHeaderCellDef   mat-sort-header  class="OBListHdrFont">
+                            {{TitleCase(dynamicColumn)}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element[dynamicColumn]?element[dynamicColumn]:'-'}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{calculate(dynamicColumn)}}</td>
+                      </ng-container>
+                  
+                  </div>
+                 
+                  
+                  <tr mat-header-row *matHeaderRowDef="dynamicColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: dynamicColumns;"></tr>
+                  <tr mat-footer-row *matFooterRowDef="dynamicColumns"></tr>
+                </table>
+              </div>
+            <!-- </div> -->
+              <mat-paginator #myPaginator [length]="5"  [pageSize]="5" [pageSizeOptions]="[5,10]">
+              </mat-paginator>
+        </div>
+      
+    </mat-card>
+    <mat-card class="mb-3"  *ngIf="!(datasource.data.length > 0) " >
+        <div class="main-heading demo-2 mt-2"  >
+         No Records Found !
+           </div>
+    </mat-card>
+  
+</div>
+  <!-- Open Popup For "PD Passbook Format Details" -----------------------------------------enD--->
+
+
+
+<!------------------------------------------------------------------------------------------------------------------------------------>
+<!-- Open Popup For "GRN Minus Entry Result Code Details"---------------------------begiN--->
+<div class="content-wrapper" id="{{message}}" *ngIf="id==='CheckResponceData'">
+
+    <div class="d-flex justify-content-between align-item-center">
+        <h2 class="py-3 mb-0">Grn Voucher Details</h2>
+        <span>
+            <div mat-dialog-close><img src="./assets/images/cross.svg" alt=""></div>
+        </span>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="col-md-12 col-12"   *ngFor="let item of resultData"  >
+        <mat-card class="mb-3">
+            <h3 class="error-text mt-4 " *ngIf="item?.CheckOfficeError?.length>0 && item.CheckOfficeError!='Y'"> *{{item?.CheckOfficeError}} </h3>
+            <h3 class="error-text mt-4" *ngIf="item?.CheckBlockDateErroritem?.length>0 && item.CheckBlockDateError!='1'"> *{{item?.CheckBlockDateError}} </h3>
+            <!-- <h3 class="error-text mt-4"> *This HODID {{item.HeadOfficeError.HODID}}  Mapped For {{item.HeadOfficeError.HodName}} </h3> -->
+            <!-- <h3 class="error-text mt-4" *ngIf="item?.insertVoucherResp.result"> *GRN Voucher Number {{item?.insertVoucherResp.out_vchr_no}} </h3> -->
+            <!-- <h3 class="error-text mt-4" *ngIf="item?.insertVoucherResp.result"> *GRN Voucher Number {{item?.insertVoucherResp.out_err_msg}} </h3> -->
+            <h3 class="error-text mt-4" *ngIf="item?.insertVoucherResp?.result"> {{item?.insertVoucherResp.out_err_msg}} </h3>
+
+            <h3 class="error-text mt-4" *ngIf="item.detailHead"> {{item.detailHead}} </h3>
+            <h3 class="error-text mt-4" *ngIf="item.voucherDate"> {{item.voucherDate}} </h3>
+            <h3 class="error-text mt-4" *ngIf="item.grossAmount"> {{item.grossAmount}} </h3>
+           <!-- Voucher Already Generated And Voucher No is " + returnval -->
+
+        </mat-card>
+    </div>
+</div>
+
+
+<!-- <div class="container-fluid">
+    <div class="col-md-12 col-12" *ngFor="let item of resultData">
+        <mat-card class="mb-3">
+            <h3 class="error-text mt-4 " *ngIf="item?.CheckOfficeError!='Y'"> *{{item?.CheckOfficeError}} </h3>
+            <h3 class="error-text mt-4" *ngIf="item?.CheckBlockDateError!='1'"> *{{item?.CheckBlockDateError}} </h3>
+            <h3 class="error-text mt-4"> *This HODID {{item.HeadOfficeError.HODID}}  Mapped For {{item.HeadOfficeError.HodName}} </h3> -->
+            <!-- <h3 class="error-text mt-4" *ngIf="item?.insertVoucherResp.result"> *GRN Voucher Number {{item?.insertVoucherResp.out_vchr_no}} </h3> -->
+            <!-- <h3 class="error-text mt-4" *ngIf="item?.insertVoucherResp.result"> *GRN Voucher Number {{item?.insertVoucherResp.out_err_msg}} </h3> -->
+            <!-- <h3 class="error-text mt-4" *ngIf="item?.insertVoucherResp.result"> {{item?.insertVoucherResp.out_err_msg}} </h3> -->
+           <!-- Voucher Already Generated And Voucher No is " + returnval 
+  
+        </mat-card>
+    </div>
+</div> -->
+<!-- Open Popup For "GRN Minus Entry Result Code Details"---------------------------enD--->
+
+
+
+<!-- Open Popup For P2F - "Important Instructions Details"---------------------------begiN--->
+<div class="content-wrapper" id="{{message}}" *ngIf="id==='importantInstructions'">
+
+    <div class="d-flex justify-content-between align-item-center">
+        <h2 class="py-3 mb-0">Important Instructions </h2>
+        <span>
+            <div mat-dialog-close><img src="./assets/images/cross.svg" alt=""></div>
+        </span>
+    </div>
+  </div>
+  <div class="container-fluid" *ngIf="id==='importantInstructions'">
+    <div class="col-md-12 col-12">
+        <mat-card class="mb-3" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+            <h3 class="error-text mt-4 " > ** Token No should be in format of (TreasuryCode-TokenFinYear-6 Digit TokenNo) eg: 2100-2223-000001 </h3>
+            <h3 class="error-text mt-4 " >** Upload Image File Size allowed max 90 kb. & Only .jpg,.png,.jpeg Files format are allowed. </h3>
+            <h3 class="error-text mt-4 " >** Upload Image File Name should be in format of (Valid 6 Digit Cheque No) eg: 123456 </h3>
+            <h3 class="error-text mt-4 " >** Payment Mode of Token must be Cheque Type. </h3>
+            <h3 class="error-text mt-4 " >** Scroll Date must be in Current Fin. Year. </h3>
+        </mat-card>
+    </div>
+  </div>
+<!-- Open Popup For P2F - "Important Instructions Details"---------------------------enD--->
+  
+  
+  <!-- Open Popup For P2F - "Cheque Image Preview"---------------------------begiN--->
+  <div class="content-wrapper" id="{{message}}" *ngIf="id==='chequeImage'">
+  
+    <div class="text-end">
+        <span>
+            <div mat-dialog-close ><img src="./assets/images/cross.svg" alt="" class="text-end"></div>
+        </span>
+    </div>
+  </div>
+  <div class="container-fluid" *ngIf="id==='chequeImage'">
+    <div class="col-md-12 col-12">
+        <mat-card class="mb-3">
+          <div>
+            <img [src]="base64chequeImage" alt="Base64 Image">
+          </div>
+        </mat-card>
+    </div>
+  </div>
+<!-- Open Popup For P2F - "Cheque Image Preview"---------------------------enD--->
+
+
+<!-- Open Popup For "objectionlist Details" -----------------------------------------begiN--->
+<div class="container-fluid"  *ngIf="id == 'objectionlist' ">
+
+    <div class="d-flex  justify-content-end align-items-center mb-3">
+  
+        <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+            <!-- <mat-icon class="close-icon">close</mat-icon> -->
+            <img src="./assets/images/cross.svg" alt="">
+        </button>
+    </div>
+    <mat-card class="mt-2 mb-3 "  *ngIf="datasource.data.length > 0 " >
+  
+  
+  
+        <!-- <div class="pop"> -->
+            <div class="row">
+       <h3 class="text-center"> Objection List </h3>
+                <div class="col-sm-4">
+                  <mat-form-field appearance="standard" role="search" class="w-75">
+                    <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                      (keyup)="applyFilter($any($event.target).value)">
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+  
+              <div class=" container-fluid scroll-container " style="overflow: auto">
+  
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="datasource" class="mat-elevation-z8"
+                  id="test" #test>
+  
+  
+                  <div  *ngFor="let dynamicColumn of objectionColumns;let i = index">
+  
+                      <ng-container matColumnDef="SrNo"  *ngIf="dynamicColumn =='SrNo' ">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          Sr No.
+                       </th>
+                       <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                           (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+  
+                     </ng-container>
+  
+                      <ng-container matColumnDef="ObjectionName"  *ngIf="dynamicColumn =='ObjectionName' ">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          Objection
+                       </th>
+                       <td mat-cell *matCellDef="let element; let j = index">{{element.ObjectionName}} </td>
+                     </ng-container>
+  
+  
+                      <ng-container matColumnDef="AuditorName"  *ngIf="dynamicColumn =='AuditorName' ">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          Auditor
+                       </th>
+                       <td mat-cell *matCellDef="let element; let j = index">{{element.AuditorName}} </td>
+                     </ng-container>
+  
+                     <ng-container matColumnDef="AccountantName"  *ngIf="dynamicColumn =='AccountantName' ">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Accountant Name
+                     </th>
+                     <td mat-cell *matCellDef="let element; let j = index">{{element.AccountantName}} </td>
+                   </ng-container>
+  
+  
+                      <ng-container matColumnDef="ToName"  *ngIf="dynamicColumn =='ToName' ">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          TO
+                       </th>
+                       <td mat-cell *matCellDef="let element; let j = index">{{element.ToName}} </td>
+                     </ng-container>
+  
+                     <ng-container matColumnDef="ObjectionDate"  *ngIf="dynamicColumn =='ObjectionDate' ">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                         Date
+                     </th>
+                     <td mat-cell *matCellDef="let element; let j = index">{{element.ObjectionDate}} </td>
+                   </ng-container>
+   
+  
+                  </div>
+  
+  
+                  <tr mat-header-row *matHeaderRowDef="objectionColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: objectionColumns;"></tr>
+                  <!-- <tr mat-footer-row *matFooterRowDef="dynamicColumns"></tr> -->
+                </table>
+              </div>
+            <!-- </div> -->
+              <mat-paginator #myPaginator [length]="5"  [pageSize]="5" [pageSizeOptions]="[5,10]">
+              </mat-paginator>
+        </div>
+  
+    </mat-card>
+    <mat-card class="mb-3"  *ngIf="!(datasource.data.length > 0) " >
+        <div class="main-heading demo-2 mt-2"  >
+         No Records Found !
+           </div>
+    </mat-card>
+  
+  </div>
+  <!-- Open Popup For "objectionlist Details" -----------------------------------------enD--->
+
+    <!-- Open Popup For "Dynamic PFMS Bill   Details Report" -----------------------------------------begiN--->
+<div class="container-fluid"  *ngIf="id == 'PFMSBilllist' ">
+
+    <div class="d-flex  justify-content-end align-items-center mb-3">
+  
+        <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+            <!-- <mat-icon class="close-icon">close</mat-icon> -->
+            <img src="./assets/images/cross.svg" alt="">
+        </button>
+    </div>
+    <mat-card class="mt-2 mb-3 "  *ngIf="datasource.data.length > 0 " >
+  
+  
+  
+        <!-- <div class="pop"> -->
+            <div class="row">
+       <h3 class="text-center">  PFMS Bills </h3>
+                <div class="col-sm-4">
+                  <mat-form-field appearance="standard" role="search" class="w-75">
+                    <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                      (keyup)="applyFilter($any($event.target).value)">
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+  
+              <div class=" container-fluid scroll-container " style="overflow: auto">
+  
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="datasource" class="mat-elevation-z8"
+                  id="test" #test>
+  
+  
+                  <div  *ngFor="let dynamicColumn of objectionColumns;let i = index">
+  
+                      <ng-container matColumnDef="SrNo"  *ngIf="dynamicColumn =='SrNo' ">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          Sr No.
+                       </th>
+                       <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                           (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+  
+                     </ng-container>
+  
+                      <ng-container matColumnDef="cdeRefNo"  *ngIf="dynamicColumn =='cdeRefNo' ">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          cde Ref No.
+                       </th>
+                       <td mat-cell *matCellDef="let element; let j = index">{{element.cdeRefNo}} </td>
+                     </ng-container>
+  
+                     <ng-container matColumnDef="transDate"  *ngIf="dynamicColumn =='transDate' ">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                         Date
+                     </th>
+                     <td mat-cell *matCellDef="let element; let j = index">{{element.transDate | date:'dd-MM-yyyy HH:mm:ss'}} </td>
+                   </ng-container>
+  
+  
+                  </div>
+  
+  
+                  <tr mat-header-row *matHeaderRowDef="objectionColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: objectionColumns;"></tr>
+                  <!-- <tr mat-footer-row *matFooterRowDef="dynamicColumns"></tr> -->
+                </table>
+              </div>
+            <!-- </div> -->
+              <mat-paginator #myPaginator [length]="5"  [pageSize]="5" [pageSizeOptions]="[5,10]">
+              </mat-paginator>
+        </div>
+  
+    </mat-card>
+    <mat-card class="mb-3"  *ngIf="!(datasource.data.length > 0) " >
+        <div class="main-heading demo-2 mt-2"  >
+         No Records Found !
+           </div>
+    </mat-card>
+  
+  </div>
+  <!-- Open Popup For "Dynamic PFMS Bill   Details Report" -----------------------------------------enD--->
+  
+<!-- Open Popup For "Dynamic Payload" -----------------------------------------begiN--->
+<div class="container-fluid"  *ngIf="id == 'payload' ">
+
+    <div class="d-flex  justify-content-end align-items-center mb-3">
+  
+        <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+            <!-- <mat-icon class="close-icon">close</mat-icon> -->
+            <img src="./assets/images/cross.svg" alt="">
+        </button>
+    </div>
+    <mat-card class="mt-2 mb-3 "  *ngIf="getpayloaddata.data.length > 0 " >
+          <h3 class="text-center"> Payload</h3>
+                  <div class=" container-fluid scroll-container " style="overflow: auto">
+                  <table width="100%" mat-table matSort matTableExporter [dataSource]="getpayloaddata" class="mat-elevation-z8"
+                  id="test" #test>
+                        <ng-container matColumnDef="SrNo"  >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          Sr No.
+                       </th>
+                       <td mat-cell *matCellDef="let item; let j = index"> {{(j+1)}} </td>
+                       </ng-container>
+  
+                      <ng-container matColumnDef="payloaddata" >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Payload Data
+                       </th>
+                       <td mat-cell *matCellDef="let element; let j = index">{{element.payloaddata}} </td>
+                     </ng-container>
+                        
+                  <tr mat-header-row *matHeaderRowDef="PayloadColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: PayloadColumns;"></tr>
+                  <!-- <tr mat-footer-row *matFooterRowDef="dynamicColumns"></tr> -->
+                </table>
+              </div>
+                          <!-- <mat-paginator #myPaginator [length]="5"  [pageSize]="5" [pageSizeOptions]="[5,10,15,20,100]">
+              </mat-paginator> -->
+       
+  
+    </mat-card>
+    <mat-card class="mb-3"  *ngIf="!(getpayloaddata.data.length > 0) " >
+        <div class="main-heading demo-2 mt-2"  >
+         No Records Found !
+           </div>
+    </mat-card>
+  
+  </div>
+   <!-- Open Popup For "Dynamic Payload" -----------------------------------------enD--->
+
+
+
+
+   <!-- Open Popup For "Dynamic rejectedReason" -----------------------------------------begiN--->
+  <div class="container-fluid"  *ngIf="id == 'rejectedReason' ">
+
+    <div class="d-flex  justify-content-end align-items-center mb-3">
+  
+        <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+            <!-- <mat-icon class="close-icon">close</mat-icon> -->
+            <img src="./assets/images/cross.svg" alt="">
+        </button>
+    </div>
+    <mat-card class="mt-2 mb-3 "  *ngIf="getrejectedReason.data.length > 0 " >
+          <h3 class="text-center"> Rejected Reason</h3>
+                  <div class=" container-fluid scroll-container " style="overflow: auto">
+                  <table width="100%" mat-table matSort matTableExporter [dataSource]="getrejectedReason" class="mat-elevation-z8"
+                  id="test" #test>
+                        <ng-container matColumnDef="SrNo"  >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                          Sr No.
+                       </th>
+                       <td mat-cell *matCellDef="let item; let j = index"> {{(j+1)}} </td>
+                       </ng-container>
+<!--   
+                       <ng-container matColumnDef="rjected_reason">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by rjected_reason">
+                            Rejected Reason</th>
+                        <td mat-cell *matCellDef="let element"
+                            (click)="expandedElement = expandedElement === element ? null : element">
+                            <div *ngIf="element !== expandedElement" class="content"> {{element.rjected}}<span
+                                    class="hyperlink btn-look f-12 bold-font ms-2">+</span></div>
+                            <div class="example-element-detail"
+                                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                                <div class="example-element-description ">
+                                    {{element.rjected_reason}}
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container> -->
+
+                    <ng-container matColumnDef="rjected_reason" >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Rejected Reason
+                       </th>
+                       <td mat-cell *matCellDef="let element; let j = index">{{element.rjected_reason}} </td>
+                     </ng-container>
+                        
+                  <tr mat-header-row *matHeaderRowDef="rejectedReasonColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns:rejectedReasonColumns;"></tr>
+                  <!-- <tr mat-footer-row *matFooterRowDef="dynamicColumns"></tr> -->
+                </table>
+              </div>
+                          <!-- <mat-paginator #myPaginator [length]="5"  [pageSize]="5" [pageSizeOptions]="[5,10,15,20,100]">
+              </mat-paginator> -->
+       
+  
+    </mat-card>
+    <mat-card class="mb-3"  *ngIf="!(getrejectedReason.data.length > 0) " >
+        <div class="main-heading demo-2 mt-2"  >
+         No Records Found !
+           </div>
+    </mat-card>
+  
+  </div>
+  
+
+<!-- loader start -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+<div class="cssload-speeding-wheel"></div>
+</div>
+<!-- loader End -->

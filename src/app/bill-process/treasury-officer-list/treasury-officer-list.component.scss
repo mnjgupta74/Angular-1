@@ -1,0 +1,201 @@
+.Search-btn-position {
+  position: absolute;
+  right: 0px;
+  top: 5px;
+}
+
+.modal-ku {
+  /* width: 900px; */
+  width: auto;
+  margin: auto;
+}
+
+.modal-btn {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  /* margin-block: 10px; */
+  height: 100px;
+}
+
+.showDiv1 {
+  display: flex;
+  margin-block: 0px;
+  flex-direction: column;
+  margin-inline: 50px;
+}
+
+.example-1 {
+  position: relative;
+  overflow-y: scroll;
+  height: 200px;
+  /* width: 100%; */
+}
+
+ 
+ /*-----------------------------*/
+/*Components - Toaster*/
+/*-----------------------------*/
+::ng-deep .toast-container {
+  --bs-toast-zindex: 1090 !important;
+  position: absolute !important;
+  z-index: var(--bs-toast-zindex);
+  width:auto;
+  max-width: 100% !important;
+  height: 12% !important;
+  pointer-events: none !important;
+}
+ 
+::ng-deep .toast-top-full-width {
+  top: 0px;
+  right: 20px;
+  left: 40% !important;
+  max-width: 100% !important;
+  justify-content: center !important;
+  display: flex !important;
+  position: absolute !important;
+}
+
+
+
+
+table {
+width: 100%;
+}
+
+th.mat-sort-header-sorted {
+color: black;
+}
+
+.example-full-width {
+width: 100%;
+}
+
+.form-field-width {
+width: 50%;
+}
+
+.loader-container{
+position : absolute;
+height: 100%;
+width: 100%;
+margin: 2em auto;
+z-index: 99;
+}
+ 
+
+
+.overlay {
+position: fixed;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+background: rgba(0, 0, 0, 0.7);
+transition: opacity 500ms;
+visibility: visible;
+opacity: 1;
+}
+ 
+ 
+
+@media screen and (max-width: 700px){
+
+.popup{
+  width: 70%;
+}
+}
+
+
+.showObj {
+opacity: 1;
+/* position: absolute; */
+/* margin-bottom: -10px; */
+/* font-weight: bold; */
+background-color: #cbe2f9;
+color: #0b5cad;
+}
+
+
+.showObjColor {
+  background-color:maroon;
+  color: #ffeeee;
+}
+
+
+.hideObj  {
+opacity: 0;
+position: absolute;
+margin-bottom: -10px;
+
+}
+
+
+.showRmrk {
+opacity: 1;
+/* position: absolute; */
+/* margin-bottom: -10px; */
+/* font-weight: bold; */
+background-color: orange;
+color: black;
+width: 98px;
+}
+
+
+
+.hideRmrk  {
+opacity: 0;
+position: absolute; 
+margin-bottom: -10px;
+
+
+}
+
+.disabled{
+pointer-events: none;
+position: absolute;
+margin-bottom: -10px;
+
+}
+
+
+/* For Table Horizontal Scroll */
+.scroll-container{
+display: flex;
+align-items: center;
+overflow: hidden;
+}
+
+
+
+
+.empty-message {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+  font-size: 15pt;
+}
+
+
+button:disabled
+{
+ cursor:not-allowed;
+}
+
+
+.opacity-half
+{
+  opacity: .3;
+}
+
+
+.opacity-full
+{
+  opacity: .9;
+}
+
+
+ 
+
+

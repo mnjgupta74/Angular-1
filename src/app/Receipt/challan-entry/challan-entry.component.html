@@ -1,0 +1,256 @@
+<div class="container-fluid">
+
+    <mat-card>
+        <mat-label><b>Challan Entry</b></mat-label>
+    </mat-card>
+
+
+
+    <!-- *ngIf="BillEntry_flag==2" -->
+
+
+
+    <mat-card class="mt-3 mb-5">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="all-input-field-container mt-4">
+                    <div class="scrollable-height-container">
+                        <div class="basic-input-field-container">
+                            <form class="p-3" [formGroup]="ChallanEntryForm">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label>Select Bank</mat-label>
+                                                <mat-select formControlName="bankName">
+                                                    <mat-option *ngFor="let Bank of BankList"
+                                                        [value]="Bank.BankBranchCode">{{Bank.BANKNAME}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label class="custom-input-lable">Challan
+                                                    Date*</mat-label>
+                                                <input matInput formControlName='ChallanDate'
+                                                    [matDatepicker]="DDoDatepick" placeholder="MM/DD/YYYY">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="DDoDatepick"></mat-datepicker-toggle>
+                                                <mat-datepicker #DDoDatepick></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <mat-label>BillType</mat-label>
+                                                <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                    (paste)="(false)" formControlName="Billtype"
+                                                    [matAutocomplete]="auto">
+                                                <mat-icon class=""
+                                                    style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                </mat-icon>
+                                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                                    <mat-option *ngFor="let option of BillTypeList | async"
+                                                        [value]="option" (click)="OnBilltypeSelected()">
+                                                        {{option.BillType}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <mat-label>Major Head</mat-label>
+                                                <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                    (paste)="(false)" formControlName="MajorHead"
+                                                    [matAutocomplete]="auto2" [(ngModel)]="SelectMajorHead">
+                                                <mat-icon class=""
+                                                    style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                </mat-icon>
+                                                <mat-autocomplete #auto2="matAutocomplete" [displayWith]="display_Major">
+                                                    <mat-option *ngFor="let option of MajorHeadList | async"
+                                                        [value]="option"
+                                                        (click)="OnMajorHeadSelected(SelectMajorHead)">
+                                                        {{option.MajorHeadCodeName}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label class="custom-input-lable">Budget
+                                                    Head</mat-label>
+                                                <input matInput placeholder="BudgetHead" maxlength="13"
+                                                    formControlName="BudgetHead">
+                                                <div *ngIf="BudgetHead && BudgetHead.invalid &&  BudgetHead.touched"
+                                                    class="text-danger error_msg">
+                                                    <div *ngIf="BudgetHead.errors?.['Required'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="BudgetHead.errors?.['maxLength'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="BudgetHead.errors?.['Numeric'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                </div>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field class="w-100" appearance="legacy">
+                                                <mat-label>Division Name</mat-label>
+                                                <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                    (paste)="(false)" formControlName="Division"
+                                                    [matAutocomplete]="Divauto">
+                                                <mat-icon class=""
+                                                    style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                </mat-icon>
+                                                <mat-autocomplete #Divauto="matAutocomplete" [displayWith]="display_Division">
+                                                    <mat-option *ngFor="let option of DivisionList | async"
+                                                        [value]="option" >
+                                                        {{option.DivisionName}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label>DDO Code </mat-label>
+
+                                                <input type="tel" placeholder="Select  DDO Code" aria-label="Number"
+                                                    matInput (paste)="(false)" formControlName="DDOCode"
+                                                    [matAutocomplete]="autoddo" />
+
+                                                <mat-icon
+                                                    style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+                                                </mat-icon>
+                                                <mat-autocomplete #autoddo="matAutocomplete"
+                                                    (optionSelected)="getOfficeNameList()"
+                                                    [displayWith]="displayDdoName">
+
+
+                                                    <!-- <mat-select  (selectionChange)="getOfficeNameList()"> -->
+                                                    <mat-option *ngFor="let option of DodoNameList | async"
+                                                        [value]="option">{{ option.DDO_NAME
+                                                        }}</mat-option>
+                                                </mat-autocomplete>
+
+                                                <!-- </mat-select> -->
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label class="custom-input-lable">TAN No./Reg. No
+                                                    Head</mat-label>
+                                                <input matInput placeholder="TanNo" maxlength="13"
+                                                    formControlName="TanNo">
+                                                <div *ngIf="TanNo && TanNo.invalid &&  TanNo.touched"
+                                                    class="text-danger error_msg">
+                                                    <div *ngIf="TanNo.errors?.['Required'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="TanNo.errors?.['TanFormat'] as error">
+                                                        {{error}}
+                                                    </div>.
+                                                    
+                                                </div>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label class="custom-input-lable">Remitter's Name</mat-label>
+                                                <input matInput placeholder="DetailHead" maxlength="13"
+                                                    formControlName="Remitter">
+                                                <div *ngIf="Remitter && Remitter.invalid &&  Remitter.touched"
+                                                    class="text-danger error_msg">
+                                                    <div *ngIf="Remitter.errors?.['Required'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="Remitter.errors?.['maxLength'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="Remitter.errors?.['Alphabet'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                </div>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label class="custom-input-lable">₹
+                                                    Amount</mat-label>
+                                                <input matInput formControlName="Amount">
+                                                <div *ngIf="Amount && Amount.invalid &&  Amount.touched"
+                                                    class="text-danger error_msg">
+                                                    <div *ngIf="Amount.errors?.['Required'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="Amount.errors?.['maxLength'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="Amount.errors?.['Numeric'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                </div>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                            <mat-form-field appearance="legacy" class="w-100">
+                                                <mat-label class="custom-input-lable">₹ Commission
+                                                    </mat-label>
+                                                <input matInput formControlName="Commission">
+                                                <div *ngIf="Commission && Commission.invalid &&  Commission.touched"
+                                                    class="text-danger error_msg">
+                                                    <div *ngIf="Commission.errors?.['Required'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="Commission.errors?.['maxLength'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                    <div *ngIf="Commission.errors?.['Numeric'] as error">
+                                                        {{error}}
+                                                    </div>
+                                                </div>
+                                            </mat-form-field>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+            <div class="float-end mt-2" >
+
+                <div class="float-end" *ngIf="!ChallanEntryForm.invalid ">
+
+
+                    <button (click)="Save()" class="btn ms-3" mat-raised-button color="primary">Submit</button>
+                </div>
+                <div class="float-end" >
+                    <button class="btn" mat-stroked-button (click)="onReset()" color="primary">Reset</button>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+
+
+</div>
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

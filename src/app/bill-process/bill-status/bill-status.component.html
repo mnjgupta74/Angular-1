@@ -1,0 +1,282 @@
+<div class="content-wrapper pb-5" appNoRightClick>
+    <section class="container-fluid">
+        <form [formGroup]="billStatusForm" #options="ngForm">
+            <mat-card>
+                <mat-label><b>T.O. Passed Bills</b></mat-label>
+                <div class="row mt-4">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <!-- <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Treasury*</mat-label>
+
+                            <input matInput type="tel" placeholder="Treasury" name="FrmTreasuryCode" (paste)="(false)"
+                                formControlName="FrmTreasuryCode" />
+                        </mat-form-field> -->
+
+                        
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Select Treasury</mat-label>
+                            <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                              formControlName="FrmTreasuryCode" [matAutocomplete]="auto" [(ngModel)]="selectedOption" />
+                            <mat-icon class="" style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                              <mat-select matInput (paste)="(false)" formControlName="FrmTreasuryCode"></mat-select>
+                              <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option"
+                                (click)="OnTreasurySelected(selectedOption)">
+                                {{ option.TreasuryName }}
+                              </mat-option>
+              
+                            </mat-autocomplete>
+                          </mat-form-field>
+
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Year</mat-label>
+
+                            <input matInput type="tel" placeholder="Treasury" name="FrmFinYear" (paste)="(false)"
+                                formControlName="FrmFinYear" />
+                        </mat-form-field>
+                    </div>
+                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Year</mat-label>
+                        <mat-select [formControl]="FrmFinYear" placeholder=" Select A Year" name="Select Year">
+                            <mat-option>--Select--</mat-option>
+                            <mat-option [value]="year" *ngFor="let year of Years">
+                                {{year}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div> -->
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Token No.*</mat-label>
+
+                            <input matInput type="tel" placeholder="Token No." name="FrmToken" (paste)="(false)"
+                                formControlName="FrmToken" />
+
+                            <div *ngIf="FrmToken && FrmToken.invalid &&  FrmToken.touched"
+                                class="text-danger error_msg">
+                                <div *ngIf="FrmToken.errors?.['Required'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="FrmToken.errors?.['minLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="FrmToken.errors?.['maxLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="FrmToken.errors?.['Numeric'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="FrmToken.errors?.['cannotContainSpace'] as error">
+                                    {{error}}
+                                </div>
+                            </div>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+                        <mat-card>
+                            <mat-radio-group aria-label="Select an option" (change)="radioButtoninGroupChange($event)">
+                                <mat-radio-button color="primary" [checked]="CheckUser_radio" class="ms-2"
+                                    value="1">CheckUser</mat-radio-button>
+                                <mat-radio-button color="primary" [checked]=" All_radio" class="ms-2" value="4">
+                                    All</mat-radio-button>
+                            </mat-radio-group></mat-card>
+                    </div> -->
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Date From:</mat-label>
+                            <input matInput [matDatepicker]="fromDatepicker" title="Date From"
+                                formControlName='fromDate'>
+                            <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #fromDatepicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>To:</mat-label>
+                            <input matInput [matDatepicker]="picker2" formControlName="toDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- <div class="d-flex justify-content-end gap-2 mt-2" *ngIf="!billStatusForm.invalid"> -->
+                <div class="d-flex justify-content-end gap-2 mt-2">
+                    <button class="btn btn-primary" mat-raised-button color="primary" (click)="onsubmit()" [disabled]="!options.valid" >Show</button>
+                    <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+                </div>
+
+            </mat-card>
+            <mat-card class="mt-3" *ngIf="showTab_Table">
+
+
+
+                <div class="scroll-container tab-container mt-4" style="overflow: auto">
+
+                    <!-- <table mat-table [dataSource]="GetAutoProcessListdata" matSort matTableExporter 
+                  (matSortChange)="announceSortChange($event)" class="family-details-table" style="width: 100%;" id="test" > -->
+
+                    <table width="100%" mat-table matSort matTableExporter [dataSource]="dataSource"
+                        (matSortChange)="announceSortChange($event)" class="mat-elevation-z8" style="width: 100%;"
+                        id="test">
+
+                        <!-- Note that these columns can be defined in any order.
+                               The actual rendered columns are set as a property on the row definition"  -->
+
+
+                        <ng-container matColumnDef="SrNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                Sr No.
+                            </th>
+                            <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                                (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                        </ng-container>
+
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="TOKENNO">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by BillNoId">
+                                Token No </th>
+                            <td mat-cell *matCellDef="let element"> {{element.TOKENNO}}
+                                <!-- <a class="primary hyperlink" [routerLink]=""> {{element.BillNoId}}</a> -->
+                        </ng-container>
+                        <!-- Position Column -->
+
+                        <ng-container matColumnDef="NETAMT">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by BillNo">
+                                Cash Amount </th>
+                            <td mat-cell *matCellDef="let element">{{element.NETAMT}}
+                            </td>
+                        </ng-container>
+
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="GROSSAMT">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by BillDate">
+                                Gross Amount
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.GROSSAMT}}</td>
+                        </ng-container>
+
+                        <!-- Sex Column -->
+                        <ng-container matColumnDef="PAYMODE">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by MajorHead">
+                                ECSNONECS
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.PAYMODE}} </td>
+                        </ng-container>
+
+                        <!-- Relation Column -->
+                        <!-- <ng-container matColumnDef="DDOCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by DDOCode"> DDOCode </th>
+                        <td mat-cell *matCellDef="let element">₹ {{element.NetAmt }} </td>
+                      </ng-container>
+    
+                       <ng-container matColumnDef="BillType">
+                         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillType"> BillType </th>
+                         <td mat-cell *matCellDef="let element">₹ {{element.NetAmt }} </td>
+                       </ng-container> -->
+
+                        <ng-container matColumnDef="CHEQUEDATE">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by VoucherNo">
+                                Cheque Date
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div *ngIf="!element.RFLAG && element.PAYMODE == 'Cheque'"
+                                    class="col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 col-xxl-12">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <!-- <mat-label>To:</mat-label> -->
+                                        <input matInput [matDatepicker]="picker2" formControlName="ChequeDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="element.RFLAG">
+                                    {{element.CHEQUEDATE }}
+                                </div>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="CHEQUENO">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by Cheque No">
+                                Cheque NO </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div *ngIf="(!element.RFLAG) && (element.PAYMODE == 'Cheque')">
+                                    <input type="text" formControlName="chequeNoctrl" class="form-control" />
+                                </div>
+                                <div *ngIf="element.RFLAG">
+                                    {{element.CHEQUENO }}
+                                </div>
+
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="BANKNAME">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by CashAmt">
+                                BankName
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div *ngIf="!element.RFLAG">
+                                    <mat-form-field class="w-100 pad" appearance="outline">
+                                        <mat-label>Select Bank</mat-label>
+                                        <mat-select formControlName="bankName">
+                                            <mat-option *ngFor="let Bank of BankList"
+                                                [value]="Bank.BankBranchCode">{{Bank.BANKNAME}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="element.RFLAG">
+                                    {{element.BANKNAME }}
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by CashAmt">
+                                Action
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+
+                                <div *ngIf="element.RFLAG">
+                                    <button class="btn btn-sm btn-success" (click)="onEdit(element)"
+                                        [disabled]="element.PAYMODE === 'NA' || (element.FLAG === 'a' && element.PAYMODE === 'ECS')">Edit
+                                    </button>
+                                </div>
+                                <div *ngIf="!element.RFLAG">
+                                    <button class="btn btn-sm btn-success" (click)="onUpdate(element)">Update</button>
+                                    <button class="btn btn-sm btn-danger" (click)="onCancel()">Cancel</button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <!-- Main Column -->
+
+
+                        <tr mat-header-row *matHeaderRowDef="BillStatusTable"></tr>
+                        <tr mat-row *matRowDef="let row; columns: BillStatusTable;"></tr>
+                    </table>
+                </div>
+
+                <mat-paginator #myPaginator [length]="10" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]" showFirstLastButtons> </mat-paginator>
+            </mat-card>
+        </form>
+    </section>
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

@@ -1,0 +1,264 @@
+.four_section{
+  background-color: #004AC3;
+  background-image: url(../../../assets/images/treasury-card-bg-image.svg);
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  border-radius: 10px;
+  p{
+      font-size: 16px;
+      margin-bottom: 2px;
+      line-height: 20px;
+  }
+
+  h2, .font-48{
+      margin-bottom: 0;
+      font-weight:700 !important;
+      font-size: 38px !important;
+  }
+}
+
+.card-height{
+  min-height: 378.5px;
+}
+
+.ticket-heading{
+  font-family: 'Poppins-m' !important;
+}
+
+.pie-color-box-yellow{
+  background-color: #F5C779;
+}
+
+.pie-color-box-green{
+  background-color: #52BB9C;
+}
+
+.chart-data{
+  p{
+      font-family: 'Poppins-m' !important;
+  }
+
+  div{
+      box-shadow: 0px 3px 6px #EAF8F5;
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+  }
+}
+
+.qv-chart-data{
+  p{
+      font-family: 'Poppins-m' !important;
+  }
+
+  div{
+      box-shadow: 0px 3px 6px #EAF8F5;
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      margin-right: 1rem;
+  }
+}
+
+.ticket-subheading{
+  font-size: 1rem;
+  font-family: 'Poppins-m' !important;
+  font-weight: 600;
+}
+
+.qv-toggle-btns{
+  .mat-button-toggle-group{
+      height: 40px;
+  }
+
+  ::ng-deep .mat-button-toggle-label-content{
+      line-height: 36px;
+  }
+}
+
+.qv-month-selector{
+  .mat-form-field{
+      display: inline;
+  }
+  margin-left: 1.5rem;
+}
+
+.qv-color-box-1{
+  background-color: #BAA4EB;
+}
+
+.qv-color-box-2{
+  background-color: #78C1BE;
+}
+
+.qv-color-box-3{
+  background-color: #BCD6FD;
+}
+
+.qv-color-box-4{
+  background-color: #F4C298;
+}
+
+.qv-color-box-5{
+  background-color: #96D6C3;
+}
+
+.ql-view-all{
+  font-family: 'Poppins-m' !important;
+}
+
+.quick-link-container{
+  height: 298.50px !important;
+  overflow-y: auto;
+
+  .q-link{
+      border-bottom: 1px solid #E4EAF2;
+  }
+
+  .link-text{
+      // font-size: 1rem;
+      font-family: 'Poppins-m' !important;
+  }
+
+  .q-link-icon img{
+      width: 32px;
+  }
+}
+
+::ng-deep .faq-card {
+  // background-color: #F4F4FF;
+
+  .accordions-container {
+      height: 298.50px;
+      overflow-y: auto;
+  }
+
+  .accordion-item{
+      padding: 10px 0px;
+      box-shadow: 2px 2px 6px #041d9e26;
+      margin: 10px 0px;
+  }
+
+  .mat-content {
+      align-items: center;
+  }
+
+  .mat-expansion-indicator {
+      visibility: hidden;
+    }
+
+  .mat-expansion-panel:not([class*=mat-elevation-z]){
+      box-shadow: none !important;
+
+      .accordion-remove{
+          display: none;
+      }
+  }
+
+  .mat-expansion-panel:not([class*=mat-elevation-z]):hover{
+      .mat-icon{
+          color: var(--primary);
+      }
+  }
+
+  .mat-expansion-panel-header.mat-expanded {
+      border-bottom: 1px solid #F4F4FF;
+      margin-bottom: 10px;
+
+      .mat-expansion-panel-header-title {
+          font-family: 'Poppins-m' !important;
+          font-size: 16px;
+      }
+
+      .accordion-add{
+          display: none;
+      }
+
+      .accordion-remove{
+          display: inline;
+      }
+  }
+}
+
+.una-link-container{
+  height: 298.50px;
+  overflow-y: auto;
+
+  .una-item-heading{
+      font-family: 'Poppins-m' !important;
+  }
+
+  .blue-dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--primary);
+  }
+
+  .una-date-text-border{
+      border-right: 1px solid #8d8d8d;
+  }
+
+  .una-link{
+      border-bottom: 1px solid #F4F4FF;
+  }
+
+  .una-link-text-container p span{
+      color: #8d8d8d;
+  }
+
+  .una-text-dot-parent{
+      position: relative;
+  }
+
+  .una-text-dot-parent::before{
+      position: absolute;
+      content: "";
+      top: 6px;
+      left: -15px;
+      height: 8px;
+      width: 8px;
+      border-radius: 50%;
+      background-color: var(--primary);
+  }
+}
+
+//////////////////////////////////////////////
+///
+@media screen and (min-width: 768px) and (max-width: 1399.98px){
+  .qv-chart-data-container{
+      overflow-x: auto;
+  }
+
+  .qv-chart-data{
+
+      div{
+          box-shadow: 0px 3px 6px #EAF8F5;
+          width: 20px;
+          height: auto;
+          border-radius: 2px;
+          margin-right: 0.5rem;
+      }
+  }
+
+  .qv-chart-data:last-child{
+      margin-bottom: 1rem;
+  }
+
+  .qv-chart{
+      text-align: center;
+      img{
+          width: 63%;
+      }
+  }
+
+  .qv-month-selector{
+      margin-left: 0px;
+  }
+
+  ::ng-deep .qv-toggle-btns{
+      .mat-button-toggle-appearance-standard .mat-button-toggle-label-content{
+          padding: 0px !important;
+      }
+  }
+}

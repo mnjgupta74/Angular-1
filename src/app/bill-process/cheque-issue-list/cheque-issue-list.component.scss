@@ -1,0 +1,24 @@
+ /* For Table Horizontal Scroll */
+ .scroll-container{
+    // border: 2px solid silver;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+   
+
+  .thead-light{
+    background-color: #e4edfa;
+    color: #414141;
+    font-weight: 600;
+    font-size: 9pt;
+    padding: 0 12px;
+    white-space: nowrap;
+    border-bottom-width: 1px;
+  }
+  
+  table {
+    width: 100%;
+    font-size: 11pt;
+  }
+  

@@ -1,0 +1,194 @@
+<div class="container-fluid">
+    <mat-card class="mb-3">
+        <mat-label> <b>Update Voucher Date / Division</b></mat-label>
+
+        <div class="col-md-12 col-12">
+            <form [formGroup]="VoucherDateUpdationForm" #options="ngForm">
+
+                <div class="row mt-4">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> Treasury</mat-label>
+                            <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                formControlName="TreasuryControl" [matAutocomplete]="autoTreas"
+                                [(ngModel)]="ChooseOption" />
+                            <mat-icon class="" style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                                <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                    {{ option.TreasuryName }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="VoucherDateUpdationForm.invalid">Please Select Treasury ! </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> Voucher No.</mat-label>
+                            <input type="tel" placeholder="Voucher Number" aria-label="Number"
+                                 matInput (paste)="(true)" NumberOnlyDirective
+                                formControlName="VoucherNo" maxlength="8" />
+                            <mat-error *ngIf="VoucherDateUpdationForm.get('VoucherNo').touched">
+                                <div class="text-danger error_msg"
+                                    *ngIf="VoucherDateUpdationForm.get('VoucherNo').errors?.required">
+                                    Please Enter Voucher Number
+                                </div>
+                                <div class="text-danger error_msg"
+                                    *ngIf="VoucherDateUpdationForm.get('VoucherNo').errors?.pattern">
+                                    Please Enter Numerical value
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>  
+ 
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-radio-group aria-label="Select an option" (change)="radioButtonGroupChange($event)"> 
+                            <mat-radio-button color="primary"   [checked]="mat_radio_1" class="ms-2 ms-sm-3" value="1">Update Date</mat-radio-button>
+                            <mat-radio-button color="primary"   [checked]="mat_radio_2" class="ms-2 ms-sm-3" value="2">Update Division</mat-radio-button>
+                        </mat-radio-group>
+                    </div> 
+
+                    
+ 
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                        <div class="float-end">
+                            <button mat-raised-button color="primary" [disabled]="!options.valid" type="submit" (click)="VoucherInfoShow()"> Show </button>
+                            <button mat-stroked-button color="primary" class="ms-3" (click)="Reset()" type="submit"> Reset </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </mat-card>
+
+
+
+
+    <mat-card class="mt-3" *ngIf="VDateChange">
+ 
+        <form [formGroup]="VoucherDateUpdationFormData" #options="ngForm">
+    
+          <div class="row mt-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+                <mat-label> Voucher No. </mat-label>
+                <input type="text" placeholder="Voucher No." aria-label="Number" formControlName="VoucherNoVal" matInput
+                  (paste)="(false)" />
+              </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+                <mat-label>Bill Type </mat-label>
+                <input type="text" placeholder="Bill Type " aria-label="Number" formControlName="BillTypeVal" matInput
+                  (paste)="(false)" />
+              </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+                <mat-label> Voucher Date</mat-label>
+                <input type="text" placeholder="Voucher Date" aria-label="Number" formControlName="VoucherDateVal" matInput
+                  (paste)="(false)" />
+              </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+                <mat-label> Gross Amount</mat-label>
+                <input type="text" placeholder="Gross Amount" aria-label="Number" formControlName="GrossAmountVal" matInput
+                  (paste)="(false)" />
+              </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+                <mat-label> Cash Amount </mat-label>
+                <input type="text" placeholder="Cash Amount" aria-label="Number" formControlName="CashAmountVal" matInput (paste)="(false)" />
+              </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+                <mat-label> Payment Mode</mat-label>
+                <input type="text" placeholder="Payment Mode" aria-label="Number" formControlName="PaymentModeVal" matInput
+                  (paste)="(false)" />
+              </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+                <mat-label> Budget Head </mat-label>
+                <input type="text" placeholder="Budget Head" aria-label="Number" formControlName="BudgetHeadVal" matInput
+                  (paste)="(false)" />
+              </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                  <mat-label> Budget Head </mat-label>
+                  <input type="text" placeholder="Budget Head" aria-label="Number" formControlName="BudgetHeadVal" matInput
+                    (paste)="(false)" />
+                </mat-form-field>
+              </div>
+    
+    
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+                <mat-label> Office ID </mat-label>
+                <input type="text" placeholder="Office ID" aria-label="Number" formControlName="OfficeIDVal" matInput
+                  (paste)="(false)" />
+              </mat-form-field>
+            </div>
+     
+             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                <mat-form-field appearance="legacy" class="w-100">
+                  <mat-label class="custom-input-lable">Enter New Voucher Date: </mat-label>
+                  <input matInput formControlName="NewVoucherDateVal" [matDatepicker]="VoucherDatepick" [max]="maxDate"
+                    placeholder="MM/DD/YYYY" />
+                  <mat-datepicker-toggle [disabled]="matDatepickerDisable" matSuffix [for]="VoucherDatepick"></mat-datepicker-toggle>
+                  <mat-datepicker #VoucherDatepick></mat-datepicker>
+                </mat-form-field>
+
+                <mat-error
+                  *ngIf="VoucherDateUpdationFormData.get('NewVoucherDateVal').error || ( !VoucherDateUpdationFormData.get('NewVoucherDateVal').valid && VoucherDateUpdationFormData.get('NewVoucherDateVal').touched ) ">
+                  Date Required
+                </mat-error>
+              </div>  
+
+  
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field appearance="legacy" class="w-100">
+                  <mat-label>Select New Division Code</mat-label>
+                  <mat-select formControlName="DivCode">
+                    <mat-option *ngFor="let option of DivisionData"
+                      value="{{option.DivisionCode}}">{{option.DivisionName}}</mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="VoucherDateUpdationFormData.get('DivCode').error || VoucherDateUpdationFormData.get('DivCode').touched ">
+                    Div Code Required
+                </mat-error>
+                </mat-form-field>
+              </div>  
+
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <div class="float-end">
+                    <button mat-raised-button color="primary" [disabled]="!options.valid" (click)="VoucherInfoUpdation()" type="submit"> Update </button>
+                    <button mat-stroked-button color="primary" class="ms-3" (click)="Reset()" type="submit"> Reset </button>
+                </div>
+            </div>
+    
+          </div>
+        </form>
+      </mat-card>
+
+ 
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

@@ -1,0 +1,56 @@
+<div class="container-fluid">
+    <mat-card>
+        <h3>Bill Details</h3>
+       
+        <form [formGroup]="billDetails"   (ngSubmit)="Submit()" autocomplete="off">
+
+            <div class="row ceiling-container mt-2" >
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                    <h3><mat-label for="referenceNo">Enter Reference No :</mat-label></h3>
+                    <mat-form-field class="w-100" appearance="fill">
+                  
+                        <mat-form-field appearance="outline" class=" w-100  inline">
+                            <!-- <mat-label class="custom-input-lable">Enter User Mobile No.</mat-label> -->
+                            <input matInput placeholder="Enter Reference No" type="tel" autofocus formControlName="referenceNo" >
+                            </mat-form-field>
+                       
+                            <button  type="submit" class="float-end" mat-raised-button color="primary" 
+                            >Get Bill Details
+                        </button>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                    
+                    
+               
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                    
+
+                </div>
+                
+            </div>
+
+            
+
+
+        </form>
+    </mat-card>
+</div>
+<div class="container-fluid scroll-container" style="overflow: auto" >
+    <mat-card [hidden]="!show">
+        <!-- <h3>Bill Details</h3> -->
+        <div       >
+            <h3 class="mt-2"><mat-label for="fromDate" >Referece No. Wise ECS Permission</mat-label> </h3>
+            <app-table [id]="table" [datasource]="dataSource" [columns]="displayedColumns" [sticky]=false  [Total]="['AMOUNT']" [pdfButton]=false></app-table> 
+          
+          </div>
+      
+    </mat-card>
+</div>
+<!-- class="fade"
+            [@state]="state"
+            (@state.done)="animationDone($event)" -->

@@ -1,0 +1,122 @@
+
+<div class="container-fluid ">
+    <mat-card class="card-shadow">
+        <!-- <img src="./assets/images/Management_icon.svg">
+        <span class="ms-3 font-weight-bold"><strong>Get Record Details</strong> </span> -->
+        <div class="d-flex justify-content-between my-3">
+                
+            <span><img src="./assets/images/Management_icon.svg">  <span class="ms-3 font-weight-bold"><strong>e-Ceiling Process Report </strong> </span></span> 
+            
+               </div>
+    
+       <div>
+        <!-- approveBillForm -->
+        <form class=" " [formGroup]="RecordDateForm"  (ngSubmit)="getRecords()" autocomplete="off">
+            <div class="row   ">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              
+                <mat-label for="fromDate" >Permission Date:</mat-label>
+                <input matInput [matDatepicker]="RecordDatepicker"  [max]="maxDate" name="fromDate" title="Record Date"
+                    formControlName='recordDate'>
+                <mat-datepicker-toggle matSuffix [for]="RecordDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #RecordDatepicker ></mat-datepicker>
+                <mat-error *ngIf="RecordDateForm.invalid">Please enter valid Permission date</mat-error>
+            </mat-form-field>
+            </div>
+          
+        </div>
+      
+        <div class="d-flex justify-content-end my-3">
+            <button type="submit" class="px-2 float-start" mat-raised-button color="primary"
+            >Get Records</button>
+            </div>
+        </form>
+        </div>
+      
+ 
+    <!-- <div class="d-flex justify-content-between my-3" *ngIf=" (this.tableDataSource.data.length >0) ||(this.refNoWiseData.data.length > 0) ">
+        <button mat-raised-button color="primary" (click)="exportToPdf()">
+            pdf </button>
+            </div> -->
+           
+      </mat-card>
+<mat-card class="card-shadow mt-1" [hidden]="!showTablesBoard"   class="fade"
+    [@state]="state" (@state.done)="animationDone($event)" >
+
+   
+    <div class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+        <button (click)="exportToPdf()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"> 
+            <img alt="Download E-ceiling Pdf Report" src="./assets/images/pdf.png">
+        </button>
+    
+    </div>
+     
+    <div  class="row "  >
+      
+         <!-- percent wise Data table -->
+         <div id="pdf" #pdf *ngIf="this.percentWiseData.data.length > 0" draggable="true" >
+          
+            <div class="  container-fluid scroll-container" style="overflow: auto">
+                <h3 class=" mt-2 heading"><mat-label for="fromDate" >Percentage Wise ECS Permission</mat-label></h3>  
+              <app-table [id]="tablesDiv" [datasource]="percentWiseData" [columns]="displayedColumns2" [sticky]=true [Total]="['TOTAL AMOUNT']" [filterField]="true"  [checkList]=false [pdfButton]=false></app-table>
+            </div>
+            </div>
+
+           
+           <!-- Range wise Data table -->
+          <div  *ngIf="this.rangerWiseData.data.length > 0" >
+            
+            <div class="  container-fluid scroll-container" style="overflow: auto">
+                <h3 class=" heading"><mat-label for="fromDate" >Amount Range Wise ECS Permission</mat-label> </h3>
+            <app-table [id]="table2" [datasource]="rangerWiseData" [columns]="displayedColumns3" [sticky]=true  [Total]="['TOTAL AMOUNT']"  [filterField]="true"  [checkList]=false  [pdfButton]=false></app-table> 
+          </div>
+          </div>
+        
+               <!-- CD Reference Number Wise Data table -->
+            <div id="pdf" #pdf *ngIf="this.RecordList.data.length > 0" draggable="true" >
+                <h3 class="mt-2 heading"><mat-label  for="fromDate" >CD Reference Number Wise ECS Permission</mat-label></h3>  
+           
+                <app-table [id]="table4" [datasource]="RecordList"   [columns]="displayedColumns1" [Total]="['AMOUNT']"  [sticky]=true [filterField]="true"   [checkList]=false   [pdfButton]=false></app-table>
+           
+                </div>
+                       <!-- CD Reference Number Wise Data table Data table -->
+              <div  *ngIf="this.refNoWiseData.data.length > 0" >
+             
+                <div class="  container-fluid scroll-container" style="overflow: auto">
+                    <h3 class="mt-2 heading"><mat-label for="fromDate" >File Uploaded ECS Permission</mat-label> </h3>
+                <app-table [id]="table3" [datasource]="refNoWiseData" [columns]="displayedColumns4" [sticky]=true  [Total]="['TOTAL_AMOUNT']" [filterField]="true"  [checkList]=false  [pdfButton]=false></app-table> 
+              </div>
+              </div>
+
+        
+          </div>
+         
+       
+
+       
+        
+       
+
+         
+       
+
+   
+</mat-card>
+</div>
+<div  class="container-fluid mt-1 ">
+
+  
+
+
+
+</div>
+
+<!-- loader start -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>
+<!-- loader End -->
+
+
+

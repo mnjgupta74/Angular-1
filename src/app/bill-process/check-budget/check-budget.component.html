@@ -1,0 +1,222 @@
+<div class="container-fluid pb-5" appNoRightClick>
+    <mat-card>
+
+        <h3 class="main-heading">Check Budget</h3>
+
+        <form [formGroup]="budgetCheckFrom" (ngSubmit)="submit()" #options="ngForm">
+
+            <div class="row ceiling-container" class="row mt-4">
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4 ">
+                    <!-- <strong><mat-label>Treasury Name</mat-label></strong> -->
+                    <mat-form-field class="w-100">
+
+                        <input type="text" placeholder="Select Treasury Code" aria-label="Number" matInput
+                            (paste)="(false)" formControlName="treasaryCode" [matAutocomplete]="auto">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                            (selectionChange)="changeOption('Treasury')">
+                            <mat-option *ngFor="let option of BillTypeoptions | async" [value]="option"
+                                (click)="changeOption('Treasury')">
+                                {{option.TreasuryName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <!-- <mat-error *ngIf="budgetCheckFrom.invalid">Please select Treasary Code </mat-error> -->
+                    </mat-form-field>
+
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4 ">
+                  <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label> Fin Year</mat-label>
+                      <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)" formControlName="Year">
+                 </mat-form-field>
+              </div>
+
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                    <!-- <strong><mat-label>DDO Code</mat-label></strong> -->
+                    <mat-form-field class="w-100">
+
+                        <input type="text" placeholder="Select DDO Code" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="ddOCode" [matAutocomplete]="auto1" [(ngModel)]="selectddoCode">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto1="matAutocomplete" [displayWith]="ddoDisplayFn"
+                            (selectionChange)="changeOption('ddoCode')">
+                            <mat-option *ngFor="let option of ddoOptions | async" [value]="option"
+                                (click)="changeOption('ddoCode')">
+                                {{option.DDO_NAME}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <!-- <mat-error *ngIf="budgetCheckFrom.invalid">Please select DDO Code </mat-error> -->
+                    </mat-form-field>
+                </div>
+
+                <!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                    <mat-form-field class="w-100">
+                        <mat-select disableOptionCentering panelClass="myPanelClass" placeholder="Select Office Name"
+                            formControlName="officeName">
+                            <mat-option *ngFor="let option of officeList " [value]="option['officeid']">
+                                {{option['OfficeName']}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="budgetCheckFrom.invalid">Please select Office Name </mat-error>
+                    </mat-form-field>
+                </div> -->
+
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Select Office</mat-label>
+                        <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="officeName" [matAutocomplete]="autoOffice">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #autoOffice="matAutocomplete" [displayWith]="displayFnOffice">
+                            <mat-option *ngFor="let option of officeList " [value]="option['officeid']">
+                                {{option['OfficeName']}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <!-- <mat-error *ngIf="budgetCheckFrom.invalid">Please select Office</mat-error> -->
+                    </mat-form-field>
+
+                </div>
+
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                    <!-- <strong><mat-label>Budget Head</mat-label></strong> -->
+                    <mat-form-field class="w-100">
+
+                        <input matInput placeholder="Enter Budget Head" tabindex="4" formControlName="budgetHead"
+                            maxlength="13" minlength="13" (keypress)="inputValidator($event)">
+                        <mat-error *ngIf="budgetCheckFrom.invalid">Please enter the Budget Head 13 digit </mat-error>
+
+                    </mat-form-field>
+                    <div *ngIf="!budgetHead?.valid && (budgetHead?.dirty ||budgetHead?.touched)">
+
+
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                    <!-- <strong><mat-label>object Head</mat-label></strong> -->
+                    <mat-form-field class="w-100">
+
+                        <input type="text" placeholder="Select Object Head" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="objectHead" [matAutocomplete]="auto2" [(ngModel)]="Selectobject">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto2="matAutocomplete" [displayWith]="objectDisplayFn">
+                            <mat-option *ngFor="let option of objectHeadOptions | async" [value]="option">
+                                {{option.objectHeadCodeName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="budgetCheckFrom.invalid">Please select the Object Head </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                    <!-- <p> <strong><mat-label>SF/CA</mat-label></strong></p> -->
+                    <mat-radio-group class="mt-4" aria-label="Select an option" formControlName="SF">
+                        <mat-radio-button color="primary" class="ms-3" value="P">State Fund
+                        </mat-radio-button>
+                        <mat-radio-button color="primary" class="ms-3" value="N">Non Plan
+                        </mat-radio-button>
+                        <mat-radio-button color="primary" class="ms-3" value="C">Central Assistance
+                        </mat-radio-button>
+                        <mat-radio-button color="primary" class="ms-3" value="A">N.A.
+                        </mat-radio-button>
+
+                    </mat-radio-group>
+                </div>
+                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+
+                    <!-- <p><strong> <mat-label>Voted/Charged</mat-label></strong></p> -->
+                    <mat-radio-group class="mt-4" aria-label="Select an option" formControlName="vOrCharge">
+                        <mat-radio-button color="primary" class="ms-3" value="V">Voted
+                        </mat-radio-button>
+                        <mat-radio-button color="primary" class="ms-3" value="C">Charged
+                        </mat-radio-button>
+                        <mat-radio-button color="primary" class="ms-3" value="A">N.A.
+                        </mat-radio-button>
+
+                    </mat-radio-group>
+
+                </div>
+
+
+
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                    <div class="float-end">
+                        <button type="submit" mat-raised-button color="primary"  (click)="showAmtTypeRow()" [disabled]="!options.valid" >Check Budget</button>
+                        <button mat-stroked-button color="primary" class="ms-3"   mat-stroked-button color="primary" type="submit" (click)="Reset()"> Reset </button>
+                    </div>
+                  </div>
+
+
+
+            </div>
+
+        </form>
+
+
+
+    </mat-card>
+    <div *ngIf="submitted" class="row">
+
+        <div *ngIf="!budgetDetails && submitted" class="col-12 col-sm-12 col-md-12 col-lg-12 ">
+            <mat-card class="mt-2">
+                <strong class="main-heading " style="text-align: center;"> Budget Not Available</strong>
+            </mat-card>
+
+        </div>
+
+        <div *ngIf="budgetDetails" class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+            <mat-card class="mt-0">
+                <div class="text-center ">
+                    <h2>Budget Balance</h2>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="row ">
+                    <div class="col-4 col-sm-6 col-lg-4 p-2 border-right">
+                        <strong matListItemTitle>HOD : </strong>&nbsp;&nbsp;
+                        <span matListItemLine> {{ budgetDetails.HOD}}</span>
+                    </div>
+                </div>
+
+                <div class="row ">
+                   
+                    <div class="col-3 col-sm-6  col-lg-3 p-2">
+                        <strong matListItemTitle>Pool Balance : </strong>&nbsp;&nbsp;
+                        <span matListItemLine>{{ budgetDetails.Amount}}</span>
+                    </div>
+                    <div class="col-3 col-sm-6 col-lg-3 p-2 ">
+                        <strong matListItemTitle>Block Amount : </strong>
+                        <span matListItemLine>{{budgetDetails.BlockAmount}}</span>
+                    </div>
+                    <div class="col-3  col-sm-6 col-lg-3 p-2">
+                        <strong matListItemTitle>Expenditure : </strong>&nbsp;&nbsp;
+                        <span matListItemLine>{{budgetDetails.Expenditure}}</span>&nbsp;&nbsp;
+                    </div>
+                   <div class="col-3 col-sm-6 col-lg-3 p-2">
+                        <strong matListItemTitle>Remaining Balance : </strong>&nbsp;&nbsp;
+                        <span matListItemLine>{{budgetDetails.RemainingAmount}}</span>
+                    </div>  
+
+
+                </div>
+            </mat-card>
+
+        </div>
+
+
+
+    </div>
+
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

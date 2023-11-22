@@ -1,0 +1,284 @@
+<div class="content-wrapper" appNoRightClick>
+  <div class="container-fluid">
+    <mat-card class="mb-3">
+      <mat-label><b>PD Account Certification</b></mat-label>
+
+      <form [formGroup]="PdAccountForm" #options="ngForm">
+        <div class="row mt-4">
+
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                   
+            <mat-form-field class="w-100" appearance="legacy">
+                <mat-label> Treasury</mat-label>
+                <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                    formControlName="TreasuryControl" [matAutocomplete]="autoTreas" [(ngModel)]="ChooseOption">
+                <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                </mat-icon>
+                <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                    <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                        {{option.TreasuryName}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="PdAccountForm.invalid">Please Select Treasury ! </mat-error>
+            </mat-form-field>
+         </div>  
+
+
+
+         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label>FinYear</mat-label>
+              <mat-select formControlName="finYear" placeholder=" Select A Year" name="Select Year">
+              <mat-option [value]="year" *ngFor="let year of Years">
+                {{ year }}
+              </mat-option>
+          </mat-select>
+            <mat-error *ngIf=" PdAccountForm.get('finYear').hasError('required') ||  PdAccountForm.get('finYear').touched ">
+              FinYear is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>Select Major Head</mat-label>
+              <input
+                type="tel"
+                placeholder="Select Major Head"
+                aria-label="Number"
+                matInput
+                (paste)="(false)"
+                formControlName="majorHead"
+                [matAutocomplete]="auto"
+              />
+              <mat-icon style="position: absolute; right: 2px; top: 0px"
+                >arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displayMajorHead"
+              >
+                <mat-option
+                  *ngFor="let option of majorHeadlist | async"
+                  [value]="option"
+                  (click)="onMajorHeadSelected()"
+                >
+                  {{ option.majorheadname }}
+                </mat-option>
+              </mat-autocomplete>
+
+              <mat-error
+                *ngIf="
+                  PdAccountForm.get('majorHead').hasError('required') ||
+                  PdAccountForm.get('majorHead').touched
+                "
+              >
+                Major Head is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>Select Budget Head</mat-label>
+              <input
+                type="tel"
+                placeholder="Select Major Head"
+                aria-label="Number"
+                matInput
+                (paste)="(false)"
+                formControlName="budgetHead"
+                [matAutocomplete]="autoBudgetHead"
+              />
+              <mat-icon style="position: absolute; right: 2px; top: 0px"
+                >arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete
+                #autoBudgetHead="matAutocomplete"
+                [displayWith]="displayBudgetHead"
+              >
+                <mat-option
+                  *ngFor="let option of budgetHeadlist | async"
+                  [value]="option"
+                  (click)="onBudgetHeadSelected()"
+                >
+                  {{ option.groupsubheadname }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error
+                *ngIf="
+                  PdAccountForm.get('budgetHead').hasError('required') ||
+                  PdAccountForm.get('budgetHead').touched
+                "
+              >
+                Budget Headis required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>Select Pd Account No</mat-label>
+              <input
+                type="tel"
+                placeholder="Select Pd Account No"
+                aria-label="Number"
+                matInput
+                (paste)="(false)"
+                formControlName="PdAccountNo"
+                [matAutocomplete]="autoPdAccountNo"
+              />
+              <mat-icon style="position: absolute; right: 2px; top: 0px"
+                >arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete
+                #autoPdAccountNo="matAutocomplete"
+                [displayWith]="displayPdAccountNo"
+              >
+                <mat-option
+                  *ngFor="let option of PdAccountNolist | async"
+                  [value]="option"
+                >
+                  {{ option.PdAccName }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error
+                *ngIf="
+                  PdAccountForm.get('PdAccountNo').hasError('required') ||
+                  PdAccountForm.get('PdAccountNo').touched
+                "
+              >
+                PD Account No is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+
+        <!-- Auto Complete FinYear -->
+          <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>FinYear</mat-label>
+               <input  type="tel" placeholder="Select FinYear"  aria-label="Number"  matInput  (paste)="(false)" formControlName="finYear" [matAutocomplete]="autoFinYear"/>
+              <mat-icon style="position: absolute; right: 2px; top: 0px">arrow_drop_down </mat-icon>  
+               <mat-autocomplete #autoFinYear="matAutocomplete">  
+                <mat-option [value]="year" *ngFor="let year of Years">
+                  {{ year }}
+                </mat-option>
+             </mat-autocomplete>  
+              <mat-error *ngIf=" PdAccountForm.get('finYear').hasError('required') ||  PdAccountForm.get('finYear').touched ">
+                FinYear is required
+              </mat-error>
+            </mat-form-field>
+          </div> -->
+ 
+         
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="float-end">
+                <button  mat-raised-button  color="primary"  mat-raised-button color="primary" [disabled]="!options.valid" (click)="showPDAccountData()" type="submit"> Show </button>
+                <button mat-stroked-button color="primary" class="ms-3"   mat-stroked-button color="primary" type="submit" (click)="showPDAccountDataReset()"> Reset </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+    </mat-card>
+
+    <mat-card class="mb-4" *ngIf="iSPdAccountVerificationShow">
+      <form
+      [formGroup]="PdAccountVerificationForm"
+      #Verificationoptions="ngForm"
+    >
+      <div class="row mt-4">
+        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 mt-4">
+          <mat-label>Closing Balance :</mat-label>
+          <mat-label class="fw-bold">{{closingbal}}</mat-label>
+        </div>
+
+        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 mt-4">
+          <mat-label>Block Amount :</mat-label>
+          <mat-label class="fw-bold">{{blockamt}}</mat-label>
+        </div>
+
+        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> Certificate Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="certificateDate"
+              title="Certificate Date"
+              formControlName="certificateDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="certificateDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #certificateDate></mat-datepicker>
+
+            <mat-error
+              *ngIf="
+                PdAccountVerificationForm.get('certificateDate').hasError(
+                  'required'
+                ) || PdAccountVerificationForm.get('certificateDate').touched
+              "
+            >
+              Certificate Date is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> Verification Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="verificationDate"
+              title="Verification Date"
+              formControlName="verificationDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="verificationDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #verificationDate></mat-datepicker>
+            <mat-error
+              *ngIf="
+                PdAccountVerificationForm.get('verificationDate').hasError(
+                  'required'
+                ) || PdAccountVerificationForm.get('verificationDate').touched
+              "
+            >
+              Verification Date is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+          <div class="float-end">
+            <button
+              mat-raised-button
+              color="primary"
+              mat-raised-button
+              color="primary"
+              [disabled]="!Verificationoptions.valid"
+              type="submit" (click)="PdAccountVerificationSubmit()"
+            >
+              Update
+            </button>
+            &nbsp;
+            
+          </div>
+        </div>
+      </div>
+    </form>
+    </mat-card>
+  </div>
+</div>
+
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+  <div class="cssload-speeding-wheel"></div>
+</div>

@@ -1,0 +1,85 @@
+<div class="container-fluid">
+    <mat-card>
+        <form [formGroup]="paymentreportForm">
+        <h2>Payment Reports</h2>
+             <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label> Report*</mat-label>
+                        <select placeholder="Search" matNativeControl formControlName='searchreport'>
+                            <option>--Select--</option>
+                            <option value="RP1">TY 32</option>
+                            <option value="RP2">TY 3</option>
+                            <option value="RP3">Payment Reconcilation</option>
+                            <option value="RP4">Receipt Reconcilation</option>
+                            <option value="RP5">Form 24 G</option>
+                            <option value="RP6">BT Register</option>
+                            <option value="RP7">Cash Book</option>
+                        </select>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" aria-label="Number" matInput (paste)="(false)" formControlName="treasuryval"
+                            [matAutocomplete]="auto" placeholder="Treasury">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaytreasury">
+                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                {{option.TreasuryName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="paymentreportForm.invalid">Please Select Treasury ! </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" placeholder="FinYear" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="finyear">
+                    </mat-form-field>
+                </div>
+            </div>
+        <div class="row mt-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                    <mat-label> From Date*</mat-label>
+                    <input matInput [max]="paymentreportForm.controls.toDate.value" [matDatepicker]="fromDatepicker"
+                        title="Date From" formControlName='fromDate'>
+                    <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #fromDatepicker></mat-datepicker>
+                    <mat-error *ngIf="paymentreportForm.invalid">Please select the from date </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                    <mat-label>To Date*</mat-label>
+                    <input matInput [min]="paymentreportForm.controls.fromDate.value" [matDatepicker]="picker2"
+                        formControlName="toDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error *ngIf="paymentreportForm.invalid">Please select the to date </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                    <mat-label>Register No.</mat-label>
+                  <input matInput type="number" placeholder="Enter Number" formControlName='registerValue'
+                        onKeyPress="if(this.value.length==8) return false;" />
+                    <mat-error *ngIf="paymentreportForm.invalid">Please Enter Valid Value ! </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-primary" mat-raised-button color="primary" [disabled]="!paymentreportForm.valid"
+                (click)="getpaymentreport()">Print</button>
+                  <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+                 </div>
+    </form>
+</mat-card>
+</div>
+
+<!-- <mat-spinner color="warn"></mat-spinner> -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

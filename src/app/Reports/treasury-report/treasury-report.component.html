@@ -1,0 +1,228 @@
+<div class="container-fluid">
+    <mat-card>
+        <form [formGroup]="TreasReportForm"  #options="ngForm">
+            <h2>Treasury LOR Report</h2>
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" aria-label="Number" matInput (paste)="(false)" formControlName="treasuryval"
+                            [matAutocomplete]="auto" placeholder="Treasury">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaytreasury">
+                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                {{option.TreasuryName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="TreasReportForm.invalid">Please Select Treasury ! </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+
+
+            <div *ngIf="!display">
+                <div class="row mt-3">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> From Date*</mat-label>
+                            <input matInput [max]="TreasReportForm.controls.toDate.value"
+                                [matDatepicker]="fromDatepicker" title="Date From" formControlName='fromDate'>
+                            <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #fromDatepicker></mat-datepicker>
+                            <mat-error *ngIf="TreasReportForm.invalid">Please select the from date </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>To Date*</mat-label>
+                            <input matInput [min]="TreasReportForm.controls.fromDate.value" [matDatepicker]="picker2"
+                                formControlName="toDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                            <mat-error *ngIf="TreasReportForm.invalid">Please select the to date </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-primary" mat-raised-button (click)="onSearch()" color="primary">Search</button>
+                <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+            </div>
+        </form>
+    </mat-card>
+    <mat-card class="mt-3" *ngIf="showTreastrackTable">
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center mt-3">
+            <h1>Government  of Rajasthan </h1>
+            <label class="mt-3 d-block"> <b> Treasury Name</b> :{{TreasuryName}} </label>
+            <label class="mt-3"> <b> List of Receipt from</b> :{{TreasReportForm.get('fromDate').value
+                |date:'dd-MM-yyyy' }} <b> To </b> : {{TreasReportForm.get('toDate').value
+                |date:'dd-MM-yyyy'}} </label>
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field appearance="standard" role="search" class="w-75">
+                    <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                        (keyup)="applyFilter($any($event.target).value)">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+            <button (click)="exportToPdf()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"> 
+                <img alt="Download Treasury LOR Report Pdf Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+            </button>
+            <button mat-raised-button class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"
+            (click)="exportexcel(this.exportcompletedata, this.filename)">
+            <img alt="Download Treasury LOR Report Excel Report" src="./assets\images\icons8-export-excel-24.png"  matTooltip="Click here to export Excel"></button>
+        </div>
+
+
+        <div class="scroll-container tab-container mt-4" style="overflow: auto">
+            <table width="100%" mat-table matSort matTableExporter [dataSource]="GetTreasurytrackdata"
+                class="mat-elevation-z8" style="width: 100%;" id="test">
+                <ng-container matColumnDef="SrNo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Sr No.
+                    </th>
+                    <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                        (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                </ng-container>
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="PD_DIV_DTLS">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        PD DIV DTLS
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.PD_DIV_DTLS}} </td>
+                </ng-container>
+                <ng-container matColumnDef="GRP">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        GRP
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.GRP}} </td>
+                </ng-container>
+                <ng-container matColumnDef="Commission">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Commission
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.Commission}} </td>
+                </ng-container>
+                <ng-container matColumnDef="GroupHead">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Group Head
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.GroupHead}} </td>
+                </ng-container>
+                <ng-container matColumnDef="BudgetHead">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Budget Head
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.BudgetHead}}-{{element.BHName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="DivCode">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Div Code
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.DivCode}} </td>
+                </ng-container>
+               
+                <ng-container matColumnDef="MajorHead">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                        sortActionDescription="Sort by Disc_Budget_Head">
+                        Discription of Budget Head
+                    </th>
+                    <td mat-cell *matCellDef="let element">{{element.MajorHead}}-{{element.MajorHeadNameHindi}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="ReceiptAmt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by ReceiptAmt">
+                        Amount (in Rs.)<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.ReceiptAmt}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="ChallanAmt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Challan Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.ChallanAmt}} </td>
+                </ng-container>
+                <ng-container matColumnDef="TotalChallan">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TotalChallan">
+                        Total Challan<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.TotalChallan}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="DivChallanAmt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TotalChallan">
+                        Div Challan Amount<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.DivChallanAmt}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="HeadRange">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TotalChallan">
+                        Head Range<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.HeadRange}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="BTADJAmt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TotalChallan">
+                        BT ADJ Amount<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.BTADJAmt}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="DivBTADJAmt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TotalChallan">
+                        Div BT ADJ Amount<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.DivBTADJAmt}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="GrossAmt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TotalChallan">
+                        Gross Amount<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.GrossAmt}}
+                    </td>
+                </ng-container>
+
+
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <mat-paginator #myPaginator [length]="5" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]" showFirstLastButtons>
+        </mat-paginator>
+    </mat-card>
+</div>
+
+<!-- <mat-spinner color="warn"></mat-spinner> -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

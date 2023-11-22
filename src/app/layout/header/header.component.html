@@ -1,0 +1,114 @@
+<section class="header-section sticky-top-custom" >
+    <div class="header-container">
+        <div class="container-fluid  ">
+            <div class="row py-1 main-header-background">
+                <div class="col-6">
+                    <div class="left-main-header ms-lg-2">
+                        <img src="./assets/images/logo.png" alt="left-header-image" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="right-main-header float-end me-lg-2 d-flex align-items-center">
+                     
+                       
+                        <div class="avatar d-inline">
+                            <!-- <img src="./assets/images/oldman_image.jpg"> -->
+                            <img src="./assets/images/userImg.png">
+
+                        </div>
+                        <div class="avatar d-none d-lg-inline-block ms-2">
+
+                            <!-- <p class="m-0 subtitle-2" >{{displayName}}</p> -->
+                            <a href="#">
+                                <div class="dropdown">
+                                    <a class="w-color dropdown-toggle f-12 b-0"  role="button"
+                                        id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{displayName}}
+                                    </a>
+
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <li>
+                                       <a class="dropdown-item" (click)="logout()">Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </a>
+                            <p class="f-12 m-0" >  {{maskedStr}}   </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row middle-header-info-container p-1 py-0">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8-col-xxl-8 d-flex align-items-center p-0">
+                    <ul class="d-flex mb-0">
+                        <li>
+                            <p class="m-0 active middle-menu-border p-0 pe-2">FY : <span>{{financialYear}}</span></p>
+                        </li>
+                        <li>
+                            <p class="m-0 active p-0 px-2 middle-menu-border">SSO ID : <span>{{ssoId}}</span></p>
+                        </li>
+                        <li>
+                            <p class="m-0 active middle-menu-border p-0 px-2">Treasury Name : <span>{{treasuryName}} - {{treasuryCode}}</span></p>
+                        </li>
+                        <li>
+                           <p class="m-0 active  p-0 px-2">Date  : <span>{{currentDate | date:'dd-MM-yyyy'}}</span></p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-12 col-lg-12 col-xl-4 col-xxl-4 d-none d-md-block p-0">
+                    <div>
+                        <div class="light_blue_bg justify-align-middle align-items-center align-self-center">
+                            <div class="float-end">
+                                <div class="d-flex align-items-center">
+                                    <div class="white_bg p-2">
+                                        <!-- <span>My Desk</span><span class="light_grey_bg py-1 px-4 ms-2">Desk
+                                            2</span>  -->
+                                            &nbsp; &nbsp;  &nbsp; &nbsp; <span>My Role</span><span
+                                            class="light_grey_bg py-1 px-4 ms-2">{{roleName}}</span>
+                                    </div>
+                                    <!-- <div><button class="btn white-button ms-3"><span class="secondary_blue f-12">Change</span></button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row menu-bar-container">
+                <div class="col-12">
+                    <nav class="navbar navbar-expand-md">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" href="#">
+                                <img width="100px" src="./assets/images/rajifms-logo.png">
+                            </a>
+                            <button class="navbar-toggler border-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <!-- <span class="navbar-toggler-icon"></span> -->
+                                <img src="./assets/images/navbar-icon.svg" alt="nav-icon">
+                            </button>
+                            <div class="collapse navbar-collapse justify-content-around" id="navbarNav">
+                                <ul class="navbar-nav menu-options">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" aria-current="page" href="#">My Dashboard</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Budget Management</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Disbursement Engine</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" aria-current="page" href="#">Revenue Management</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Accounting</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

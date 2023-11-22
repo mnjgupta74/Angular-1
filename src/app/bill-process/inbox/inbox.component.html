@@ -1,0 +1,155 @@
+<mat-card class="mx-3 p-2">
+<div class="container-fluid">
+    <div class="row">
+    <div class="row-12">
+        <div class="row">
+                    <div class="col-12 col-md-4 col-lg-2 shadow p-3 mb-5 bg-body rounded">
+                      <ul class="list-group" id="list-tab" role="tablist">
+                        <li class="list-group-item">
+                            <a class="list-group-item d-flex align-item-center list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#" (click)="getInboxDetail(empinfo.aid,'INBOX')" role="tab" aria-controls="list-home"><span><mat-icon>inbox</mat-icon></span><span class="labelwise">Inbox</span>
+                                <span class="badge bg-warning rounded-pill">{{countDetail?.inboxCount}}</span>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a class="list-group-item d-flex align-item-center list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#" (click)="getInboxDetail(empinfo.aid,'OUTBOX')" role="tab" aria-controls="list-home"><span><mat-icon>outbox</mat-icon></span><span class="labelwise">Outbox</span>
+                                <span class="badge rounded-pill">{{countDetail?.outboxCount}}</span>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a class="list-group-item d-flex align-item-center list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#" (click)="getInboxDetail(empinfo.aid,'DRAFT')" role="tab" aria-controls="list-home"><span><mat-icon>drafts</mat-icon></span><span class="labelwise">Drafts</span>
+                                <span class="badge rounded-pill">{{countDetail?.draftCount}}</span>
+                            </a>
+                        </li>
+                     </ul>
+                    </div>
+        <div class="col-12 col-md-8 col-lg-10">
+            <div class="tab-content" id="nav-tabContent">
+        <!-- breadcrumb -->
+    <section>
+            <div class="content-wrapper">
+                <nav aria-label="breadcrumb">
+
+
+                   <div class="float-end mt-2 mr-3">
+                            <button  mat-stroked-button class="btn btn-outline ms-2 rounded-pill bcolor"(click)="View_pensionerlist()">Upcoming Pensioners</button>
+                        </div>
+                </nav>
+            </div>
+    </section>
+    <!-- main-hero section -->
+    <div class="content-wrapper box">
+        <div class="row">
+            <h3>Application Requests</h3>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <button mat-stroked-button class="btn btn-outline ms-2 rounded-pill aa">All Requests</button>
+                <button mat-stroked-button class="btn btn-outline ms-2 rounded-pill">Rejected Requests</button>
+                <button mat-stroked-button class="btn btn-outline ms-2 rounded-pill">Pending Requests</button>
+                <button mat-stroked-button class="btn btn-outline ms-2 rounded-pill">Approved Requests</button>
+            </div>
+            <div class="col-4">
+                <mat-form-field class="w-100 float-end">
+                    <mat-label><mat-icon>search</mat-icon>   Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)"  placeholder="Search" #input >
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="showerror">
+            <strong>Error occurred :- </strong>{{error}}
+          </div>
+        <div class="" style="overflow: auto;">
+            <table mat-table [dataSource]="dataSource" matSort class="w-100">
+                <!-- Request ID -->
+                <ng-container matColumnDef="Request ID">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Request ID</th>
+                    <td mat-cell *matCellDef="let row" matTooltip={{row.createdDate}}>
+                           <a href="JavaScript:Void(0);"(click)="View_Profile(row.requestID,row.taskTranId,row.taskRoleId)">{{row.requestID}}</a>
+                    </td>
+                </ng-container>
+                <!-- Initiator -->
+                <ng-container matColumnDef="Initiator">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Initiator</th>
+                    <td mat-cell *matCellDef="let row"> {{row.initiator}} </td>
+                </ng-container>
+
+                 <!-- Request Description -->
+                <ng-container matColumnDef="Request Description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Request Description</th>
+                    <td mat-cell *matCellDef="let row"> {{row.reqDescription}} </td>
+                </ng-container>
+
+                <!-- Created Date -->
+                <ng-container matColumnDef="Created Date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Initiated Date</th>
+                    <td mat-cell *matCellDef="let row"> {{row.createdDate  | date}} </td>
+                </ng-container>
+                  <!-- Previous Asignee -->
+                  <ng-container matColumnDef="Received From" >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Received From</th>
+                    <td mat-cell *matCellDef="let row" > {{row.previousAsignee}} </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="Status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                    <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                </ng-container> -->
+                <ng-container matColumnDef="Remarks">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Remarks</th>
+                    <td mat-cell *matCellDef="let row">
+                        {{row.remarks}}
+                    </td>
+                </ng-container>
+                   <ng-container matColumnDef="Action">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                    <td td mat-cell *matCellDef="let row">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon>more_vert</mat-icon>
+                          </button>
+                          <mat-menu #menu="matMenu">
+                            <button mat-menu-item *ngIf="isShow" (click)="View_Profile(row.requestID,row.taskTranId,row.taskRoleId)" type="button">
+                              <mat-icon>visibility</mat-icon>
+                              <span>View</span>
+                            </button>
+                            <!-- <button mat-menu-item disabled></button> -->
+                            <button mat-menu-item *ngIf="isShow" (click)="updateRequest()" type="button">
+                              <mat-icon style="color: green;">check_box</mat-icon>
+                              <span>Approve</span>
+                            </button>
+                            <button mat-menu-item *ngIf="isShow" (click)="updateRequest()" type="button">
+                              <mat-icon style="color: red;">highlight_off</mat-icon>
+                              <span>Reject</span>
+                            </button>
+                            <button mat-menu-item (click)="View_History(row.requestID)" type="button">
+                                <mat-icon>history</mat-icon>
+                                <span>View History</span>
+                              </button>
+                          </mat-menu>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                 <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                </tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        </div>
+    </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+    </div>
+</mat-card>
+
+
+
+

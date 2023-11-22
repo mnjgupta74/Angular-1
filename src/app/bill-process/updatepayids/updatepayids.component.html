@@ -1,0 +1,296 @@
+<div class="content-wrapper" appNoRightClick>
+    <section class="content">
+        <div class="light-blue-bg">
+            <mat-card class="p-4">
+                <legend>
+                    <label class="">
+                        <div class="section-title">
+                            <h2>PayId/NonPayId & Division Updation</h2>
+                        </div>
+                    </label>
+                </legend>
+
+                <div class="col-md-12 col-12">
+                    <div class="fieldset">
+                        <div class="row">
+                            <form [formGroup]="updateDivGrp" #options="ngForm">
+                                <div class="row mt-5 m-4">
+                                    <div class="col-md-12 col-sm-12 col-12 d-flex">
+                                        <mat-radio-group aria-label="Select an option" [(ngModel)]="radioOptions"
+                                            formControlName="rblTypeCtrl" (change)="onRadioButtonChange($event)">
+                                            <mat-radio-button color="primary" [checked]="true" value="1">Update
+                                                PayId/NonPayId</mat-radio-button>
+                                            <mat-radio-button color="primary" class="ms-3" value="2">Division
+                                                Update</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5 m-4">
+                                    <ng-container *ngIf="
+                                     display == true;then profileBlock;else serviceBlock">
+                                    </ng-container>
+                                    <ng-template #serviceBlock>
+                                        <div
+                                            class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 col-xxl-3 d-flex justify-content-center">
+                                            <mat-form-field class="w-100" appearance="outline">
+                                                <mat-label>Major Head</mat-label>
+                                                <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                                    (paste)="(false)" formControlName="drpMajorHeadControl"
+                                                    [matAutocomplete]="auto1" [(ngModel)]="SelectMajorHead" />
+                                                <mat-icon class=""
+                                                    style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+                                                </mat-icon>
+                                                <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayMajor">
+                                                    <mat-option *ngFor="let option of MajorHeadoptions | async"
+                                                        [value]="option" (click)="OnMajorHeadSelected(SelectMajorHead)">
+                                                        {{ option.majorheadname }}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template #profileBlock>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 col-xxl-3">
+                                            <mat-form-field class="w-100" appearance="outline">
+                                                <mat-label>Reference No*</mat-label>
+                                                <input matInput type="tel" placeholder="Reference No" (paste)="(false)"
+                                                    formControlName="frmRefNo" />
+                                            </mat-form-field>
+                                        </div>
+                                    </ng-template>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 col-xxl-3">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Voucher No*</mat-label>
+                                            <input matInput type="tel" placeholder="Voucher No" (paste)="(false)"
+                                                formControlName="frmVoucherNo" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div
+                                        class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 col-xxl-3 d-flex justify-content-center">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>FinYear</mat-label>
+                                            <select matNativeControl required formControlName="frmFinYear">
+                                                <option value="2021">2021</option>
+                                                <option value="2022" selected>2022</option>
+                                                <option value="2023">2023</option>
+                                            </select>
+                                        </mat-form-field>
+                                    </div>
+                                    <!-- [(ngModel)]="YearSelected" -->
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 col-xxl-3">
+                                        <button class="btn btn-primary Search-btn-position" mat-raised-button
+                                            color="primary" (click)="searchFn()">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="
+                    display == true;
+                    then profileBlock1;
+                    else serviceBlock1
+                  ">
+                                </ng-container>
+                                <ng-template #profileBlock1>
+                                    <div class="row">
+                                        <div class="overflow-auto">
+                                            <table mat-table [dataSource]="BTSource" class="w-100">
+                                                <ng-container matColumnDef="PayID">
+                                                    <th mat-header-cell *matHeaderCellDef>PayID</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.PayID}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="BudgetHead">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        BudgetHead
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.BudgetHead}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="ObjectHead">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        ObjectHead
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.ObjectHead}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="PDAcNo">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        PDAcNo</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.PDAcNo}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="BFCType">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        BFCType</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.PlanNonPlan}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="HeadType">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        HeadType</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.Voted}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="SanctionNo">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Sanction
+                                                        No</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.SanctionNo}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="SanctionDate">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Sanction
+                                                        Date</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.SanctionDate}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="Remark">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Remark</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.Remark}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="Amount">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Amount</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.Amount}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="Status">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Status</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.flag}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="Treasury">
+                                                    <th mat-header-cell *matHeaderCellDef class="table-col-padding">
+                                                        Treasury</th>
+                                                    <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                        <p class="m-0">{{element.TreasuryCode}}</p>
+                                                    </td>
+                                                </ng-container>
+                                                <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
+                                                <tr class="mat-row" *matNoDataRow>
+                                                    <td class="mat-cell" colspan="4">
+                                                        No data matching the filter.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                    </div> 
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 col-xxl-3">
+                                        <button class="btn btn-primary Search-btn-position" mat-raised-button
+                                            color="primary" (click)="searchFn()">
+                                            Verify PD Amount
+                                        </button>
+                                    </div>
+                                </ng-template>
+
+                                <ng-template #serviceBlock1>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 col-xxl-12">
+                                            <div>
+                                                <table class="table" *ngIf="lstDivDetails">
+                                                    <!-- PayID	BudgetHead	ObjectHead	PDACNo	BFCType	HeadType	Sanction No.	Sanction Date	Remark	Amount	Status	Treasury -->
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th scope="col">S.No.</th>
+                                                            <th scope="col">DetailHead</th>
+                                                            <th scope="col">Amount</th>
+                                                            <th scope="col">Divison Code</th>
+                                                            <th scope="col">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr
+                                                            *ngFor=" let lstPay of lstDivDetails;let indexOfelement = index">
+                                                            <!-- <td>{{indexOfelement+1}} </td> -->
+                                                            <td>{{ indexOfelement + 1 }}</td>
+                                                            <td>{{ lstPay.DetailHead }}</td>
+                                                            <td>{{ lstPay.Amount }}</td>
+                                                            <!-- <td>{{ lstPay.DivisionCode }}</td> -->
+
+                                                            <td>
+                                                                <div *ngIf="lstPay.flag">
+                                                                    <mat-form-field class="w-50" appearance="outline">
+                                                                        <mat-label>Division Code*</mat-label>
+                                                                        <input matInput type="tel"
+                                                                            placeholder="Voucher No" (paste)="(false)"
+                                                                            formControlName="divisionCtrl"
+                                                                            [(ngModel)]="ngModelDivisionCode" />
+                                                                    </mat-form-field>
+                                                                    <!-- <mat-form-field  appearance="outline">
+                                                                        <mat-label>Division Code</mat-label>
+                                                                        <input type="text"
+                                                                            formControlName="divisionCtrl"
+                                                                            [(ngModel)]="ngModelDivisionCode"
+                                                                            class="form-control" />
+                                                                    </mat-form-field> -->
+                                                                </div>
+                                                                <div *ngIf="!lstPay.flag">
+                                                                    {{ lstPay.DivisionCode }}
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div *ngIf="lstPay.flag">
+                                                                    <button class="btn btn-sm btn-success"
+                                                                        (click)="onUpdate(lstPay)">
+                                                                        Update
+                                                                    </button>
+                                                                    <button class="btn btn-sm btn-danger"
+                                                                        (click)="lstPay.flag = false">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                                <div *ngIf="!lstPay.flag">
+                                                                    <button class="btn btn-sm btn-success"
+                                                                        (click)="onEdit(lstPay)">
+                                                                        Edit
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                            <!-- <a [disabled]="element.symbol === 'O'">Edit</a> -->
+                                                            <!-- <button mat-raised-button color="primary" [disabled]="OBJList.ECSNonECS === 'NA'">Edit</button>-->
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <p *ngIf="lstDivDetails == 0"
+                                                    style="text-align: center; font-size: 400">
+                                                    No Data Found
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </mat-card>
+
+        </div>
+    </section>
+</div>
+
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

@@ -1,0 +1,427 @@
+<div class="container-fluid">
+  <mat-card class="mb-3">
+    <mat-label> <b>Token Trail</b></mat-label>
+
+    <div class="col-md-12 col-12">
+      <form [formGroup]="TokenTrailForm" #options="ngForm" (ngSubmit)="TokenTrailSubmit()">
+        <div class="row mt-4">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Treasury</mat-label>
+              <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                formControlName="TreasuryControl" [matAutocomplete]="autoTreas" [(ngModel)]="ChooseOption" />
+              <mat-icon class="" style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                  {{ option.TreasuryName }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="TokenTrailForm.invalid">Please Select Treasury !
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Token No.</mat-label>
+              <input type="tel" placeholder="Token Number" aria-label="Number" (input)="onInput($event,1)" matInput
+                (paste)="(true)" NumberOnlyDirective formControlName="TokenNo" maxlength="8" />
+              <mat-error *ngIf="TokenTrailForm.get('TokenNo').touched">
+                <div class="text-danger error_msg" *ngIf="TokenTrailForm.get('TokenNo').errors?.required">
+                  Please Enter Token Number
+                </div>
+                <div class="text-danger error_msg" *ngIf="TokenTrailForm.get('TokenNo').errors?.pattern">
+                  Please Enter Numerical value
+                </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Ref.No.</mat-label>
+              <input type="text" placeholder="Ref.No" aria-label="Number" (input)="onInput($event,2)" matInput
+                (paste)="(true)" NumberOnlyDirective formControlName="RefNo" maxlength="20" />
+              <mat-error *ngIf="TokenTrailForm.get('RefNo').touched">
+                <div class="text-danger error_msg" *ngIf="TokenTrailForm.get('RefNo').errors?.required">
+                  Please Enter Ref.No.
+                </div>
+                <div class="text-danger error_msg" *ngIf="TokenTrailForm.get('RefNo').errors?.pattern">
+                  Please Enter Numerical value
+                </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              
+            <br>
+            <div style="color:#5757db;">
+              ** Either Treasury And TokenNo Or ReferenceNo is Compulsory !
+             </div>
+           
+            <div class="float-end">
+              <button mat-raised-button color="primary" [disabled]="!options.valid" type="submit">
+                Submit
+              </button>
+              <button mat-stroked-button color="primary" class="ms-3" (click)="Reset()">
+                Reset
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </mat-card>
+
+
+  <mat-card class="mt-3" *ngIf="paymangerStatusdata">
+    <div class="text-center"> <b> Bill Detail </b> </div>
+    <div class="scroll-container" style="overflow: auto">
+      <table mat-table matSort matTableExporter [dataSource]="paymangerResult" style="width:100%" matSort
+        class="mat-elevation-z8" id="test">
+
+
+        <ng-container matColumnDef="RefNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="RefNo by RefNo">
+            Reference No
+          </th>
+          <td mat-cell *matCellDef="let element; let j = index"> {{element.CDE_REFERENCE_NO}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="DDOCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by DDOCode">
+            DDO Code
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.DDOCode}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="OfficeCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by OfficeCode">
+            Office Code
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.OfficeCode}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="BillType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillType">
+            Bill Type
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.BillType}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="subBillType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by subBillType">
+           Sub Bill Type
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.subBillType}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="BudgetHead">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BudgetHead">
+            Budget Head
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.BudgetHead}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Objecthead">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Objecthead">
+            Object Head
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.Objecthead}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="PlanNonPlan">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by PlanNonPlan">
+            Plan NonPlan
+          </th>
+          <td mat-cell *matCellDef="let element"  > 
+            <p *ngFor="let item of element.coPNP" >
+              {{item}}
+            </p>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="VotedCharged">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by VotedCharged">
+            Voted Charged
+          </th>
+          <td mat-cell *matCellDef="let element"  >
+            
+            <p *ngFor="let item of element.coVC" >
+              {{item}}
+            </p>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="BillDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillDate">
+            Bill Date
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.BillDate}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="BillNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BillNo">
+            Bill No.
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.BILLNO}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Demandno">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Demandno">
+            Demand No.
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.Demandno}}
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="PDAcNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by PDAcNo">
+            PDAcNo
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.pdacno}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="TreasuryCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TreasuryCode">
+            Treasury Code
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.TreasuryCode}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="PayYear">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by PayYear">
+            Pay Year
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.PayYear}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="PayMonth">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by PayMonth">
+            Pay Month
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.PayMonth}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="PaymentMode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by PaymentMode">
+            Payment Mode
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.PAYMENT_MODE}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="DeductionAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by DeductionAmount">
+            Deduction Amount
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.DeductionAmount}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Amount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Amount">
+            Amount
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.Amount}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="CashAmoumt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by CashAmoumt">
+            Cash Amoumt
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.CashAmoumt}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="GrossAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by GrossAmount">
+            Gross Amount
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.GrossAmount}}
+          </td>
+        </ng-container>
+
+
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+  </mat-card>
+
+  <mat-card class="mt-3" *ngIf="tokenTrailStatusdata" style="background-color: #dadce8;">
+    <div class="row">
+      <mat-label class="text-center "> <b> System Detail </b> </mat-label>
+    </div>
+    <form [formGroup]="TokenTrailStatusForm" #options="ngForm" (ngSubmit)="TokenTrailSubmit()">
+
+      <div class="row mt-3">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> Reference No.</mat-label>
+            <input type="text" placeholder="Reference No" aria-label="Number" formControlName="ReferenceNo" matInput
+              (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> Token No.</mat-label>
+            <input type="text" placeholder="Token No" aria-label="Number" formControlName="TokenNo" matInput
+              (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> BillType</mat-label>
+            <input type="text" placeholder="BillType" aria-label="Number" formControlName="BillType" matInput
+              (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> MajorHead</mat-label>
+            <input type="text" placeholder="MajorHead" aria-label="Number" formControlName="MajorHead" matInput
+              (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> DDO</mat-label>
+            <input type="text" placeholder="DDO" aria-label="Number" formControlName="DDO" matInput (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> VoucherNo</mat-label>
+            <input type="text" placeholder="VoucherNo" aria-label="Number" formControlName="VoucherNo" matInput
+              (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> VoucherDate </mat-label>
+            <input type="text" placeholder="VoucherDate" aria-label="Number" formControlName="VoucherDate" matInput
+              (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+
+
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> Gross Amount </mat-label>
+            <input type="text" placeholder="Gross Amount" aria-label="Number" formControlName="GrossAmount" matInput
+              (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+          <mat-form-field class="w-100" appearance="legacy">
+            <mat-label> Cash Amount </mat-label>
+            <input type="text" placeholder="Cash Amount" aria-label="Number" formControlName="CashAmount" matInput
+              (paste)="(false)" />
+          </mat-form-field>
+        </div>
+
+
+      </div>
+    </form>
+  </mat-card>
+
+  <mat-card mat-card class="mt-3" *ngIf="tokenTrailStatusdata" style=" background-color: #d8e8d7;">
+    <div class="row">
+
+      <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <div class="scroll-container" style="overflow: auto">
+          <table style="width:100%" class="mat-elevation-z8 " id="test">
+            <tr style="background-color: antiquewhite;">
+              <th> Token Detail </th>
+              <th> Auditor Detail </th>
+              <th> Accountant Detail</th>
+              <th> TO Detail</th>
+            </tr>
+            <tbody>
+              <tr>
+                <td> User :{{tokenTrailStatusResult?.TokenUser}} </td>
+                <td> {{tokenTrailStatusResult?.Auditor}} </td>
+                <td> {{tokenTrailStatusResult?.Accountant}} </td>
+                <td> {{tokenTrailStatusResult?.TO_CODE}} </td>
+              </tr>
+
+              <tr>
+                <td> Receipt Date :{{tokenTrailStatusResult?.ForwardDate}}</td>
+                <td> {{tokenTrailStatusResult?.Auditordate}} </td>
+                <td> {{tokenTrailStatusResult?.Accountantdate}} </td>
+                <td> {{tokenTrailStatusResult?.Todate}} </td>
+              </tr>
+
+              <tr>
+                <td> Diapatch Date :- {{tokenTrailStatusResult?.DispatchDate}}</td>
+
+                <td class="text-{{auditorColour}}">
+                  <a *ngIf="auditorColour=='primary'" class="primary hyperlink"
+                    (click)="auditObjection(tokenTrailStatusResult.TREASURY_REFNO)">
+                    <b>{{tokenTrailStatusResult?.AuditorFlag}}</b></a>
+                  <span *ngIf="auditorColour!='primary'"><b>{{tokenTrailStatusResult?.AuditorFlag}}</b> </span>
+                </td>
+
+                <td class="text-{{acctColour}}">
+                  <a *ngIf="acctColour=='primary'" class="primary hyperlink"
+                    (click)="auditObjection(tokenTrailStatusResult.TREASURY_REFNO)">
+                    <b>{{tokenTrailStatusResult?.Acctflag}}</b></a>
+                  <span *ngIf="acctColour!='primary'"><b>{{tokenTrailStatusResult?.Acctflag}}</b> </span>
+
+
+                </td>
+                <td class="text-{{toColour}}">
+
+
+                  <a *ngIf="toColour=='primary'" class="primary hyperlink"
+                    (click)="auditObjection(tokenTrailStatusResult.TREASURY_REFNO)">
+                    <b>{{tokenTrailStatusResult?.Toflag}}</b> </a>
+                  <span *ngIf="toColour!='primary'"> <b>{{tokenTrailStatusResult?.Toflag}}</b> </span>
+
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </mat-card>
+
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+  <div class="cssload-speeding-wheel"></div>
+</div>

@@ -1,0 +1,45 @@
+<div class="container-fluid">
+    <mat-card>
+         <h2 class="my-2">Upload Files</h2>
+         <form>
+
+            <div class="row mt-4">
+
+                <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column gap-1">
+                    <mat-label class="fw-semibold">Select related document</mat-label>
+                    <mat-form-field appearance="legacy" class="w-100">
+                        <input class="textarea-input" matInput placeholder="Select">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-4 d-flex flex-column gap-1">
+                    <mat-label class="fw-semibold">Choose File/ Attachment</mat-label>
+                    <div class="file-uploder-container d-flex flex-column mt-2">
+                        <div class="upload-lable-text btn py-2">
+
+                            <label *ngIf="!Disabledfile" for="inputGroupFile">Drag & drop or <span class="file-browse">
+                                browse</span></label>
+                
+                            <div *ngIf="Disabledfile" class="d-flex justify-content-between align-items-center">
+                                <a><span style="color:#3281CC;">{{Disabledfile}}</span></a>
+                                <mat-icon (click)="removeSelectedFile()" color="warn" class="fs-5">delete_forever</mat-icon>
+                            </div>
+
+                        </div>
+                
+                        <div class="input-group custom-file-button">
+                            <input type="file" class="form-control file-upload-input hidden" id="inputGroupFile" hidden
+                        multiple="true" (change)="onChangeFile($event)" formControlName="file">
+                        </div>
+
+                    </div>
+                </div>
+        
+            </div>
+
+            <div class="d-flex justify-content-end my-3">
+                <button type="submit" mat-raised-button color="primary">Process Request</button>
+            </div>
+         </form>
+    </mat-card>
+</div>

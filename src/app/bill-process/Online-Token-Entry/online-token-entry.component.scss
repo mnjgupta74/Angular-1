@@ -1,0 +1,22 @@
+// .thead-light{
+//   background-color: #e4edfa;
+//   color: #414141;
+//   font-weight: 600;
+//   padding: 0 12px;
+//   white-space: nowrap;
+// }
+
+    .isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+    text-decoration: none;
+  }
+  
+  .generateToken {
+    color:rgb(11, 76, 230) !important;
+    font-size: 14pt !important;
+    font-weight: bold;
+    text-align: center;
+  }

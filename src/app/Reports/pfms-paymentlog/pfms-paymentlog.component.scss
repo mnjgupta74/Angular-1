@@ -1,0 +1,96 @@
+.mat-column-payloadData{
+    // word-wrap:break-word !important;
+    white-space: unset !important;
+    // flex: 0 0 78% !important;
+    // width: 68% !important;
+    // overflow-wrap: break-word !important;
+    // word-wrap: break-word;
+    // word-break: break-word;
+   // -ms-hyphens: auto;
+   // -moz-hyphens: auto;
+ }
+// mat-cell:nth-child(1),
+// mat-header-cell:nth-child(1) {
+//     flex: 0 0 30%;
+// }
+
+// mat-cell:nth-child(5),
+// mat-header-cell:nth-child(5) {
+//     flex: 0 0 10%;
+// }
+// .mat-column-payloadData {
+//     overflow: initial;
+//   }
+  // .mat-header-cell:last-child,.mat-cell:last-child{
+  //   flex:10%
+  // }
+  table {
+    width: 100%;
+  }
+  
+  tr.example-detail-row {
+    height: 0;
+  }
+  
+  // tr.example-element-row:not(.example-expanded-row):hover {
+  //   background: #777;
+  // }
+  
+  tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+  }
+  
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  .btn_custome_r{ background-color:#ff150059 !important;}
+.btn_custome_r:hover{filter: grayscale(100%);}
+  
+  // .example-element-diagram {
+  //   min-width: 80px;
+  //   border: 2px solid black;
+  //   padding: 8px;
+  //   font-weight: lighter;
+  //   margin: 8px 0;
+  //   height: 104px;
+  // }
+  
+  // .example-element-symbol {
+  //   font-weight: bold;
+  //   font-size: 40px;
+  //   line-height: normal;
+  // }
+  
+  // .example-element-description {
+  //   padding: 16px;
+  // }
+  
+  // .example-element-description-attribution {
+  //   opacity: 0.5;
+  // }
+  
+  .content{
+    overflow: hidden;
+    // width:300px;
+    
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+   
+    }
+    .btn-look {
+      display: inline-block;
+      color: var(--primary);
+     // box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+      box-shadow: 7px 1px 1px -1px #c2c2c27e;
+      padding: 7px;
+      border-radius: 12px;
+      background-color: rgb(230, 238, 255);
+      font-size: 13pt;
+      font-weight: bolder;
+    }

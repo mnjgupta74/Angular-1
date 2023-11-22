@@ -1,0 +1,281 @@
+<div class="content-wrapper" appNoRightClick>
+    <div class="container-fluid">
+        <mat-card class="mb-3">
+
+          <mat-label><b>Cheque Master</b></mat-label>
+
+          <form [formGroup]="CheckMasterGrp" #options="ngForm">
+            <div class="row mt-4">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label> Treasury</mat-label>
+                        <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="TreasuryControl" [matAutocomplete]="autoTreas" [(ngModel)]="ChooseOption">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                {{option.TreasuryName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="CheckMasterGrp.invalid">Please Select Treasury ! </mat-error>
+                    </mat-form-field>
+                 </div>  
+               
+                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label> Fin Year</mat-label>
+                        <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)" formControlName="Year">
+                   </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label>Select Bank</mat-label>
+                      <input type="tel" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)" formControlName="frmBank"  [matAutocomplete]="auto">
+                      <mat-icon style="position: absolute; right:2px; top:0px">arrow_drop_down </mat-icon>
+                      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayBankFn">
+                          <mat-option *ngFor="let option of BankListoptions | async"  [value]="option" (click)="onBankSelected(option.BankBranchCode)">
+                              {{option.BANKNAME}}
+                          </mat-option>
+                      </mat-autocomplete>
+                      <mat-error *ngIf="CheckMasterGrp.get('frmBank').hasError('required') || CheckMasterGrp.get('frmBank').touched">
+                        Bank is required
+                    </mat-error>
+                  </mat-form-field>
+              </div>
+
+
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Cheque Initial</mat-label>
+
+                        <input matInput type="tel" placeholder="Cheque No" maxlength="6" formControlName="frmChequeNo" />
+                        <mat-error *ngIf="ChequeNo && ChequeNo.invalid &&  ChequeNo.touched" class="text-danger error_msg">
+                            <div *ngIf="ChequeNo && ChequeNo.invalid &&  ChequeNo.touched"
+                            class="text-danger error_msg">
+                            <div *ngIf="ChequeNo.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNo.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNo.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNo.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNo.errors?.['cannotContainSpace'] as error">
+                                {{error}}
+                            </div>
+                         </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Cheque From</mat-label>
+
+                        <input matInput type="tel" placeholder="Cheque No"
+                            formControlName="frmChequeFrom" maxlength="6" />
+
+                            <mat-error *ngIf="ChequeNoFrom && ChequeNoFrom.invalid &&  ChequeNoFrom.touched" class="text-danger error_msg">
+                            <div *ngIf="ChequeNoFrom && ChequeNoFrom.invalid &&  ChequeNoFrom.touched"
+                            class="text-danger error_msg">
+                            <div *ngIf="ChequeNoFrom.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNoFrom.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNoFrom.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNoFrom.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNoFrom.errors?.['cannotContainSpace'] as error">
+                                {{error}}
+                            </div>
+                         </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Cheque To</mat-label>
+                        <input matInput type="tel" placeholder="Cheque No"
+                            formControlName="frmChequeTo"  maxlength="6" />
+
+                            <mat-error *ngIf="ChequeNoTo && ChequeNoTo.invalid &&  ChequeNoTo.touched" class="text-danger error_msg">
+                            <div *ngIf="ChequeNoTo && ChequeNoTo.invalid &&  ChequeNoTo.touched"
+                            class="text-danger error_msg">
+                            <div *ngIf="ChequeNoTo.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNoTo.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNoTo.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNoTo.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="ChequeNoTo.errors?.['cannotContainSpace'] as error">
+                                {{error}}
+                            </div>
+                         </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                        <div class="float-end">
+                            <button mat-raised-button color="primary" mat-raised-button
+                            (click)="InsertCheckList()" color="primary" [disabled]="!options.valid"  type="submit"> Submit <!-- <mat-icon>chevron_right</mat-icon> --> </button>
+                            &nbsp;
+                            <button  mat-stroked-button   color="primary"  mat-stroked-button color="primary" type="Reset" (click)="formReset()">Reset </button>
+                        </div>
+                    </div>
+            </div>
+        </form>
+
+      </mat-card>
+  </div>
+  </div>
+
+
+
+  <div class="container-fluid" appNoRightClick>
+
+        <div class="tab-container mt-4" *ngIf="datatableIsVisiable">
+
+                <mat-card class="mt-1">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4" >
+                                <mat-form-field appearance="standard"  role="search" class="w-100">
+                                    <input matInput type="search" placeholder="Enter For Search"
+                                        aria-label="Search" (keyup)="applyFilter($any($event.target).value)">
+                                    <mat-icon matSuffix>search</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                <div *ngIf="loading | async" class="loader-container">
+                </div>
+
+            <div class="scroll-container" style="overflow: auto">
+                <table mat-table matSort matTableExporter [dataSource]="OBListdata"
+                    style="width:100%" (matSortChange)="announceSortChange($event)"
+                    class="mat-elevation-z8" id="test">
+                    <!-- #exporter="matTableExporter" -->
+                    <!-- Position Column -->
+
+                    <ng-container matColumnDef="SrNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            sortActionDescription="Sort by SrNo" class="OBListHdrFont">
+                            SrNo
+                        </th>
+                        <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                            (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="BankName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                        sortActionDescription="Sort by BankName" class="OBListHdrFont">
+                        BankName
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.BankName}}
+                    </td>
+                </ng-container>
+
+
+                    <ng-container matColumnDef="BankBranchCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            sortActionDescription="Sort by BankBranchCode"
+                            class="OBListHdrFont">
+                            BranchName
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.BRANCHNAME}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="ChequeInit">
+                        <th mat-header-cell *matHeaderCellDef
+                            sortActionDescription="Sort by ChequeInit" mat-sort-header class="OBListHdrFont">
+                            ChequeInit
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.ChequeInit}} </td>
+                    </ng-container>
+
+
+
+                    <ng-container matColumnDef="ChequeTo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            sortActionDescription="Sort by ChequeTo" class="OBListHdrFont">
+                            ChequeTo
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.ChequeTo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ChequeFrom">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            sortActionDescription="Sort by ChequeFrom" class="OBListHdrFont">
+                            ChequeFrom
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.ChequeFrom}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Action">
+                        <th mat-header-cell *matHeaderCellDef class="OBListHdrFont">
+                            Action
+                        </th>
+                        <td mat-cell *matCellDef="let element"  (click)="DeleteCheck(element)">
+                            <!-- <td mat-cell *matCellDef="let element"> -->
+                            <!-- <button mat-icon-button matTooltip="Delete">  -->
+                            <button mat-icon-button>
+                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                            </button>
+                            <!-- <button class="btn btn-primary" mat-raised-button
+                            color="primary">Enter</button>-->
+
+
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="empty-row">
+                        <td mat-cell *matCellDef="let element">No Data</td>
+                    </ng-container>
+
+                    <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> -->
+
+
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: OBListdata.data.length > 0 ? displayedColumns : ['empty-row'];"></tr>
+
+                </table>
+            </div>
+                <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                aria-label="Select page of periodic elements">
+            </mat-paginator> -->
+
+                <mat-paginator #myPaginator [length]="5" [pageSize]="5"  [pageSizeOptions]="[5, 10,15,20,25]" showFirstLastButtons>
+                </mat-paginator>
+            </mat-card>
+        </div>
+
+ </div>
+
+
+  <div *ngIf="this.loader.getLoading()" class="cssload-container">
+      <div class="cssload-speeding-wheel"></div>
+  </div>

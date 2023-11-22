@@ -1,0 +1,164 @@
+<div class="container-fluid">
+    <mat-card>
+        <h3>DDO Sign Verification</h3>
+        <form [formGroup]="ddoCheckForm" >
+
+            <div class="row ceiling-container mt-1">
+
+                <div class="col-12 col-sm-8 col-md-8 col-lg-4">
+                  
+                      <mat-form-field class="w-100">
+                        <input type="text" placeholder="Select DDO Code" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="ddoCode" [matAutocomplete]="auto1" [(ngModel)]="selectddoCode">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down</mat-icon>
+                        <mat-autocomplete #auto1="matAutocomplete" [displayWith]="ddoDisplayFn" >
+                            <mat-option *ngFor="let option of ddoOptions | async" [value]="option">
+                                {{option.ddoName}}
+                            </mat-option>
+                        </mat-autocomplete>
+
+                      </mat-form-field>
+                </div>
+            </div>
+
+
+            <div class="d-flex justify-content-end ">
+                <button type="submit" mat-raised-button color="primary"
+                 (click)="submit()">show</button>
+            </div>
+
+        </form>
+    </mat-card>
+</div>
+<div class="container-fluid mt-1 mb-2">
+    <mat-card  [hidden]="!(employeeData?.length > 0) ">
+        <!-- <h3>DDO Details</h3> -->
+
+     
+        <div class="d-flex flex-column">
+            <div  class="row align-center">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-2 border text-center ">
+    
+                    <div class="d-flex flex-column justify-content-between py-2 text-center">
+                 <!-- <strong>Signature II  :</strong> <img src="./assets/images/ashok-national.svg" alt="No Record Found" width="50px" height="50px"> -->
+                <mat-label><strong>DDO Code</strong> </mat-label>
+                <div class="mt-2 ">
+                  {{ddoCheckForm.value.ddoCode?.ddoCode}}
+                </div> 
+                 
+            </div>
+    
+            </div>
+             
+           </div> 
+           <div  class="row align-center">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-2 border text-center ">
+    
+                <div class="d-flex flex-column justify-content-between py-2 text-center">
+             <!-- <strong>Signature II  :</strong> <img src="./assets/images/ashok-national.svg" alt="No Record Found" width="50px" height="50px"> -->
+            <mat-label><strong>DDO Name</strong> </mat-label>
+            <div class="mt-2" style="word-wrap: break-word;">
+                {{ddoName}}
+            </div> 
+             
+        </div>
+
+        </div>
+         
+       </div>
+
+
+
+
+
+            <div  class="row  align-center">
+               
+           
+                <div class="col-12 col-sm-12 col-md-6 col-lg-2 border text-center ">
+    
+                    <div class="d-flex flex-column justify-content-between pt-3 text-center">
+                 <!-- <strong>Signature II  :</strong> <img src="./assets/images/ashok-national.svg" alt="No Record Found" width="50px" height="50px"> -->
+                <mat-label><strong>Signature I  </strong> </mat-label>
+                <div class="mt-2 border py-2 hyperlink">
+                    <img mat-icon-button [height]="50" [src]="src1" alt="No Record Found" accept="image/png, image/gif, image/jpeg"  (click)="openDialog(myTemplate,src1)">
+                </div> 
+                 
+            </div>
+    
+            </div>
+           
+            </div>
+            
+            <div  class="row align-center">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-2 border text-center ">
+    
+                    <div class="d-flex flex-column justify-content-between pt-3">
+                 <!-- <strong>Signature II  :</strong> <img src="./assets/images/ashok-national.svg" alt="No Record Found" width="50px" height="50px"> -->
+                 <mat-label><strong>Signature II  </strong> </mat-label>
+                <div class="mt-2 border py-2 hyperlink">
+                    <img [height]="50" [src]="src2" alt="No Record Found" accept="image/png, image/gif, image/jpeg"  (click)="openDialog(myTemplate,src2)">
+                </div> 
+            </div>
+    
+            </div>
+             
+           </div>
+            
+            <div  class="row mb-3 align-center">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-2 border text-center ">
+    
+                    <div class="d-flex flex-column justify-content-between pt-3">
+                        <mat-label><strong>Signature III  </strong> </mat-label>
+                        <div class="mt-2 border py-2 hyperlink">
+                            <img [height]="50" [src]="src3" alt="No Record Found" accept="image/png, image/gif, image/jpeg"  (click)="openDialog(myTemplate,src3)">
+                        </div> 
+                 <!-- <strong>Signature II  :</strong> <img src="" alt="No Record Found"> -->
+                 
+            </div>
+    
+            </div>
+             
+            </div>
+            
+            <!-- <div class="float-center">
+                <button type="submit" mat-raised-button color="primary" [disabled]="!options.valid"
+                  (click)="updateEmployee()" >Save</button>
+                  <button mat-stroked-button color="primary" class="ms-3" type="button">Cancel</button>
+            </div> -->
+          </div>
+ 
+       
+        
+    </mat-card>
+
+</div>
+<div class="container-fluid mt-2" *ngIf=" employeeData && !(employeeData.length > 0)"   >
+    <mat-card >
+    <div class="demo-2  ceiling-container ">
+     
+    No Record Found ! 
+
+    </div>
+</mat-card>
+   </div>
+
+   <!-- // this template is invisible. It will be shown in the popup -->
+<ng-template #myTemplate>
+
+    <div class="d-flex justify-content-end  align-items-center mb-1" mat-dialog-title cdkDrag
+      cdkDragRootElement=".cdk-overlay-pane">
+  
+      <button mat-icon-button class="close-button" (click)="myDialogRef?.close()">
+        <!-- <mat-icon class="close-icon">close</mat-icon> -->
+        <img src="./assets/images/cross.svg" alt="">
+      </button>
+    </div>
+    <img class="popup" src="./assets/images/ashok-national.svg" style="height: 450px;; width:500px">
+    <!-- <button (click)="myDialogRef?.close()">this close button is optional</button> -->
+  </ng-template>
+  
+     <!-- loader start -->
+  <div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+  </div>
+  <!-- loader End -->

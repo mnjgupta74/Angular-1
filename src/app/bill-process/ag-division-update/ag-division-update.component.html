@@ -1,0 +1,280 @@
+<div class="container-fluid">
+    <mat-card class="mb-3">
+        <mat-label> <b>Ag Office DivisionCode Update</b></mat-label>
+    
+        <div class="col-md-12 col-12">
+          <form
+            [formGroup]="AgDivisionSearchForm"
+            #options="ngForm"  (ngSubmit)="GetAgOfficeDetail()"
+            
+          >
+            <div class="row mt-6">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label>AG Div Code </mat-label>
+        
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Enter AG Div Code"
+                        name="AGDivCode"
+                        (paste)="(false)"
+                        formControlName="AGDivCode"
+                        NumberOnlyDirective
+                        
+                       
+                        
+                      />
+                     
+       
+                      <mat-error
+                        *ngIf="AGDivCode && AGDivCode.invalid && AGDivCode.touched"
+                        class="text-danger error_msg"
+                      >
+                        <div *ngIf="AGDivCode.errors?.['Required'] as error">
+                          {{ error }}
+                        </div>
+                       
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                      <mat-label>Division Code *</mat-label>
+        
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Enter Division Code"
+                        name="DivisionCode"
+                        (paste)="(false)"
+                        formControlName="DivisionCode"
+                        NumberOnlyDirective
+                     
+                        
+                      />
+
+                      <mat-error
+                      *ngIf="DivisionCode && DivisionCode.invalid && DivisionCode.touched"
+                      class="text-danger error_msg"
+                    >
+                      <div *ngIf="DivisionCode.errors?.['Required'] as error">
+                        {{ error }}
+                      </div>
+                      </mat-error>
+        
+                     
+                    </mat-form-field>
+                  </div>
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                  <mat-label> Treasury</mat-label>
+                  <input
+                    type="text"
+                    placeholder="Pick one"
+                    aria-label="Number"
+                    matInput
+                    (paste)="(false)"
+                    formControlName="TreasuryControl"
+                    [matAutocomplete]="autoTreas"
+                    [(ngModel)]="ChooseOption"
+                  />
+                  <mat-icon
+                    class=""
+                    style="position: absolute; right: 2px; top: 0px"
+                    >arrow_drop_down
+                  </mat-icon>
+                  <mat-autocomplete
+                    #autoTreas="matAutocomplete"
+                    [displayWith]="displayTreasFn"
+                  >
+                    <mat-option
+                      *ngFor="let option of Treasuryoptions | async"
+                      [value]="option"
+                    >
+                      {{ option.TreasuryName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="AgDivisionSearchForm.invalid"
+                    >Please Select Treasury !
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div
+              class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"
+            >
+              <div class="float-end">
+                <button
+                  mat-raised-button
+                  color="primary"
+                 
+                  type="submit"
+                 
+                >
+                  Search
+                </button>
+               
+
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  class="ms-3"
+                  [disabled]="newBtnShow"
+                  type="Button" (click)="insertNewRecord()"
+                >
+                  New
+                </button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  class="ms-3"
+                  type="button" (click)="searchReset()"
+                 
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+           </div>
+          </form>
+          </div>
+            <div class="col-md-12 col-12">
+            <form
+            [formGroup]="AgDivisionUpdateForm"
+            #updateForm="ngForm" (ngSubmit)="SaveAgOfficeDetail($event.submitter.id)"
+            
+          >
+            <div class="row mt-6" *ngIf="show">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                  <mat-label>OfficeId *</mat-label>
+    
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="Enter OfficeId"
+                    name="OfficeId"
+                    (paste)="(false)"
+                    formControlName="OfficeId"
+                    
+                 
+                    
+                  />
+    
+                  
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                  <mat-label>AGDivCode *</mat-label>
+    
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="Enter AG Div Code"
+                    name="AGDiv"
+                    (paste)="(false)"
+                    formControlName="AGDiv"
+                    
+                 
+                    
+                  />
+    
+                  
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                  <mat-label>Division Code *</mat-label>
+    
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="Enter Division Code"
+                    name="Division"
+                    (paste)="(false)"
+                    formControlName="Division"
+                    NumberOnlyDirective
+                 
+                    
+                  />
+    
+                  
+                </mat-form-field>
+              </div>
+
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                  <mat-label>Division Name *</mat-label>
+    
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="Enter Division Name"
+                    name="Division Name"
+                    (paste)="(false)"
+                    formControlName="DivisionName"
+                  
+                  />
+     
+                </mat-form-field>
+              </div>
+
+              <div
+                class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"
+              >
+                <div class="float-end">
+                  <button
+                    mat-raised-button
+                    color="primary" 
+                    id="update" *ngIf="updateShow"
+                    type="Submit"  [disabled]="!updateForm.valid"
+                  >
+                    Update
+                  </button>
+
+                  <button
+                    mat-raised-button
+                    color="primary"  class="ms-3"
+                    id="deactivate" *ngIf="deActivateShow"
+                    type="Submit"  [disabled]="!updateForm.valid"
+                  >
+                  Deactivate
+                  </button>
+
+                  <button
+                  mat-raised-button
+                  color="primary"
+                  id="insert" *ngIf="insertShow"
+                  type="Submit"  [disabled]="!updateForm.valid"
+                >
+                  Insert
+                </button>
+                
+                 
+
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    class="ms-3"
+                   
+                    type="Button" (click)="cancelBtn()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+           </div>
+          </form>
+        </div>
+      </mat-card>
+
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+  <div class="cssload-speeding-wheel"></div>
+</div>

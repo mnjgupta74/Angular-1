@@ -1,0 +1,86 @@
+<div class="container-fluid">
+    <mat-card class="mt-3 mb-5" *ngIf="displayACBill">
+        <form [formGroup]="ACBILLLForm">
+        <h2>AC Bill Report</h2>
+           
+        <div class="row">
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                    <input type="text" aria-label="Number" matInput (paste)="(false)" formControlName="treasuryval"
+                        [matAutocomplete]="auto" placeholder="Treasury">
+                    <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                    </mat-icon>
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaytreasury">
+                        <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                            {{option.TreasuryName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="ACBILLLForm.invalid">Please Select Treasury ! </mat-error>
+                </mat-form-field>
+            </div>
+            
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                    <mat-label> From Date*</mat-label>
+                    <input matInput [max]="ACBILLLForm.controls.toDate.value" [matDatepicker]="fromDatepicker"
+                        title="Date From" formControlName='fromDate'>
+                    <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #fromDatepicker></mat-datepicker>
+                    <mat-error *ngIf="ACBILLLForm.invalid">Please select the from date </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                    <mat-label>To Date*</mat-label>
+                    <input matInput [min]="ACBILLLForm.controls.fromDate.value" [matDatepicker]="picker2"
+                        formControlName="toDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error *ngIf="ACBILLLForm.invalid">Please select the to date </mat-error>
+                </mat-form-field>
+            </div>
+
+           
+        </div>
+
+
+
+      
+
+        <div class="row mt-3">
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4 ">
+                <div class="w-100">
+                 <mat-label>Report View </mat-label>
+                 <mat-radio-group aria-label="Select an option"  tab=truer>
+                     <mat-radio-button color="primary" class="ms-3" value="P">
+                         Simple</mat-radio-button>
+                     <mat-radio-button color="primary" [checked]="true" class="ms-3"
+                         value="R">PDF</mat-radio-button>
+                    
+                 </mat-radio-group>
+             </div> 
+             </div>
+
+          
+            <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-form-field class="w-100" appearance="legacy">
+                    <input type="text" placeholder="FinYear" aria-label="Number" matInput (paste)="(false)"
+                        formControlName="finyear">
+                </mat-form-field>
+            </div> -->
+        </div>
+       
+        <div class="d-flex justify-content-end gap-2">
+            <!-- <div *ngIf="!tokenDetailsForm.invalid"> -->
+            <button class="btn btn-primary" mat-raised-button color="primary" [disabled]="!ACBILLLForm.valid"
+                >Show</button>
+            <!-- <button mat-stroked-button color="primary" class="ms-3" (click)="onreset()">Reset</button> -->
+            <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+            <!-- </div> -->
+        </div>
+    </form>
+</mat-card>
+</div>

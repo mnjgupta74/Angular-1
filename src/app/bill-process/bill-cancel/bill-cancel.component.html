@@ -1,0 +1,270 @@
+   
+    <div class="container-fluid">
+        <mat-card>
+            <h2>Bill Cancel</h2><br>
+            <!-- <small class="d-flex align-items-center"> 
+                <p class="f-14" placeholder="Treasury" name="Treasury" (paste)="(false)"><b>Treasury : </b>{{this.GetBillCancelFetchListModal.treaCode}} </p>
+                <p class="f-14 ms-4" placeholder="Year" name="Year" (paste)="(false)"><b>Fin Year : </b>{{finYr}}</p>
+            </small> -->
+             
+                          <form [formGroup]="BillCancelForm" #options="ngForm"> 
+                            <div class="row align-items-center">
+ 
+                                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                   
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label> Treasury</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                            formControlName="TreasuryControl" [matAutocomplete]="autoTreas" [(ngModel)]="ChooseOption">
+                                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                                {{option.TreasuryName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="BillCancelForm.invalid">Please Select Treasury ! </mat-error>
+                                    </mat-form-field>
+    
+     
+                                 </div>  
+                               
+                                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label> Fin Year</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)" formControlName="Year">
+                                   </mat-form-field>
+                                </div>
+ 
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                        <mat-radio-group aria-label="Select an option" formControlName="rblTypeCtrl"  (change)="radioButtonGroupChange($event)"> 
+                                                <mat-radio-button color="primary"   [checked]="mat_radio_1" class="ms-2 ms-sm-3" value="1"> Non PD</mat-radio-button>
+                                                <mat-radio-button color="primary"   [checked]="mat_radio_2" class="ms-2 ms-sm-3" value="2">PD/CashZero/Others</mat-radio-button>
+                                                <mat-radio-button color="primary"   [checked]="mat_radio_3" class="ms-2 ms-sm-3" value="3">Receipt Bills</mat-radio-button>
+                                                <mat-error *ngIf="BillCancelForm.get('rblTypeCtrl').invalid && BillCancelForm.get('rblTypeCtrl').touched">Please Select Option </mat-error>
+                                        </mat-radio-group>
+                                    </div>
+ 
+                            <div class="row mt-3 align-items-center">
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Token No.*</mat-label>
+                                            <input matInput type="tel" placeholder="Token No." name="Token Number"
+                                            autocomplete="off" (paste)="(false)" formControlName="TokenNum" />
+                                            <mat-error *ngIf="TokenNum && TokenNum.invalid &&  TokenNum.touched" class="text-danger error_msg">
+                                            <div *ngIf="TokenNum && TokenNum.invalid &&  TokenNum.touched"
+                                            class="text-danger error_msg">
+
+                                            <div *ngIf="TokenNum.errors?.['maxLength'] as error">
+                                                {{error}}
+                                            </div>
+                                            <div *ngIf="TokenNum.errors?.['SpecialChar'] as error">
+                                                {{error}}
+                                            </div>
+                                            <div *ngIf="TokenNum.errors?.['Numeric'] as error">
+                                                {{error}}
+                                            </div>
+                                            <div *ngIf="TokenNum.errors?.['cannotContainSpace'] as error">
+                                                {{error}}
+                                            </div>
+                                        </div>
+                                    </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>DDOCode*</mat-label>
+                                        <input matInput type="tel" placeholder="DDOCode"
+                                        autocomplete="off"   name="DDOCode" (paste)="(false)"
+                                            formControlName="DDOCode" />
+                                            <mat-error *ngIf="DDOCode && DDOCode.invalid &&  DDOCode.touched" class="text-danger error_msg">
+                                        <div *ngIf="DDOCode && DDOCode.invalid &&  DDOCode.touched"
+                                            class="text-danger error_msg">
+                                            <div *ngIf="DDOCode.errors?.['Required'] as error">
+                                                {{error}}
+                                            </div>
+                                            <div *ngIf="DDOCode.errors?.['minLength'] as error">
+                                                {{error}}
+                                            </div>
+                                            <div *ngIf="DDOCode.errors?.['maxLength'] as error">
+                                                {{error}}
+                                            </div>
+                                            <div *ngIf="DDOCode.errors?.['Numeric'] as error">
+                                                {{error}}
+                                            </div>
+                                            <div *ngIf="DDOCode.errors?.['cannotContainSpace'] as error">
+                                                {{error}}
+                                            </div>
+                                         </div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div> -->
+                              
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"> 
+                                    <div class="float-end"> 
+                                            <button mat-raised-button color="primary" (click)="BillCancelFetch()" [disabled]="!options.valid"  type="submit">Show</button>
+                                            <button mat-stroked-button color="primary" class="ms-3"  (click)="BillCancelShowReset()" type="submit"> Reset</button>    
+                                     </div>
+                                 </div> 
+                            </div>
+                            
+                    </div>                    
+                       
+
+                       </form>
+                     
+                    </mat-card>
+         
+   </div>
+         
+
+    <div class="container-fluid" appNoRightClick *ngIf="showTab_Table"> 
+
+                    <div class="tab-container mt-4">
+                        <mat-card class="mb-3">
+                            <form [formGroup]="BillCancelForm" #options="ngForm">
+                            <div *ngIf="loading | async" class="loader-container">
+                            </div>
+                            <div class="scroll-container" style="overflow: auto">
+                            <table mat-table matSort matTableExporter [dataSource]="BillCancelDetails"
+                                style="width:100%" (matSortChange)="announceSortChange($event)" matSort
+                                class="mat-elevation-z8" id="test">
+                              
+            
+                                <ng-container matColumnDef="SrNo">
+                                    <th mat-header-cell *matHeaderCellDef   mat-sort-header
+                                        sortActionDescription="Sort by SrNo" class="OBListHdrFont">
+                                        SrNo
+                                    </th>
+                                    <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                                        (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                                </ng-container>
+            
+
+
+                              <ng-container matColumnDef="TokenNo">
+                                    <th mat-header-cell *matHeaderCellDef   mat-sort-header
+                                        sortActionDescription="Sort by TokenNo" class="OBListHdrFont">
+                                        Token No
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.TokenNo}}
+                                    </td>
+                                </ng-container>
+
+                                
+                          <ng-container matColumnDef="OfficeId">
+                                <th mat-header-cell *matHeaderCellDef   mat-sort-header
+                                    sortActionDescription="Sort by OfficeId" class="OBListHdrFont">
+                                    OfficeId
+                                </th>
+                                <td mat-cell *matCellDef="let element"> {{element.OfficeId}}
+                                </td>
+                            </ng-container>
+            
+            
+                                <ng-container matColumnDef="DDOCode">
+                                    <th mat-header-cell *matHeaderCellDef  mat-sort-header
+                                        sortActionDescription="Sort by DDOCode"
+                                        class="OBListHdrFont">
+                                        DDOCode
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.DDOCode}} </td>
+                                </ng-container>
+            
+            
+                                <ng-container matColumnDef="BillType">
+                                    <th mat-header-cell *matHeaderCellDef  mat-sort-header
+                                        sortActionDescription="Sort by BillType" class="OBListHdrFont">
+                                        BillType
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.BillType}} </td>
+                                </ng-container>
+            
+            
+                                <ng-container matColumnDef="BankBranchCode">
+                                    <th mat-header-cell *matHeaderCellDef  mat-sort-header
+                                        sortActionDescription="Sort by BankBranchCode" class="OBListHdrFont">
+                                        BankBranchCode
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.BankBranchCode}} </td>
+                                </ng-container>
+            
+
+                                <ng-container matColumnDef="ChequeDate">
+                                    <th mat-header-cell *matHeaderCellDef  mat-sort-header
+                                        sortActionDescription="Sort by ChequeDate" class="OBListHdrFont">
+                                        ChequeDate
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.ChequeDate}} </td>
+                                </ng-container>
+
+
+                                <ng-container matColumnDef="ChequeCancelDate">
+                                    <th mat-header-cell *matHeaderCellDef  mat-sort-header
+                                        sortActionDescription="Sort by ChequeCancelDate" class="OBListHdrFont">
+                                        ChequeCancelDate
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.ChequeCancelDate}} </td>
+                                </ng-container>
+
+
+                                <ng-container matColumnDef="ChequeNo">
+                                    <th mat-header-cell *matHeaderCellDef  mat-sort-header
+                                        sortActionDescription="Sort by ChequeNo" class="OBListHdrFont">
+                                        ChequeNo
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.ChequeNo}} </td>
+                                </ng-container>
+ 
+
+                                <ng-container matColumnDef="empty-row">
+                                    <td mat-cell *matCellDef="let element">Data Not Found !</td>
+                                </ng-container>
+            
+                                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> 
+             
+            
+                            </table>
+                        </div>
+                            <mat-paginator #myPaginator [length]="25" [pageSize]="5"
+                                [pageSizeOptions]="[5, 10]">
+                            </mat-paginator>
+                        </form>
+                        </mat-card>
+                    </div>
+            
+    </div>
+
+          
+    <div class="container-fluid" *ngIf="showTab_Reason">
+                    <mat-card class="mt-2">
+                            <form [formGroup]="BillCancelFormReason" #optionsReason="ngForm">
+                                <div class="row mt-5">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                <mat-form-field class="example-full-width w-100">
+                                                <mat-label>Enter Reason:</mat-label>
+                                                <textarea matInput name="Reason" cols="200" rows="5" formControlName="Reason"  placeholder="Please Enter Reason !" [(ngModel)]="reasonStatus" required></textarea>  
+                                            </mat-form-field> 
+                                        </div> 
+                                        
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                                                <div class="float-end"> 
+                                                        <button mat-raised-button color="primary" [disabled]="!optionsReason.valid" (click)="BillCancelSubmit()" type="submit">Submit</button>
+                                                        <button mat-stroked-button color="primary" class="ms-3"  (click)="BillCancelSubmitReset()" type="submit">Reset Reason</button>    
+                                                 </div>
+                                             </div> 
+                                            </div>
+                                </div> 
+                            </form>
+                        </mat-card>
+    </div>
+
+ 
+  <div *ngIf="this.loader.getLoading()" class="cssload-container">
+      <div class="cssload-speeding-wheel"></div>
+  </div>
+
+ 

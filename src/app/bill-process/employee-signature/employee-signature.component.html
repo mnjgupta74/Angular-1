@@ -1,0 +1,134 @@
+<div class="container-fluid">
+  <mat-card>
+    <h3>Employee Signature/photograph</h3>
+    <form [formGroup]="ddoCheckForm">
+
+      <div class="row ceiling-container mt-1">
+
+        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+
+          <mat-form-field class="w-100">
+
+            <input type="text" placeholder="Select DDO Code" aria-label="Number" matInput (paste)="(false)"
+              formControlName="ddoCode" [matAutocomplete]="auto1" [(ngModel)]="selectddoCode">
+            <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+            </mat-icon>
+            <mat-autocomplete #auto1="matAutocomplete" [displayWith]="ddoDisplayFn">
+              <mat-option *ngFor="let option of ddoOptions | async" [value]="option">
+                {{option.ddoName}}
+              </mat-option>
+            </mat-autocomplete>
+
+          </mat-form-field>
+        </div>
+
+
+
+
+      </div>
+
+
+      <div class="d-flex justify-content-end ">
+        <button type="submit" mat-raised-button color="primary" (click)="submit()">Check</button>
+      </div>
+
+    </form>
+  </mat-card>
+</div>
+<div class="container-fluid mt-1">
+  <mat-card [hidden]="!submitted">
+    <h3>DDO Details</h3>
+    <form [formGroup]="imagesForm" #options="ngForm">
+
+      <div class="d-flex flex-column">
+        <div class="row  align-center">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-5 border text-center ">
+
+            <div class="d-flex flex-row justify-content-between py-3 hyperlink">
+
+              <strong>Signature I :</strong> <img [src]="src1" [height]="50" alt="No Record Found"
+                accept="image/png, image/gif, image/jpeg" (click)="openDialog(myTemplate,src1)">
+
+            </div>
+
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-7  border ">
+
+            <input class="py-3" type="file" formControlName="signI" accept="image/png, image/jpg, image/jpeg"
+              (change)="showPreview($event,1,'signI')">
+
+          </div>
+        </div>
+
+        <div class="row align-center">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-5 border text-center ">
+
+            <div class="d-flex flex-row justify-content-between py-3 hyperlink">
+              <!-- <strong>Signature II  :</strong> <img src="./assets/images/ashok-national.svg" alt="No Record Found" width="50px" height="50px"> -->
+              <strong>Signature II :</strong> <img [src]="src2" [height]="50" alt="No Record Found"
+                (click)="openDialog(myTemplate,src2)">
+
+            </div>
+
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-7  border ">
+
+
+
+            <input class="py-3" type="file" formControlName="signII" accept="image/png, image/jpg, image/jpeg"
+              (change)="showPreview($event,2,'signII')">
+          </div>
+        </div>
+
+        <div class="row mb-3 align-center">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-5 border text-center ">
+
+            <div class="d-flex flex-row justify-content-between py-3 hyperlink">
+              <strong>Signature III :</strong> <img [src]="src3" [height]="50" alt="No Record Found"
+                (click)="openDialog(myTemplate,src3)">
+
+
+            </div>
+
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-7  border ">
+
+
+            <!-- <input class="py-3" type="file"  accept="image/png, image/gif, image/jpeg"  (change)="showPreview($event,3,'signIII')" > -->
+            <input class="py-3" type="file" formControlName="signIII" accept="image/png, image/jpg, image/jpeg"
+              (change)="showPreview($event,3,'signIII')">
+          </div>
+        </div>
+
+        <div class="float-center">
+          <button type="submit" mat-raised-button color="primary" (click)="updateEmployee()">{{buttonText}}</button>
+          <button mat-stroked-button color="primary" class="ms-3" type="button" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+
+    </form>
+
+
+  </mat-card>
+
+</div>
+<!-- // this template is invisible. It will be shown in the popup -->
+<ng-template #myTemplate>
+
+  <div class="d-flex justify-content-end  align-items-center mb-1" mat-dialog-title cdkDrag
+    cdkDragRootElement=".cdk-overlay-pane">
+
+    <button mat-icon-button class="close-button" (click)="myDialogRef?.close()">
+      <!-- <mat-icon class="close-icon">close</mat-icon> -->
+      <img src="./assets/images/cross.svg" alt="">
+    </button>
+  </div>
+  <img class="popup" src="./assets/images/ashok-national.svg" style="height: 450px;; width:500px">
+  <!-- <button (click)="myDialogRef?.close()">this close button is optional</button> -->
+</ng-template>
+
+<!-- loader start -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+  <div class="cssload-speeding-wheel"></div>
+</div>
+<!-- loader End -->

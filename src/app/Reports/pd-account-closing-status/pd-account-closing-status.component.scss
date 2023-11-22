@@ -1,0 +1,30 @@
+.example-1 {
+  position: relative;
+  overflow-y: scroll;
+  height: 150px;
+
+
+  /* width: 100%; */
+}
+.matCellDanger {
+  background-color: rgb(255, 209, 209);
+  color:rgb(0, 0, 0);
+
+}
+
+.matCellPrimary {
+  background-color: rgb(180, 228, 180);
+  color:rgb(0, 0, 0);
+}
+
+//  .mat-form-field-infix {
+//   padding: 0em 0 1em 0 !important;
+// }
+
+
+.mat-form-field-appearance-outline {
+  .mat-form-field-infix {
+
+    padding: 0em 0 1em 0 !important;
+  }
+}

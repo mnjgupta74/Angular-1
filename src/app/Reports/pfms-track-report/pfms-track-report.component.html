@@ -1,0 +1,215 @@
+<div class="container-fluid">
+    <mat-card>
+        <form [formGroup]="PfmsTrackReportform"  #options="ngForm">
+            <h2>PFMS Track Report</h2>
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" aria-label="Number" matInput (paste)="(false)" formControlName="treasuryval"
+                            [matAutocomplete]="auto" placeholder="Treasury">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaytreasury">
+                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                {{option.TreasuryName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="PfmsTrackReportform.invalid">Please Select Treasury ! </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" placeholder="FinYear" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="finyear">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <!-- <div class="row mt-2"> -->
+                <!-- <div class="col-md-12 col-sm-12 col-12 d-flex "> -->
+                <mat-radio-group aria-label="Select an option" (change)="radioButtonGroupChange($event)"
+                    formControlName="rblTypeCtrl">
+                    <mat-radio-button color="primary" [checked]="mat_radio_1" value="1">Search By Date
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" [checked]="mat_radio_2" class="ms-3" value="2">Search By
+                        CDE Ref. No.</mat-radio-button>
+                </mat-radio-group>
+                <!-- </div> -->
+            </div>
+
+
+
+            <div *ngIf="!display">
+                <div class="row mt-3">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> From Date*</mat-label>
+                            <input matInput [max]="PfmsTrackReportform.controls.toDate.value"
+                                [matDatepicker]="fromDatepicker" title="Date From" formControlName='fromDate'>
+                            <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #fromDatepicker></mat-datepicker>
+                            <mat-error *ngIf="PfmsTrackReportform.invalid">Please select the from date </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>To Date*</mat-label>
+                            <input matInput [min]="PfmsTrackReportform.controls.fromDate.value"
+                                [matDatepicker]="picker2" formControlName="toDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                            <mat-error *ngIf="PfmsTrackReportform.invalid">Please select the to date </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="display">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Cde_Ref No.</mat-label>
+                        <input matInput type="number"  formControlName='Referenceno'
+                            onKeyPress="if(this.value.length==19) return false;" />
+                        <mat-error *ngIf="PfmsTrackReportform.invalid">Please Enter Valid Value ! </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-primary" mat-raised-button  [disabled]="!options.valid" (click)="onSearch()" color="primary">Search</button>
+                <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+            </div>
+        </form>
+    </mat-card>
+    <mat-card class="mt-3" *ngIf="showpfmstrackTable">
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field appearance="standard" role="search" class="w-75">
+                    <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                        (keyup)="applyFilter($any($event.target).value)">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+        <!-- <button (click)="capture()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"> 
+            <img alt="Download RBI Paymet Files Pdf Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+        </button> -->
+        <div class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+            <button (click)="exportToPdf()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"> 
+                <img alt="Download RBI Paymet Files Pdf Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+            </button>
+            <button mat-raised-button class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"
+            (click)="exportexcel(this.exportcompletedata, this.filename)">
+            <img alt="Download RBI Paymet Files Excel Report" src="./assets\images\icons8-export-excel-24.png"  matTooltip="Click here to export Excel"></button>
+        </div>
+
+
+        <div class="scroll-container tab-container mt-4" style="overflow: auto">
+            <table width="100%" mat-table matSort matTableExporter [dataSource]="Getpfmstrackdata"
+                class="mat-elevation-z8" style="width: 100%;"  id="LIST" #LIST>
+                <ng-container matColumnDef="SrNo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Sr No.
+                    </th>
+                    <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                        (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                </ng-container>
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="CDE_REFNO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                        Cde_Reference No.
+                    </th>
+                    <td mat-cell *matCellDef="let element"><a class="primary hyperlink"
+                            [ngClass]="{'isDisabled':element.CDE_REFNO==0}" (click)="viewDocumentPopup(element)"
+                            [routerLink]="">
+                            {{element.CDE_REFNO}} </a> </td>
+                </ng-container>
+                <ng-container matColumnDef="TREASURY_CODE">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TREAS_NAME_EN">
+                        Treasury Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">{{element.TREASURY_CODE}}-{{element.TREAS_NAME_EN}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="TOKENNO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Token_info">
+                        Token No.<br />
+                        Token By<br />
+                        Token Date<br />
+                        Token Status<br />
+                    </th>
+                   
+                    <td mat-cell *matCellDef="let element"  >
+                        {{element.TOKENNO}}<br />{{element.TOKEN_ACTION_BY}}<br />{{element.TOKEN_ACTION_DATE}}<br /> <span [ngClass]="[element.TOKEN_ACTION_FLAG == 'OBJECTION' ? 'showObjCol': '' || element.TOKEN_ACTION_FLAG == 'PASS' ? 'showPassolor' : ''||element.TOKEN_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.TOKEN_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.TOKEN_ACTION_FLAG=='PENDING'?'showPENDcol':'']">{{element.TOKEN_ACTION_FLAG}}</span>
+                                        
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="AUDITOR_ACTION_BY">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Auditor_info">
+                        Auditor By<br />
+                        Auditor Date<br />
+                        Auditor Status<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.AUDITOR_ACTION_BY}}<br />{{element.AUDITOR_ACTION_DATE}}<br />
+                        <span [ngClass]="[element.AUDITOR_ACTION_FLAG == 'OBJECTION' ? 'showObjCol': '' || element.AUDITOR_ACTION_FLAG == 'PASS' ? 'showPassolor' : ''||element.AUDITOR_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.AUDITOR_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.AUDITOR_ACTION_FLAG=='PENDING'?'showPENDcol':'']">{{element.AUDITOR_ACTION_FLAG}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="CHECKER_ACTION_BY">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Checker_info">
+                        Checker By<br />
+                        Checker Date<br />
+                        Checker Status<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.CHECKER_ACTION_BY}}<br />{{element.CHECKER_ACTION_DATE}}<br />
+                        <span [ngClass]="[element.CHECKER_ACTION_FLAG == 'OBJECTION' ? 'showObjCol': '' || element.CHECKER_ACTION_FLAG == 'PASS' ? 'showPassolor' : ''||element.CHECKER_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.CHECKER_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.CHECKER_ACTION_FLAG=='PENDING'?'showPENDcol':'']">{{element.CHECKER_ACTION_FLAG}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="TO_ACTION_BY">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by To_info">
+                        TO By<br />
+                        TO Date<br />
+                        TO Status<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.TO_ACTION_BY}}<br />{{element.TO_ACTION_DATE}}<br />
+                        <span [ngClass]="[element.TO_ACTION_FLAG == 'OBJECTION' ? 'showObjCol': '' || element.TO_ACTION_FLAG == 'PASS' ? 'showPassolor' : ''||element.TO_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.TO_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.TO_ACTION_FLAG=='PENDING'?'showPENDcol':'']">{{element.TO_ACTION_FLAG}}</span>
+                        
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="SNA_ACTION_BY">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Sna_info">
+                        SNA By<br />
+                        SNA Date<br />
+                        SNA Status<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.SNA_ACTION_BY}}<br />{{element.SNA_ACTION_DATE}}<br />
+                        <span [ngClass]="[element.SNA_ACTION_FLAG == 'OBJECTION' ? 'showObjCol': '' || element.SNA_ACTION_FLAG == 'PASS' ? 'showPassolor' : ''||element.SNA_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.SNA_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.SNA_ACTION_FLAG=='PENDING'?'showPENDcol':'']">{{element.SNA_ACTION_FLAG}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="PFMS_ACTION_BY">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by PFMS_info">
+                        PFMS By<br />
+                        PFMS Date<br />
+                        PFMS Status<br />
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.PFMS_ACTION_BY}}<br />{{element.PFMS_ACTION_DATE}}<br />
+                        <span [ngClass]="[element.PFMS_ACTION_FLAG == 'OBJECTION' ? 'showObjCol': '' || element.PFMS_ACTION_FLAG == 'PASS' ? 'showPassolor' : ''||element.PFMS_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.PFMS_ACTION_FLAG=='DELETED'?'showDELEcol':''||element.PFMS_ACTION_FLAG=='PENDING'?'showPENDcol':'']">{{element.PFMS_ACTION_FLAG}}</span>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <mat-paginator #myPaginator [length]="5" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]" showFirstLastButtons>
+        </mat-paginator>
+    </mat-card>
+</div>
+
+<!-- <mat-spinner color="warn"></mat-spinner> -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

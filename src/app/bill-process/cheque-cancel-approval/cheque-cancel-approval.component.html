@@ -1,0 +1,157 @@
+<div class="container-fluid" appNoRightClick>
+    <div class="fieldset">
+        <form [formGroup]="chqueCancelApprovalForm"  #options="ngForm">
+        <mat-card class="mb-3">
+                <mat-label><b>Cheque Cancel Approval (TO Authorization)</b></mat-label>
+                <div class="row mt-4">
+                    
+
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                   
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> Treasury</mat-label>
+                            <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                formControlName="TreasuryControl" [matAutocomplete]="autoTreas" [(ngModel)]="ChooseOption">
+                            <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                                <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                    {{option.TreasuryName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="chqueCancelApprovalForm.invalid">Please Select Treasury ! </mat-error>
+                        </mat-form-field>
+
+                     </div>  
+
+                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                          <mat-label>FinYear</mat-label>
+                          <input  type="tel" placeholder="Select FinYear" aria-label="Number" matInput (paste)="(false)"  formControlName="finYear" [matAutocomplete]="autoFinYear"/>
+                          <mat-icon style="position: absolute; right: 2px; top: 0px">
+                            arrow_drop_down
+                          </mat-icon>
+                          <mat-autocomplete #autoFinYear="matAutocomplete">
+                            <mat-option [value]="year" *ngFor="let year of Years"> {{ year }} </mat-option>
+                        </mat-autocomplete>
+                          <mat-error *ngIf=" chqueCancelApprovalForm.get('finYear').hasError('required') || chqueCancelApprovalForm.get('finYear').touched">
+                            FinYear is required 
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                   
+                      <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"> 
+                        <div class="float-end">
+                            <button mat-raised-button color="primary" (click)="ChequeCancelApproval_Fetch()" type="submit" [disabled]="!options.valid">Show</button>
+                            <button mat-stroked-button color="primary" class="ms-3"   (click)="Reset()" type="submit">Reset</button>
+                        </div> 
+                </div>
+                </div> 
+
+        </mat-card>
+
+           
+        <div class="mt-2 scroll-container" style="overflow: auto" *ngIf="showTab_Table">
+
+            <mat-card class="mb-3">
+ 
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field appearance="standard" role="search" class="w-75">
+                        <input matInput type="search"
+                            placeholder="Enter For Search" aria-label="Search"
+                            (keyup)="applyFilter($any($event.target).value)">
+                            <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+                </div>
+            
+            </div>
+            <div class="scroll-container" style="overflow: auto">
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="ChequeCancelApprovalFetchList">
+                    <ng-container matColumnDef="SrNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by SrNo"
+                            class="OBListHdrFont">
+                            Sr No.
+                        </th>
+                        <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                            (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                    </ng-container>
+ 
+                    <ng-container matColumnDef="Chequeno">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header 
+                            class="OBListHdrFont">
+                            Cheque No
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.Chequeno}} </td>
+                    </ng-container>
+                   
+                    <ng-container matColumnDef="bankbranchcode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header 
+                            class="OBListHdrFont">
+                            Bank Branch 
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.bankbranchcode}} </td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="Tokenno">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                         class="OBListHdrFont">
+                         Token No
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.Tokenno}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Reason">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="OBListHdrFont">
+                            Reason
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.Reason}} </td>
+                    </ng-container>
+ 
+                    <ng-container matColumnDef="TransDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="OBListHdrFont">
+                            Trans Date
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.TransDate}} </td>
+                    </ng-container>
+ 
+
+                    <ng-container matColumnDef="Pass">
+                        <th mat-header-cell *matHeaderCellDef class="OBListHdrFont">
+                            <mat-checkbox (change)="$event ? masterToggle($event) : null" [checked]="Ischecked" > 
+                            </mat-checkbox> Pass
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event.checked===true ? row.IsChecked = true : row.IsChecked = false"
+                                [checked]="row.IsChecked">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+
+                  
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    
+                </table>
+            </div>
+                <mat-paginator #myPaginator [length]="10" [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]" (page)="onChangePage($event)" showFirstLastButtons>
+            </mat-paginator>
+
+
+            <div mat-dialog-actions *ngIf="showTab_BtnChequeCancel" class="d-flex justify-content-end">
+                <button mat-raised-button color="primary" (click)="ChequeCancelApproval_Submit()"
+                    type="submit">Cheque Cancel</button>
+                <!-- <button  mat-raised-button (click)="TORevert_Submit()">Revert</button> -->
+            </div>
+
+            </mat-card>
+ 
+        </div>
+      
+        </form>
+    </div>
+</div>

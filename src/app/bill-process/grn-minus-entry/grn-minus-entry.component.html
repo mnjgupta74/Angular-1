@@ -1,0 +1,784 @@
+<div class="container-fluid">
+  <mat-card class="mb-3">
+    <mat-label> <b>Grn Minus Voucher Entry</b></mat-label>
+
+    <div class="col-md-12 col-12">
+      <form [formGroup]="GrnMinusEntryForm" #options="ngForm" (ngSubmit)="GetGrnDetail()">
+        <div class="row mt-4">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Treasury</mat-label>
+              <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                formControlName="TreasuryControl" [matAutocomplete]="autoTreas" [(ngModel)]="ChooseOption" />
+              <mat-icon class="" style="position: absolute; right: 2px; top: 0px">arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                  {{ option.TreasuryName }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="GrnMinusEntryForm.invalid">Please Select Treasury !
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Fin Year</mat-label>
+              <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                formControlName="Year" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>GRN No.*</mat-label>
+
+              <input matInput type="text" placeholder="Enter GRN No." name="GRN Number" (paste)="(false)"
+                formControlName="GRN" NumberOnlyDirective maxlength="13" minlength="4" />
+
+              <mat-error *ngIf="GRN && GRN.invalid && GRN.touched" class="text-danger error_msg">
+                <div *ngIf="GRN.errors?.['Required'] as error">
+                  {{ error }}
+                </div>
+                <div *ngIf="GRN.errors?.['minLength'] as error">
+                  {{ error }}
+                </div>
+                <div *ngIf="GRN.errors?.['maxLength'] as error">
+                  {{ error }}
+                </div>
+                <div *ngIf="GRN.errors?.['Numeric'] as error">
+                  {{ error }}
+                </div>
+                <div *ngIf="GRN.errors?.['cannotContainSpace'] as error">
+                  {{ error }}
+                </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="float-end">
+              <button mat-raised-button color="primary" [disabled]="!options.valid" type="submit">
+                Show
+              </button>
+              <button mat-stroked-button color="primary" class="ms-3" (click)="Reset()" type="submit">
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+
+  <!-- <mat-card class="mt-3 mb-5" *ngIf="BillEntry_flag==2"> -->
+  <mat-card class="mt-3 mb-5" *ngIf="grnResultDataLength >0">
+    <!-- <div class="section-title" (click)="tokenStatus('','','')" *ngIf="this.Popup_error_list.length>0"> -->
+    <!-- <div class="section-title">
+                        <h2>
+                            <span style="color:red;" class="blink">See Error Details</span>
+                        </h2>
+                    </div> -->
+
+    <div class="left-bill-entry-container">
+      <div class="left-bill-entry-header pb-2">
+        <div class="col-lg-7">
+          <p class="m-0 d-inline f-14">
+            GRN Number: <span class="medium-font"> {{ this.grnResultData?.GRN }} </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="all-input-field-container mt-4">
+      <div class="scrollable-height-container">
+        <div class="basic-input-field-container">
+          <form class="p-3" [formGroup]="GrnMinusEntryFormDetails" (ngSubmit)="grnMinusEntryFormSubmit()"
+            #optionsdata="ngForm">
+            <div class="container-fluid">
+              <div class="row">
+
+                <input type="hidden" formControlName="GRN" placeholder="" />
+                <input type="hidden" formControlName="TreasuryCode" placeholder="" />
+                <input type="hidden" formControlName="HODID" placeholder="" />
+                <!-- <input
+                matInput
+                formControlName="HODID"
+                placeholder="HODID."
+                [disabled]="true"/> -->
+
+
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Bank</mat-label>
+                    <mat-select formControlName="bankName">
+                      <mat-option *ngFor="let Bank of BankList" [value]="Bank.BankBranchCode">{{ Bank.BANKNAME
+                        }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">Voucher Date </mat-label>
+                    <input matInput formControlName="VoucherDate" [matDatepicker]="VoucherDatepick" [max]="maxDate"
+                      placeholder="MM/DD/YYYY" />
+                    <mat-datepicker-toggle matSuffix [for]="VoucherDatepick"></mat-datepicker-toggle>
+                    <mat-datepicker #VoucherDatepick></mat-datepicker>
+                  </mat-form-field>
+
+                  <mat-error
+                    *ngIf="GrnMinusEntryFormDetails.get('VoucherDate').error || ( !GrnMinusEntryFormDetails.get('VoucherDate').valid && GrnMinusEntryFormDetails.get('VoucherDate').touched ) ">
+                    Date Required</mat-error>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>DDO Name</mat-label>
+                    <mat-select formControlName="DdoName">
+                      <mat-option *ngFor="let option of DodoNameList | async" [value]="option.ddo_code">{{
+                        option.DDO_NAME }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field class="w-100" appearance="legacy">
+                    <mat-label>DDO Name</mat-label>
+                    <input
+                      type="text"
+                      placeholder="Pick one"
+                      aria-label="Number"
+                      matInput
+                      formControlName="DdoName"
+                      (paste)="(false)"
+                      [matAutocomplete]="auto3"
+                    />
+                    <mat-icon
+                      class=""
+                      style="position: absolute; right: 2px; top: 0px"
+                      >arrow_drop_down
+                    </mat-icon>
+                    <mat-autocomplete
+                      #auto3="matAutocomplete"
+                      [displayWith]="displayFn3"
+                    >
+                      <mat-option
+                        *ngFor="let option of DodoNameList | async"
+                        [value]="option"
+                        (click)="OnDdoNameSelected()"
+                      >
+                        {{ option.DDO_NAME }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div> -->
+
+                <!--
+                <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable"
+                      >DDO BIll No.*</mat-label
+                    >
+                    <input
+                      matInput
+                      formControlName="DdoBillNo"
+                      placeholder="Ddo Bill No"
+                    />
+                    <div
+                      *ngIf="
+                        DdoBillNo && DdoBillNo.invalid && DdoBillNo.touched
+                      "
+                      class="text-danger error_msg"
+                    >
+                      <div *ngIf="DdoBillNo.errors?.['Required'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="DdoBillNo.errors?.['Numeric'] as error">
+                        {{ error }}
+                      </div>
+                    </div>
+                  </mat-form-field>
+                </div> -->
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">Office Name*</mat-label>
+                    <input matInput formControlName="OfficeName" placeholder="Office Name" />
+                    <div *ngIf="
+                        OfficeName && OfficeName.invalid && OfficeName.touched
+                      " class="text-danger error_msg"></div>
+                  </mat-form-field>
+                </div>
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable"
+                      >DDO Bill Date*</mat-label
+                    >
+                    <input
+                      matInput
+                      formControlName="DdoBillDate"
+                      [matDatepicker]="DDoDatepick"
+                      placeholder="MM/DD/YYYY"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="DDoDatepick"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #DDoDatepick></mat-datepicker>
+                  </mat-form-field>
+                </div> -->
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field class="w-100" appearance="legacy">
+                    <mat-label>BillType</mat-label>
+                    <input
+                      type="text"
+                      placeholder="Pick one"
+                      aria-label="Number"
+                      matInput
+                      (paste)="(false)"
+                      formControlName="Billtype"
+                      [matAutocomplete]="auto"
+                    />
+                    <mat-icon
+                      class=""
+                      style="position: absolute; right: 2px; top: 0px"
+                      >arrow_drop_down
+                    </mat-icon>
+                    <mat-autocomplete
+                      #auto="matAutocomplete"
+                      [displayWith]="displayFn"
+                    >
+                      <mat-option
+                        *ngFor="let option of BillTypeList | async"
+                        [value]="option"
+                        (click)="OnBilltypeSelected()"
+                      >
+                        {{ option.BillType }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div> -->
+
+                <!-- <div
+                class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+              >
+                <mat-form-field appearance="legacy" class="w-100">
+                  <mat-label class="custom-input-lable">
+                   HOD ID.</mat-label
+                  >
+                  <input
+                    matInput
+                    formControlName="HODID"
+                    placeholder="HODID."
+                    [disabled]="true"/>
+                  <mat-error *ngIf="GrnMinusEntryFormDetails.get('HODID').error || GrnMinusEntryFormDetails.get('HODID').touched " > HOD ID Required</mat-error>
+
+
+                </mat-form-field>
+                <mat-error *ngIf="hodError"> HOD ID Not Created </mat-error>
+              </div> -->
+
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">
+                      HOD Name.</mat-label>
+                    <input matInput formControlName="HodName" placeholder="HodName" [disabled]="true" />
+                    <mat-error
+                      *ngIf="GrnMinusEntryFormDetails.get('HodName').errors?.required || GrnMinusEntryFormDetails.get('HodName').touched ">
+                      Hod Name Required</mat-error>
+
+                  </mat-form-field>
+                  <mat-error *ngIf="hodError"> HOD Name Not Created </mat-error>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Budget Head </mat-label>
+                    <mat-select formControlName="BudgetHead">
+                      <mat-option *ngFor="let option of BudgetHeadData "
+                        value="{{option.code}}">{{option.groupsubheadname}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>Object Head</mat-label>
+                    <mat-select formControlName="objectHead">
+                      <mat-option *ngFor="let option of ObjectHeadData"
+                        value="{{option.objectHeadCode}}">{{option.objectHeadCodeName}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>BillType </mat-label>
+                    <mat-select formControlName="Billtype" [disabled]="true">
+                      <mat-option [value]="0">Select BIllType</mat-option>
+                      <mat-option [value]="3">Minus Expenditure</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">BIll Month</mat-label>
+                    <input
+                      matInput
+                      formControlName="BIllMonth"
+                      placeholder="BIll Month"
+                    />
+                    <div
+                      *ngIf="
+                        BIllMonth && BIllMonth.invalid && BIllMonth.touched
+                      "
+                      class="text-danger error_msg"
+                    >
+                      <div *ngIf="BIllMonth.errors?.['Required'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="BIllMonth.errors?.['Numeric'] as error">
+                        {{ error }}
+                      </div>
+                    </div>
+                  </mat-form-field>
+                </div> -->
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">BIll Year</mat-label>
+                    <input
+                      matInput
+                      formControlName="BIllYear"
+                      placeholder="BIll Year"
+                    />
+                    <div
+                      *ngIf="BIllYear && BIllYear.invalid && BIllYear.touched"
+                      class="text-danger error_msg"
+                    >
+                      <div *ngIf="BIllYear.errors?.['Required'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="BIllYear.errors?.['Numeric'] as error">
+                        {{ error }}
+                      </div>
+                    </div>
+                  </mat-form-field>
+                </div> -->
+
+
+
+                <!-- <mat-radio-group
+                    aria-label="Select an option"
+                    formControlName="chequeType"
+                  >
+                    <mat-radio-button color="primary" class="ms-3" value="1"
+                      >Cheque
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="2"
+                      >ECS
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="3"
+                      >N.A.
+                    </mat-radio-button>
+
+                  </mat-radio-group> -->
+
+                <!-- <mat-error *ngIf="MHMapGrp.get('typeMajor').invalid && MHMapGrp.get('typeMajor').touched">Please Select  Major Type</mat-error> -->
+
+
+
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+
+                <mat-card-title class="custom-input-lable w-100">Mode of Payment</mat-card-title>
+
+                <input type="radio"  color="primary" value="C"  formControlName="paymentMode"> Cross
+                <input type="radio"  color="primary" value="AC"  formControlName="paymentMode"> A/c. Payee
+                <input type="radio"  color="primary" value="CASH"  formControlName="paymentMode"> Cash
+                <input type="radio"  color="primary" value="N"  formControlName="paymentMode"> N.A.
+
+                  <mat-radio-group
+                    aria-label="Select an option"
+                    formControlName="paymentMode"
+                  >   <mat-radio-button color="primary" class="ms-3" value="1"
+                      >Cross
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="2"
+                      >A/c. Payee
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="3"
+                      >Cash
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="4"
+                      >N.A.
+                    </mat-radio-button>
+
+
+                  </mat-radio-group>
+
+                  <mat-error *ngIf="MHMapGrp.get('typeMajor').invalid && MHMapGrp.get('typeMajor').touched">Please Select  Major Type</mat-error>
+                </div> -->
+
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable"
+                      >Cheque Date</mat-label
+                    >
+                    <input
+                      matInput
+                      formControlName="chequeDate"
+                      [matDatepicker]="chequeDatepick"
+                      placeholder="MM/DD/YYYY"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="chequeDatepick"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #chequeDatepick></mat-datepicker>
+                  </mat-form-field>
+                </div> -->
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable"
+                      >Third Party Name</mat-label
+                    >
+                    <input
+                      matInput
+                      formControlName="thirdPartyName"
+                      placeholder="Third Party Name"
+                    />
+                  </mat-form-field>
+                </div> -->
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                  <!-- <mat-form-field appearance="legacy" class="w-100">
+                  <mat-label>BillType </mat-label>
+                  </mat-form-field> -->
+
+                  <mat-card-title class="custom-input-lable w-100">SF / CA</mat-card-title>
+
+                  <mat-radio-group aria-label="Select an option">
+                    <input type="radio" color="primary" value="P" formControlName="PlanNonPlan"> State Fund
+                    <input type="radio" color="primary" value="N" formControlName="PlanNonPlan"> Non Plan
+                    <input type="radio" color="primary" value="C" formControlName="PlanNonPlan"> Central Assistance
+                    <input type="radio" color="primary" value="A" formControlName="PlanNonPlan"> N.A.
+                  </mat-radio-group>
+
+
+                  <!-- <mat-radio-group
+                    aria-label="Select an option"
+                    formControlName="SFCA"
+                  >
+                    <mat-radio-button color="primary" class="ms-3" value="1"
+                      >State Fund
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="2"
+                      >Non Plan
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="3"
+                      >Central Assistance
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="4"
+                      >N.A.
+                    </mat-radio-button>
+                  </mat-radio-group> -->
+                </div>
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">Division</mat-label>
+                    <input
+                      matInput
+                      formControlName="division"
+                      placeholder="Division Name"
+                    />
+                  </mat-form-field>
+                </div> -->
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-card-title class="custom-input-lable w-100">Voted / Charged</mat-card-title>
+
+                  <mat-radio-group aria-label="Select an option">
+
+                    <input type="radio" color="primary" value="V" formControlName="VotedCharged"> Voted
+                    <input type="radio" color="primary" value="C" formControlName="VotedCharged"> Charged
+                    <input type="radio" color="primary" value="A" formControlName="VotedCharged"> N.A.
+
+
+                    <!-- <mat-radio-button color="primary"  formControlName="VotedCharged" class="ms-3" value="V"
+                      >
+
+                      <input type="radio" color="primary"  value="V"  formControlName="VotedCharged"> Option 1
+
+                      Voted
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" formControlName="VotedCharged" class="ms-3" value="C"
+                      >Charged
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" formControlName="VotedCharged" class="ms-3" value="V"
+                      >N.A.
+                    </mat-radio-button> -->
+
+                  </mat-radio-group>
+
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-card-title class="custom-input-lable w-100">Cheque/ECS/N.A.</mat-card-title>
+
+                  <input type="radio" color="primary" value="C" formControlName="chequeType"> Cheque
+                  <input type="radio" color="primary" value="E" formControlName="chequeType"> ECS
+                  <input type="radio" color="primary" value="N" formControlName="chequeType"> N.A.
+                </div>
+
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">Gross Amount</mat-label>
+                    <input matInput formControlName="grossAmount" placeholder="Gross Amount " />
+                  </mat-form-field>
+                </div>
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                <mat-card-title class="custom-input-lable w-100">AIS/GNG</mat-card-title>
+                <input type="radio" color="primary" value="A" formControlName="AISGNG"> AIS
+                <input type="radio" color="primary" value="GNG" formControlName="AISGNG"> Gazt. and Non Gazt.
+                <input type="radio" color="primary" value="N" formControlName="AISGNG"> N.A.
+
+                  <mat-radio-group
+                    aria-label="Select an option"
+                    formControlName="AISGNG"
+                  >
+                    <mat-radio-button color="primary" class="ms-3" value="1"
+                      >AIS
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="2"
+                      >Gazt. and Non Gazt.
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" class="ms-3" value="3"
+                      >N.A.
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div> -->
+
+
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">Net Amount</mat-label>
+                    <input matInput formControlName="netAmount" placeholder="Net Amount" />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label>DivCode</mat-label>
+                    <mat-select formControlName="DivCode">
+                      <mat-option *ngFor="let option of DivisionData"
+                        value="{{option.DivisionCode}}">{{option.DivisionName}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="GrnMinusEntryFormDetails.get('DivCode').error || GrnMinusEntryFormDetails.get('DivCode').touched ">
+                      Div Code Required</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                >
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">
+                      Cheque No.</mat-label
+                    >
+                    <input
+                      matInput
+                      formControlName="chequeNo"
+                      placeholder="	Cheque No."
+                    />
+                  </mat-form-field>
+                </div> -->
+
+
+
+
+
+
+
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                  <div class="float-end">
+                    <button mat-raised-button color="primary" [disabled]="!optionsdata.valid" type="submit">
+                      Submit
+                    </button>
+                    <button mat-stroked-button color="primary" class="ms-3" (click)="Reset()" type="submit">
+                      Reset
+                    </button>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+
+
+
+          </form>
+        </div>
+
+        <!-- <div class="accordions-input-container">
+                            <div class="accordion-item mb-2">
+                                <mat-accordion>
+                                    <mat-expansion-panel [expanded]="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title class="medium-font">
+                                                Budget Details
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <form class="p-3" [formGroup]="GrnMinusEntryFormDetails">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Detail
+                                                            Head</mat-label>
+                                                        <input matInput placeholder="DetailHead" maxlength="13"
+                                                            formControlName="DetailHead">
+                                                        <div *ngIf="DetailHead && DetailHead.invalid &&  DetailHead.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="DetailHead.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="DetailHead.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="DetailHead.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field class="w-100" appearance="legacy">
+                                                        <mat-label>Object Head</mat-label>
+                                                        <input type="text" placeholder="Pick one" aria-label="Number"
+                                                            matInput (paste)="(false)" formControlName="ObjectHead"
+                                                            [matAutocomplete]="auto2" [(ngModel)]="SelectObjectHead">
+                                                        <mat-icon class=""
+                                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                                        </mat-icon>
+                                                        <mat-autocomplete #auto2="matAutocomplete"
+                                                            [displayWith]="displayFn2">
+                                                            <mat-option *ngFor="let option of ObjectHeadList | async"
+                                                                [value]="option"
+                                                                (click)="OnObjectHeadSelected(SelectObjectHead)">
+                                                                {{option.objectHeadCodeName}}
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Office
+                                                            Id.</mat-label>
+                                                        <input matInput placeholder="officeid"
+                                                            formControlName="officeid">
+                                                        <div *ngIf="officeid && officeid.invalid &&  officeid.touched"
+                                                            class="text-danger error_msg">
+                                                            <div *ngIf="officeid.errors?.['Required'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="officeid.errors?.['maxLength'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div
+                                                                *ngIf="officeid.errors?.['cannotContainSpace'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                            <div *ngIf="officeid.errors?.['Numeric'] as error">
+                                                                {{error}}
+                                                            </div>
+                                                        </div>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label class="custom-input-lable">Head
+                                                            Office</mat-label>
+                                                        <input matInput placeholder="Placeholder"
+                                                            formControlName="HeadOffice">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label>BFC Type</mat-label>
+                                                        <mat-select formControlName="PlanNonPlan">
+                                                            <mat-option value="P">Plan</mat-option>
+                                                            <mat-option value="N">Non Plan</mat-option>
+                                                            <mat-option value="C">Central Assistance</mat-option>
+                                                            <mat-option value="A">N.A.</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                    <mat-form-field appearance="legacy" class="w-100">
+                                                        <mat-label>Head Type</mat-label>
+                                                        <mat-select formControlName="VotedCharged">
+                                                            <mat-option value="V">Voted</mat-option>
+                                                            <mat-option value="C">Charged</mat-option>
+                                                            <mat-option value="A">N.A.</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+
+
+
+
+
+                        </div> -->
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+  <div class="cssload-speeding-wheel"></div>
+</div>

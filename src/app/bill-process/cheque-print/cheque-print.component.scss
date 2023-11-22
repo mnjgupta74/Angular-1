@@ -1,0 +1,23 @@
+
+.PrintBtnDisable {
+    opacity: 1;
+    /* position: absolute; */
+    /* margin-bottom: -10px; */
+    /* font-weight: bold; */
+    background-color: #d4d4d4;
+    color: #a09f9f;
+    cursor:not-allowed;
+    }
+
+
+    
+.PrintBtnEnable {
+    opacity: 1;
+    /* position: absolute; */
+    /* margin-bottom: -10px; */
+    /* font-weight: bold; */
+    background-color: #cbe2f9;
+    color: #0b5cad;
+    cursor: pointer;
+    }
+    

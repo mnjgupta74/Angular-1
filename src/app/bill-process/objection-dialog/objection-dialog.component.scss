@@ -1,0 +1,166 @@
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 49.33%;
+    padding: 10px;
+    height: 300px; /* Should be removed. Only for demonstration */
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  
+  .mat-list-base {
+    padding-top: 0px !important;
+    display: block;
+  }
+  
+  .view-ob{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-items: center;
+  }
+    
+    
+  
+    .panel-heading{display: flex;
+      justify-content: space-between;
+      padding: 5px 15px;
+    }
+  
+   
+  
+    /* .panel-heading:nth-child(odd) {
+      background: red;
+    }
+    
+    .panel-heading:nth-child(even) {
+      background: lightgreen;
+    }
+  
+    .mat-accordion .mat-expansion-panel{box-shadow: none;}
+    .mat-accordion .mat-expansion-panel .mat-expansion-panel-header{
+      background-color: #ebebeb;}
+   */
+  
+  
+   .objection-list-row {
+    height: 200px;
+    overflow-y: auto;
+  }
+  .objection-list-row .custom-label {
+    font-size: 14px;
+  }
+  .panel-default:nth-child(even) {
+    background: #fafcff;
+    border-radius: 5px;
+  }
+  .mat-mdc-form-field + .mat-mdc-form-field {
+    margin-left: 8px;
+  }
+  .mat-expansion-panel:not([class*=mat-elevation-z]) {
+    box-shadow: none;
+    margin-bottom: 10px;
+  }
+  ::ng-deep .mat-expansion-panel-header, .mat-expanded {
+    background: #f0f0f0;
+  }
+  .mat-expansion-panel:hover {
+    background: #f0f0f0;
+  }
+  ::ng-deep .mat-expansion-panel-body {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding-top: 10px;
+  }
+  .mat-expansion-panel-header.mat-expanded {
+    height: 40px;
+  }
+  .objection-popup {
+    height: 480px;
+    overflow-y: auto;
+  }
+  .icon-size img {
+    width: 30px;
+  }
+  .btn-style-pending {
+    background-color: #fff5cb;
+    color: #f49753;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 4px 15px;
+  }
+  .token-container {
+    height: 300px;
+    overflow-y: auto;
+  }
+  .token-date {
+    white-space: pre;
+  }
+  .mList {
+    position: relative;
+    margin: 0;
+    padding-bottom: 1em;
+    padding-left: 20px;
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+  .mList::before {
+    position: absolute;
+    content: "";
+    background-color: #e2e2e2;
+    bottom: 0;
+    top: 0;
+    left: 6px;
+    width: 2px;
+  }
+  .mList::after {
+    position: absolute;
+    content: "";
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #52bb9c;
+    box-shadow: 1px 1px 5px 8px #d5e2df;
+    left: 0;
+  }
+  .mList:last-child::before {
+    bottom: 100px;
+  }
+  .mList:last-child::after {
+    background-color: #efa831;
+    box-shadow: 1px 1px 5px 8px #e8deca;
+  }
+  
+  
+  .add-btn{
+    width: 30px;
+    padding: 7px;
+    background-color: #2a6dd94a;
+    border-radius: 4px;
+  }
+
+  .mat-list-base .mat-list-item, .mat-list-base .mat-list-option {
+    height:auto !important;
+
+  }
+
+  .add-btn-submit {  
+  padding-top: 50%;
+  }
+
+
+  .sticky-button
+  {
+   max-height: 600px;
+   overflow: auto;
+  }
+  .mat-form-field-wrapper
+  {
+    padding-bottom: 0px;
+  }

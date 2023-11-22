@@ -1,0 +1,257 @@
+<div appNoRightClick>
+    <div class="container-fluid">
+        <mat-card class="mb-3">
+            <mat-label> <b>New Token Report</b></mat-label>
+            <div>
+                <mat-expansion-panel class="mt-2" [expanded]="true">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title> New Token Report </mat-panel-title>
+                        <button mat-icon-button variant="icon-button" (keydown.enter)="$event.stopPropagation();"
+                            (click)="$event.stopPropagation();">
+                        </button>
+                    </mat-expansion-panel-header>
+                    <div class="col-md-12 col-12">
+
+                        <form [formGroup]="NewTokenReportForm" #options="ngForm">
+
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Date From:</mat-label>
+                                        <input matInput [matDatepicker]="fromDatepicker" title="Date From"
+                                            formControlName='fromDate'>
+                                        <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #fromDatepicker></mat-datepicker>
+                                        <mat-error *ngIf="NewTokenReportForm.invalid">Please Select From Date !
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>To:</mat-label>
+                                        <input matInput [matDatepicker]="picker2" formControlName="toDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                        <mat-error *ngIf="NewTokenReportForm.invalid">Please Select To Date !
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Bill Type</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            (paste)="(false)" formControlName="Billtype"
+                                            [matAutocomplete]="auto">
+                                        <mat-icon class=""
+                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                            <mat-option *ngFor="let option of BillTypeList | async"
+                                                [value]="option" >
+                                                {{option.BillType}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+
+                                <div
+                                class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4"
+                              >
+                                <mat-form-field appearance="legacy" class="w-100">
+                                  <mat-label>DDO Code </mat-label>
+                  
+                                  <input
+                                  type="tel"
+                                  placeholder="Pick one"
+                                  aria-label="Number"
+                                  matInput
+                                  (paste)="(false)"
+                                  formControlName="DDOCode"
+                                  [matAutocomplete]="autoddo"
+                                />
+                  
+                                <mat-icon style="position: absolute; right: 2px; top: 0px"
+                                >arrow_drop_down
+                              </mat-icon>
+                              <mat-autocomplete
+                                #autoddo="matAutocomplete" 
+                                [displayWith]="displayDdoName"
+                              >
+                  
+                  
+                                    <mat-option
+                                      *ngFor="let option of DodoNameList | async"
+                                      [value]="option"
+                                      >{{ option.DDO_NAME }}</mat-option
+                                    >
+                                  </mat-autocomplete>
+                  
+                                 
+                                  </mat-form-field>
+                              </div>
+                  
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label> Gross Amount</mat-label>
+                                        <input type="text" placeholder="Gross Amount" aria-label="Number" matInput
+                                            (paste)="(false)" formControlName="grossAmount">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label> Net Amount</mat-label>
+                                        <input type="text" placeholder="Net Amount" aria-label="Number" matInput
+                                            (paste)="(false)" formControlName="netAmount">
+                                        
+                                    </mat-form-field>
+                                </div>
+
+
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                                    <div class="float-end">
+                                        <button mat-raised-button color="primary" (click)="GetNewTokenReportList()" type="submit"
+                                            [disabled]="!options.valid">Show</button>
+                                        <button mat-stroked-button color="primary" class="ms-3"
+                                            (click)="GetNewTokenReportReset()" type="submit">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </mat-expansion-panel>
+            </div>
+
+        </mat-card>
+
+
+       
+        <mat-card>
+            <div class="container-fluid" *ngIf="NewTokenReportData.data.length > 0;">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                        <mat-form-field appearance="standard" role="search" class="w-100">
+                            <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                                (keyup)="applyFilter($any($event.target).value)">
+                            <mat-icon matSuffix>search</mat-icon>
+                        </mat-form-field>
+                    </div>
+                   
+                </div>
+            </div>
+
+            <div *ngIf="NewTokenReportData.data.length > 0;" class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+                <button (click)="exportToPdf()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"> 
+                    <img alt="New Token PDF Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+                </button>
+                 <button mat-raised-button class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"
+                (click)="exportexcel(this.exportcompletedata, this.filename)">
+                <img alt="New Token Excel Report" src="./assets\images\icons8-export-excel-24.png"  matTooltip="Click here to export Excel"></button>
+            </div>
+
+
+            <div *ngIf="loading | async" class="loader-container">
+            </div>
+
+           
+            <div class="scroll-container" style="overflow: auto"
+                *ngIf="NewTokenReportData.data.length > 0; else emptyTableMsg">
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="NewTokenReportData" 
+                (matSortChange)="announceSortChange($event)" class="mat-elevation-z8"   style="width: 100%;" id="test1" #test1> 
+                 
+                           <ng-container matColumnDef="SrNo">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                 Sr No.
+                               </th>
+                               <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                                 (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                             </ng-container>
+         
+         
+                      <!-- DDoCode Column -->
+                      <ng-container matColumnDef="DDoCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by DDOCode"> DDO Code </th>
+                        <!-- <td mat-cell *matCellDef="let element" (click)="viewDocumentPopup(element)"> <a class="primary hyperlink" [routerLink]=""> {{element.CDE_Refno}}</a> -->
+                           <td mat-cell *matCellDef="let element">{{element.DDoCode}}
+                      </ng-container>
+                      <!-- DDoCode Column -->
+                      
+                      <ng-container matColumnDef="TokenNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TokenNo"> Token No </th>
+                        <td mat-cell *matCellDef="let element">{{element.TokenNo}}
+                       </td>
+                      </ng-container> 
+         
+                    
+                      <!-- Major Head Column -->
+                      <ng-container matColumnDef="Majorhead">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Majorhead"> Major Head </th>
+                        <td mat-cell *matCellDef="let element"> <span></span>{{element.Majorhead}}</td>
+                      </ng-container>  
+                    
+                      <!-- Gross Amount Column -->
+                      <ng-container matColumnDef="GrossAmt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by GrossAmt"> Gross Amount  </th>
+                        <td mat-cell *matCellDef="let element"> {{element.GrossAmt}} </td>
+                      </ng-container>
+                    
+                      <!-- Cash Amount Column -->
+                      <ng-container matColumnDef="CashAmt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by CashAmt"> Cash Amount </th>
+                        <td mat-cell *matCellDef="let element">{{element.CashAmt }} </td>
+                      </ng-container>
+                    
+                      <!-- Bill Type Column -->
+                      <ng-container matColumnDef="Billtype">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Billtype"> Bill Type </th>
+                        <td mat-cell *matCellDef="let element">{{element.Billtype}} </td>
+                      </ng-container>
+         
+         
+                        <!-- CDE Ref No Column ₹ -->
+                        <ng-container matColumnDef="Cde_refNo">
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Cde_refNo"> Cde Ref No / Sanction Ref No </th>
+                           <td mat-cell *matCellDef="let element">{{element.Cde_refNo}} </td>
+                         </ng-container>
+         
+         
+                          
+                    
+                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>  
+                    </table>
+               
+            </div>
+
+
+            <div [hidden]="NewTokenReportData.data.length <= 0">
+                <mat-paginator #myPaginator [length]="NewTokenReportData.data.length " [pageSize]="5"
+                    [pageSizeOptions]="[5, 10, 15, 20]" (page)="onChangePage($event)" showFirstLastButtons>
+                </mat-paginator>
+            </div>
+
+
+
+            <div mat-dialog-actions *ngIf="showTab_BtnForward && NewTokenReportData.data.length > 0"
+                class="d-flex justify-content-end">
+               
+            </div>
+
+           
+            <ng-template #emptyTableMsg>
+                <div class="empty-message">No Pendency Found !</div>
+            </ng-template>
+        </mat-card>
+
+
+
+        <div *ngIf="this.loader.getLoading()" class="cssload-container">
+            <div class="cssload-speeding-wheel"></div>
+        </div>
+    </div>
+</div>
+

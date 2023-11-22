@@ -1,0 +1,18 @@
+ /* For Table Horizontal Scroll */
+ .scroll-container{
+  // border: 2px solid silver;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+
+.viewBillBtn {
+  opacity: 1;
+  /* position: absolute; */
+  /* margin-bottom: -10px; */
+  /* font-weight: bold; */
+  background-color: #cbe2f9;
+  color: #0b5cad;
+  }
+  

@@ -1,0 +1,53 @@
+
+<mat-card>
+    <div class="row col-lg-8 offset-2">
+                <div class="col">
+                   
+                    
+                        <div class="heading-1 m-4 primary mb-2 text-center">
+                           Rajkosh Login
+                        </div>
+                        <form [formGroup]="loginForm">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                    <div class="m-4 mb-0">
+                                        <mat-label class="d-block">User Name</mat-label>
+                                        <mat-form-field appearance="outline" class="w-100">
+
+                                            <input matInput placeholder="Enter User Name"  name="username" formControlName="username" class="input-padding">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                    <div class="m-4">
+                                        <mat-label class="d-block">Password</mat-label>
+                                        <mat-form-field appearance="outline" class="w-100">
+
+                                            <input type="password" matInput placeholder="Enter Password" formControlName="password" name="password"  class="input-padding" (change)="encPassword()">
+                                        </mat-form-field>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                    <div class="m-4 text-center">
+                                        <button mat-raised-button color="primary"  type="button"  [disabled]="loginForm.invalid" (click)="onsubmit()" class="big-btn-with-icon-padding">
+                                            Login                                                   
+                                        </button>
+
+                                        <!-- <button mat-raised-button color="primary" [disabled]="loginForm.invalid" (click)="onsubmit()"
+            type="button">Login</button> -->
+                                       
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </form>
+                    
+                </div>
+            </div>
+
+</mat-card>

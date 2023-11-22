@@ -1,0 +1,557 @@
+<!-- <div class="content-wrapper ms-3" appNoRightClick> -->
+<div class="container-fluid">
+    <mat-card>
+        <h2>Token Update</h2>
+        <form [formGroup]="treasuryform">
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" aria-label="Number" matInput (paste)="(false)" formControlName="treasuryval"
+                            [matAutocomplete]="auto" placeholder="Treasury">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaytreasury">
+                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                {{option.TreasuryName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="tokenDetailsForm.invalid">Please Select Treasury ! </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <input type="text" placeholder="FinYear" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="finyear">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-radio-group aria-label="Select an option" (change)="radioButtonGroupChange($event)">
+                        <mat-radio-button color="primary" [checked]="mat_radio_1" value="1">Token Edit
+                        </mat-radio-button>
+                        <mat-radio-button color="primary" [checked]="mat_radio_2" class="ms-3" value="2">Token
+                            Delete
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </form>
+    </mat-card>
+    <form [formGroup]="tokenDetailsForm">
+        <mat-card class="mt-4" *ngIf="display">
+            <h2>Token Edit</h2>
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label> From Date*</mat-label>
+                        <input matInput [max]="tokenDetailsForm.controls.toDate.value" [matDatepicker]="fromDatepicker"
+                            title="Date From" formControlName='fromDate'>
+                        <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #fromDatepicker></mat-datepicker>
+                        <mat-error *ngIf="tokenDetailsForm.invalid">Please select the from date </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>To Date*</mat-label>
+                        <input matInput [min]="tokenDetailsForm.controls.fromDate.value" [matDatepicker]="picker2"
+                            formControlName="toDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="tokenDetailsForm.invalid">Please select the to date </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <select placeholder="Search" matNativeControl formControlName='searchField'>
+                            <option>--Select--</option>
+                            <option value="TokenNo">Token Number</option>
+                            <option value="DdoCode">DDO Code</option>
+                            <option value="GrossAmt">Gross Amount</option>
+                            <option value="CashAmt">Cash Amount</option>
+                            <option value="MajorHead">Major Head</option>
+                            <option value="Billtype">Bill Type</option>
+                        </select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <!-- <input matInput type="number" placeholder="Enter Value" formControlName='searchValue' maxlength="8"> -->
+                        <input matInput type="number" placeholder="Enter Number" formControlName='searchValue'
+                            onKeyPress="if(this.value.length==8) return false;" />
+                        <mat-error *ngIf="tokenDetailsForm.invalid">Please Enter Valid Value ! </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <!-- <div *ngIf="!tokenDetailsForm.invalid"> -->
+                <button class="btn btn-primary" mat-raised-button color="primary" [disabled]="!tokenDetailsForm.valid"
+                    (click)="GetTokenLIst()">Search</button>
+                <!-- <button mat-stroked-button color="primary" class="ms-3" (click)="onreset()">Reset</button> -->
+                <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+                <!-- </div> -->
+            </div>
+        </mat-card>
+        <mat-card class="mt-3" *ngIf="showtab">
+            <div class="mt-2 scroll-container" style="overflow: auto">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <mat-form-field appearance="standard" role="search1" class="w-75">
+                            <input matInput type="Search" placeholder="Enter For Search" aria-label="Search"
+                                (keyup)="Filter($any($event.target).value)">
+                            <mat-icon matSuffix>search</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="tokenRefListarr"
+                    class="mat-elevation-z8" id="test">
+                    <ng-container matColumnDef="SrNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by SrNo"
+                            class="OBListHdrFont">
+                            Sr No.
+                        </th>
+                        <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                            (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="TokenNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Token No.
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.TokenNo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="CDE_RefNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            cde_ReferenceNo
+                        </th>
+                        <td mat-cell *matCellDef="let element"> <a [ngClass]="{'isDisabled':element.CDE_RefNo==0}"
+                                (click)="viewDocumentPopup(element)" class="primary hyperlink" [routerLink]="">
+                                {{element.CDE_RefNo}}</a>
+                            <!-- <td mat-cell *matCellDef="let element"> {{element.CDE_RefNo}} </td> -->
+                    </ng-container>
+
+                    <ng-container matColumnDef="DdoCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            DDO
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.DdoCode}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="MajorHead">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Major Head
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.MajorHead}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="GrossAmt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Gross Amount
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.GrossAmt}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="CashAmt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Net Amt
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.CashAmt}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Billtype">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            BillType
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.Billtype}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Action">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Action
+                        </th>
+                        <td mat-cell *matCellDef="let element"><button  mat-icon-button
+                                 (click)="onAction(element)">  <img width="20px" src="./assets/images/edit.svg" alt=""></button>
+                                 </td>
+                        </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
+                </table>
+                <mat-paginator #myPaginator [length]="10" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]"
+                    showFirstLastButtons></mat-paginator>
+            </div>
+        </mat-card>
+    </form>
+    <form [formGroup]="tokenDeleteForm">
+        <mat-card class="mt-4" *ngIf="indisplay">
+            <h2>Token Delete</h2>
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label> From Date*</mat-label>
+                        <input matInput [max]="tokenDeleteForm.controls.toDate.value" [matDatepicker]="fromDatepicker"
+                            title="Date From" formControlName='fromDate'>
+                        <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #fromDatepicker></mat-datepicker>
+                        <mat-error *ngIf="tokenDeleteForm.invalid">Please select the from date </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>To Date*</mat-label>
+                        <input matInput [min]="tokenDeleteForm.controls.fromDate.value" [matDatepicker]="picker2"
+                            formControlName="toDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="tokenDeleteForm.invalid">Please select the to date </mat-error>
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <!-- <mat-label>Bill Type</mat-label> -->
+                    <mat-radio-group aria-label="Select an option" (change)="radioButtonGroup($event)">
+                        <mat-radio-button color="primary" [checked]="Payment_radio" class="ms-2"
+                            value="1">Payment</mat-radio-button>
+                        <mat-radio-button color="primary" [checked]=" Reference_radio" class="ms-2" value="2">
+                            Receipt</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Token No</mat-label>
+                        <input matInput type="text" placeholder="Token No" name="tokenNo" (paste)="(false)"
+                            formControlName="tokenNo" maxlength="10" />
+                        <mat-error *ngIf="tokenNo && tokenNo.invalid &&  tokenNo.touched" class="text-danger error_msg">
+
+                            <div *ngIf="tokenNo.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="tokenNo.errors?.['SpecialChar'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="tokenNo.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="tokenNo.errors?.['cannotContainSpace'] as error">
+                                {{error}}
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-primary" mat-raised-button color="primary" (click)="ontokensearch()"
+                    [disabled]="!tokenDeleteForm.valid">Search</button>
+                <!-- <button mat-stroked-button color="primary" class="ms-3" (click)="onreset()">Reset</button> -->
+                <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+            </div>
+        </mat-card>
+
+         <mat-card class="mt-3" *ngIf="showtrantab"> 
+        <!-- <mat-card class="mt-3"> 
+            <div class="mt-2 scroll-container" style="overflow: auto" *ngIf="tokenRefListarr.data.length > 0; else emptyTableMsg"> -->
+                <div class="mt-2 scroll-container" style="overflow: auto"> 
+                <div class="row">
+                    <div class="col-sm-6">
+                        <mat-form-field appearance="standard" role="search" class="w-75">
+                            <input matInput type="Search" placeholder="Enter For Search" aria-label="Search"
+                                (keyup)="Filter($any($event.target).value)">
+                            <mat-icon matSuffix>search</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <table width="100%" mat-table matSort matTableExporter [dataSource]="tokenRefListarr"
+                    class="mat-elevation-z8" id="test">
+                    <ng-container matColumnDef="SrNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Sr No.
+                        </th>
+                        <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                            (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="TokenNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Token No
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.TokenNo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="CDE_RefNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            cde_ReferenceNo
+                        </th>
+                        <td mat-cell *matCellDef="let element"> <a [ngClass]="{'isDisabled':element.CDE_RefNo==0}"
+                                (click)="viewDocumentPopup(element)" class="primary hyperlink" [routerLink]="">
+                                {{element.CDE_RefNo}}</a>
+                            <!-- <td mat-cell *matCellDef="let element"> {{element.cde_RefNo}} </td> -->
+                    </ng-container>
+                    <ng-container matColumnDef="DDOCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            DDO
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.DDOCode}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="MajorHead">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Major Head
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.MajorHead}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="GrossAmt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Gross Amount
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.GrossAmt}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="CashAmt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Net Amt
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.CashAmt}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="BillType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            BillType
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.BillType}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Action">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                            Action
+                        </th>
+                        <td mat-cell *matCellDef="let element"><button mat-icon-button (click)="onDelete(element)">
+                                <img width="20px" src="./assets/images/delete.svg" alt="">
+                            </button> </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator #myPaginator [length]="10" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]"
+                    showFirstLastButtons>
+                </mat-paginator>
+            </div>
+            <!-- <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">S No</th>
+                                <th scope="col">TokenNo</th>
+                                <th scope="col">BillType</th>
+                                <th scope="col">DdoCode</th>
+                                <th scope="col">MajorHead</th>
+                                <th scope="col">CashAmt</th>
+                                <th scope="col">GrossAmt</th>
+                                <th scope="col">Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let token of tokendeleteARR let indexOfelement=index;">
+                                <td>{{indexOfelement+1}} </td>
+                                <td>{{ token.TokenNo }}</td>
+                                <td>{{ token.BillType }}</td>
+                                <td>{{ token.DDOCode }}</td>
+                                <td>{{ token.MajorHead }}</td>
+                                <td>{{ token.CashAmt }}</td>
+                                <td>{{ token.GrossAmt }}</td>
+                                <td> 
+                                    <button mat-icon-button (click)="onDelete(token)">
+                                        <img width="20px" src="./assets/images/delete.svg" alt="">
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    <ng-template #emptyTableMsg>
+                        <div class="empty-message">No Pendency Found !</div>
+                     </ng-template>
+        </mat-card>
+    </form>
+</div>
+
+<div class="container-fluid" *ngIf="showeditForm">
+    <mat-card class="mt-3">
+        <form [formGroup]="tokenEditForm">
+            <h2>Token Edit</h2>
+            <div class="row mt-5">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Token No</mat-label>
+                        <input matInput type="tel" placeholder="Token No" (paste)="(false)" name="Token No"
+                            formControlName="TokenNo" />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Receipt Date</mat-label>
+                        <input matInput type="tel" placeholder="Receipt Date" (paste)="(false)" name="Receipt Date"
+                            formControlName="Receipt" />
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>DDO Code</mat-label>
+                        <input matInput type="text" placeholder="DDO Code" name="DdoCode" (paste)="(false)"
+                            (focusout)="onFocusOutEvent($event)" formControlName="DdoCode" />
+                        <mat-error *ngIf="DdoCode && DdoCode.invalid &&  DdoCode.touched" class="text-danger error_msg">
+                            <div *ngIf="DdoCode.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="DdoCode.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="DdoCode.errors?.['SpecialChar'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="DdoCode.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="DdoCode.errors?.['cannotContainSpace'] as error">
+                                {{error}}
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>DDO Name</mat-label>
+
+                        <input matInput type="text" placeholder="DDO Name" name="DdoName" (paste)="(false)"
+                            formControlName="DdoName" />
+
+                        <mat-error *ngIf="DdoName && DdoName.invalid &&  DdoName.touched" class="text-danger error_msg">
+                            <div *ngIf="DdoName.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="DdoName.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="DdoName.errors?.['SpecialChar'] as error">
+                                {{error}}
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Major Head</mat-label>
+                        <input matInput type="tel" placeholder="Major Head" (paste)="(false)" name="MajorHead"
+                            formControlName="MajorHead" />
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                    </mat-form-field>
+                </div> -->
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Bill Type</mat-label>
+                        <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                            formControlName="BillTypeControl" [matAutocomplete]="auto" [(ngModel)]="SelectBilltype">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                            <mat-option *ngFor="let option of BillTypeoptions | async" [value]="option"
+                                (click)="OnBillTypeSelected(SelectBilltype)">
+                                {{option.BillType}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="tokenEditForm.invalid">Please select the Bill Type </mat-error>
+                    </mat-form-field>
+
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Major Head</mat-label>
+                        <input type="text" placeholder="Pick one" aria-label="text" matInput (paste)="(false)"
+                            formControlName="MajorHeadControl" [matAutocomplete]="auto1" [(ngModel)]="SelectMajorHead">
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                        <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayMajor">
+                            <mat-option *ngFor="let option of MajorHeadoptions | async" [value]="option"
+                                (click)="OnMajorHeadSelected(SelectMajorHead)">
+                                <!-- {{option.majorheadcode}} -->
+                                {{option.majorheadname}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="tokenEditForm.invalid">Please select the Major Head </mat-error>
+                    </mat-form-field>
+                </div>
+
+
+
+                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="outline">
+                        <mat-label>Bill Type</mat-label>
+                        <input matInput type="tel" placeholder="Bill Type" name="NBillType"
+                            formControlName="BillType" />
+                        <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                        </mat-icon>
+                    </mat-form-field>
+                </div> -->
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Net Amount</mat-label>
+
+                        <input matInput type="tel" placeholder="Net Amount" name="NetAmt" (paste)="(false)"
+                            formControlName="NetAmt" />
+
+                        <mat-error *ngIf="NetAmt && NetAmt.invalid &&  NetAmt.touched" class="text-danger error_msg">
+                            <div *ngIf="NetAmt.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="NetAmt.errors?.['minLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="NetAmt.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="NetAmt.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>Gross Amount</mat-label>
+                        <input matInput type="text" placeholder="Gross Amount" name="GrossAmt" (paste)="(false)"
+                            formControlName="GrossAmt" />
+                        <mat-error *ngIf="GrossAmt && GrossAmt.invalid &&  GrossAmt.touched"
+                            class="text-danger error_msg">
+                            <div *ngIf="GrossAmt.errors?.['Required'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="GrossAmt.errors?.['Numeric'] as error">
+                                {{error}}
+                            </div>
+                            <div *ngIf="GrossAmt.errors?.['maxLength'] as error">
+                                {{error}}
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2" *ngIf="!tokenEditForm.invalid">
+                <button class="btn btn-primary" mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+                <button mat-stroked-button color="primary" class="ms-3" (click)="onreset()">Reset</button>
+            </div>
+        </form>
+       
+    </mat-card>
+</div>
+
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

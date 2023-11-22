@@ -1,0 +1,27 @@
+<div  *ngIf="!_show"
+[@state]="state"
+(@state.done)="animationDone($event)" >
+    <app-otp-verfication
+    (childButtonEvent)="receivedMessageHandler($event)"
+    (onInitEvent)="receiveAutoMsgHandler($event)" [childComp]=true></app-otp-verfication>
+</div>
+
+<div class="container-fluid scroll-container" style="overflow: auto" >
+    <mat-card *ngIf="_show"  class="fade"
+    [@state]="state"
+    (@state.done)="animationDone($event)" >
+        <h3>Upload Reference No for ECS</h3>
+        <div class="w-100" appDrapAndDrop >
+           <button  mat-stroked-button color="primary" style="padding: 0;">
+            <label for="imageUpload" class="upload-lable-text btn w-100 " ><mat-icon color="primary">cloud_upload</mat-icon><span class="file-browse mx-2 text-dark" >Choose File</span></label>
+
+            <input  type='file' id="imageUpload"  #fileInput  hidden  />
+
+           </button> 
+       
+            <button  class="px-2 mx-2 mt-1 " mat-raised-button color="primary"
+         >Submit</button>
+         </div>
+       
+    </mat-card>
+</div>

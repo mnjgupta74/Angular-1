@@ -1,0 +1,67 @@
+table {
+    width: 100%;
+}
+
+.table-container {
+    overflow: auto;
+    // max-height: 500px;
+ 
+}
+
+.mat-form-field {
+    font-size: 14px;
+}
+
+.table-col-padding {
+    padding: 8px 20px;
+    white-space: nowrap;
+}
+
+.mat-header-cell {
+    border-bottom: 1px solid #5a9cff;
+    font-size: 14px;
+    font-weight: 600 !important;
+    color: #414141;
+    font-family: "Poppins-m";
+    background-color: #eef5ff;
+}
+
+.action-icon img {
+    width: 30px;
+}
+
+table th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type {
+    padding-left: 10px !important;
+}
+
+::ng-deep .myPanelClass {
+    margin-top: 30px;
+}
+
+.example-container {
+    min-height:100px;
+    max-height: 50%;
+    max-height: 400px;
+    overflow: auto;
+    position: relative;   
+  }
+  tr.mat-footer-row {
+    font-weight: bold;
+    background-color: #EEF5FF;
+  }
+//   :host {
+//     display: block;
+//   }
+  .fade {
+    opacity: 0;
+  }
+
+  .mat-sort-header-container {
+    display: flex;
+  justify-content: left !important
+}
+
+// .btn_custome_g{ background-color: #0080008c !important;}
+// .btn_custome_g:hover{filter: grayscale(100%);}

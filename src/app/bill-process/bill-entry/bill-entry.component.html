@@ -1,0 +1,1176 @@
+<div class="container-fluid">
+
+    <mat-card>
+        <mat-label><b>Bill Entry</b></mat-label>
+        <div *ngIf="BillEntry_flag==2">
+            <div class="left-bill-entry-container mt-2">
+                <div class="left-bill-entry-header pb-2">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <p class="m-0 d-inline f-16 border-right pe-1">Bill Type: <span class="medium-font">
+                                    {{billType}} </span>
+                            </p>
+                            <p class="m-0 d-inline f-16 ps-2">Bill Sub-Type: <span class="medium-font">
+                                    {{subBillType}}</span> </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p class="m-0 d-inline f-16 border-right pe-1">Token Number: <span class="medium-font">
+                                    {{TokenNo}} </span>
+                            </p>
+                            <p *ngIf="Sch_Code==0" class="m-0 d-inline f-16 ps-2">Ref. No.: <span class="medium-font">
+                                    {{RefNo}}</span> </p>
+                            <p *ngIf="Sch_Code!=0" class="m-0 d-inline f-16 ps-2 border-right pe-2 ">Ref. No.: <span
+                                    class="medium-font">
+                                    {{RefNo}}</span> </p>
+                            <p *ngIf="Sch_Code!=0" class="m-0 d-inline f-16 ps-2">Sch. Code: <span class="medium-font">
+                                    {{Sch_Code}}</span> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="myelem" *ngIf="BillEntry_flag==1">
+
+
+
+
+
+
+            <form [formGroup]="BillTypeForm" (ngSubmit)="OnShowDetails()" class="p-3">
+                <!-- <div class="row mt-2">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <p class="f-14" placeholder="Treasury" name="Treasury" (paste)="(false)"><b>Treasury :
+                            </b>{{this.savebillentry.treasurycode}} </p>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <p class="f-14"><b>Year : </b>{{this.savebillentry.finyear}}</p>
+                    </div>
+
+                </div> -->
+                <div class="row mt-2">
+
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> Treasury</mat-label>
+                            <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                formControlName="TreasuryControl" [matAutocomplete]="auto" [(ngModel)]="ChooseOption">
+                            <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                    {{option.TreasuryName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="BillTypeForm.invalid">Please Select Treasury ! </mat-error>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> Fin Year</mat-label>
+                            <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                formControlName="Year">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Token No.*</mat-label>
+
+                            <input matInput type="tel" placeholder="Token No." name="Token Number" (paste)="(false)"
+                                formControlName="TokenNum" />
+
+                        </mat-form-field>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Ref. No.*</mat-label>
+
+                            <input matInput type="tel" placeholder="Ref. No" name="BillRef" (paste)="(false)"
+                                formControlName="BillRef" />
+                        </mat-form-field>
+
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                        <div class="float-end">
+                            <button type="submit" class="btn btn-primary" mat-raised-button color="primary">Show
+                                Details</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+
+    </mat-card>
+
+
+    <mat-card class="mt-3">
+        <div class="sticky-button container-fluid" *ngIf="BillEntry_flag==2">
+            <div class="section-title" (click)="tokenStatus('','','')" *ngIf="this.Popup_error_list.length>0">
+                <h2>
+                    <span style="color:red;" class="blink">See Error Details</span>
+                </h2>
+            </div>
+            <div class="float-end custome_btn_doc" (click)="viewDocument()">
+                <span class="f-14" *ngIf="!IsOpen">Show Docs</span>
+                <span class="f-14" *ngIf="IsOpen">Hide Docs</span>
+                <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                    [ngClass]="{'mat-icone': IsOpen === true}">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+            </div>
+            <div class="row">
+                <div [ngClass]="{'col-lg-6': IsOpen === true, 'col-lg-12': IsOpen === false}">
+
+                    <div class="all-input-field-container mt-4">
+                        <div class="scrollable-height-container">
+                            <div class="basic-input-field-container">
+                                <form [formGroup]="BillEntryForm">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <mat-form-field appearance="legacy" class="w-100">
+                                                    <mat-label>Select Bank</mat-label>
+                                                    <mat-select formControlName="bankName">
+                                                        <mat-option *ngFor="let Bank of BankList"
+                                                            [value]="Bank">{{Bank.BANKNAME}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <mat-form-field appearance="legacy" class="w-100">
+                                                    <mat-label class="custom-input-lable">DDO
+                                                        Name</mat-label>
+                                                    <input matInput formControlName="DdoName" placeholder="Placeholder">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <mat-form-field appearance="legacy" class="w-100">
+                                                    <mat-label class="custom-input-lable">DDO BIll
+                                                        No.</mat-label>
+                                                    <input matInput formControlName="DdoBillNo"
+                                                        placeholder="Placeholder">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field appearance="legacy" class="w-100">
+                                                    <mat-label class="custom-input-lable">DDO BIll
+                                                        Date</mat-label>
+                                                    <input matInput formControlName="DdoBillDate"
+                                                        placeholder="MM/DD/YYYY">
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="accordions-input-container">
+                                <div class="accordion-item mb-2">
+                                    <mat-accordion>
+                                        <mat-expansion-panel [expanded]="true">
+                                            <mat-expansion-panel-header>
+                                                <mat-panel-title class="medium-font">
+                                                    Budget Details
+                                                    <div>
+                                                        <img width="20px" style="margin-left: 10px;"
+                                                            src="./assets/images/budget.svg" alt="">
+                                                    </div>
+                                                </mat-panel-title>
+                                            </mat-expansion-panel-header>
+                                            <form [formGroup]="BillEntryForm" class="p-3">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">Detail
+                                                                Head</mat-label>
+                                                            <input matInput placeholder="DetailHead"
+                                                                formControlName="DetailHead">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">Object
+                                                                Head</mat-label>
+                                                            <input matInput placeholder="ObjectHead"
+                                                                formControlName="ObjectHead">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">Office
+                                                                Id.</mat-label>
+                                                            <input matInput placeholder="officeid"
+                                                                formControlName="officeid">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">Head
+                                                                Office</mat-label>
+                                                            <input matInput placeholder="Placeholder"
+                                                                formControlName="HeadOffice">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">BFC Type</mat-label>
+                                                            <input matInput formControlName="PlanNonPlan"
+                                                                placeholder="PlanNonPlan">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">Head Type</mat-label>
+                                                            <input matInput formControlName="VotedCharged"
+                                                                placeholder="VotedCharged">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                </div>
+                                <div class="accordion-item mb-2">
+                                    <mat-accordion>
+                                        <mat-expansion-panel [expanded]="true">
+                                            <mat-expansion-panel-header>
+                                                <mat-panel-title class="medium-font">
+                                                    ₹ Amount Details
+                                                    <div>
+                                                        <img width="20px" style="margin-left: 10px;"
+                                                            src="./assets/images/amount.svg" alt="">
+                                                    </div>
+                                                </mat-panel-title>
+
+                                            </mat-expansion-panel-header>
+                                            <form [formGroup]="BillEntryForm" class="p-3">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable"> Gross
+                                                                Amount (A)</mat-label>
+                                                            <input matInput formControlName="GrossAmt">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">Head
+                                                                Gross</mat-label>
+                                                            <input matInput formControlName="HeadGross">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">Net
+                                                                Amount (B)</mat-label>
+                                                            <input matInput formControlName="NetAmt">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">Balance
+                                                                Budget</mat-label>
+                                                            <input matInput placeholder="Placeholder"
+                                                                [ngClass]="BudgetAmountF ? 'warn' : 'warn1'"
+                                                                formControlName="BudgetBal">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <mat-form-field appearance="legacy" class="w-100">
+                                                            <mat-label class="custom-input-lable">(A)-(B)</mat-label>
+                                                            <input matInput placeholder="Placeholder"
+                                                                formControlName="budgetval">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <mat-label class="custom-input-lable">{{grossAmtInword}} -
+                                                    (A)</mat-label>
+
+                                            </form>
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                </div>
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mb-2 " *ngIf="BT_flag">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        Book Transfer
+                                                        <div>
+                                                            <img width="20px" style="margin-left: 10px;"
+                                                                src="./assets/images/book_transfer.svg" alt="">
+                                                        </div>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <div class="overflow-auto">
+                                                    <table mat-table [dataSource]="dataSource1" class="w-100">
+                                                        <ng-container matColumnDef="DetailHead">
+                                                            <th mat-header-cell *matHeaderCellDef>Detail Head</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.DETAIL_HEAD}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="ObjectHead">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Object
+                                                                Head</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.OBJECTHEAD}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Division">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Division
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.DIVISION_CODE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="PnNP">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                BFC
+                                                                Type</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.BFC_TYPE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="VnC">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Head
+                                                                Type</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.HEAD_TYPE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="PDAcNo">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                PD
+                                                                A/C
+                                                                No.</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.PDAC_NO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="SanctionNo">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Sanction
+                                                                No</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SANCTION_NO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="SanctionDate">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Sanction
+                                                                Date</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SANCTION_DATE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Amount">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Amount
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">₹ {{element.AMOUNT}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="TreasuryName">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Treasury
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.TREASURY_NAME}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedColumns1">
+                                                        </tr>
+                                                        <tr class="mat-row" *matNoDataRow>
+                                                            <td class="mat-cell" colspan="4">
+                                                                No data matching the filter.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </div>
+                                </div>
+
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mb-2 " *ngIf="Morehead_flag">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        More Head
+                                                        <div>
+                                                            <img width="20px" style="margin-left: 10px;"
+                                                                src="./assets/images/more_heads.svg" alt="">
+                                                        </div>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <div class="overflow-auto">
+                                                    <table mat-table [dataSource]="MoreHeadSource" class="w-100">
+                                                        <ng-container matColumnDef="BuddgetHead">
+                                                            <th mat-header-cell *matHeaderCellDef>Buddget Head</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.BUDGETHEAD1}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="ObjectHead">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Object
+                                                                Head</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.OBJECT_HEAD_NAME}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="BFC">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                BFC
+                                                                Type</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.BFC_TYPE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Head">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Head
+                                                                Type</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.HEAD_TYPE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="PDAcNo">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                PD
+                                                                A/C
+                                                                No.</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.PDACC_NO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="HeadGross">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Head Gross </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">₹ {{element.HEAD_GROSS}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Budget">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Budget Amount</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">₹ {{element.BUDGET_AMOUNT}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedMoreHead"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedMoreHead"
+                                                            [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                                        <tr class="mat-row" *matNoDataRow>
+                                                            <td class="mat-cell" colspan="4">
+                                                                No data matching the filter.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div class="section-title mt-3 ms-2" *ngIf="budget_Status">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.BuType}} </h3>
+                                    </div>
+                                    <!-- <div class="section-title mt-3 ms-2" *ngIf="budgetHead_valid==='200002'">
+                                    <h3 class="error-text"> MAJOR HEAD is not proper for selected BILL
+                                        TYPE
+                                    </h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="budgetHead_valid==='200004'">
+                                    <h3 class="error-text"> InCorrect Division Code</h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="budgetHead_valid=== '200005'">
+                                    <h3 class="error-text"> Invalid PD Account No.</h3>
+                                </div>
+                                <div class="section-title mt-3 ms-2" *ngIf="budgetHead_valid=== '200007'">
+                                    <h3 class="error-text"> 5003: Please check the
+                                        BudgetHead,ObjectHead,State Fund/Central
+                                        Assistance,Voted/Charged or
+                                        BillType , BillSubType</h3>
+                                </div> -->
+                                    <div class="section-title mt-3 ms-2" *ngIf="BillNoDuplicate">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.B6Type}}</h3>
+                                    </div>
+                                    <div class="section-title mt-3 ms-2" *ngIf="Tcode.CommonErr4">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.CE4Type}} </h3>
+                                    </div>
+                                    <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error6">
+                                        <h3 class="error-text"> {{LableMsg.ObjectionC}} : {{LableMsg.BE6Type}}</h3>
+                                    </div>
+                                    <div class="section-title mt-3 ms-2" *ngIf=" Tcode.CommonErr8">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.CE8Type}} </h3>
+                                    </div>
+                                    <div class="section-title mt-3 ms-2" *ngIf="Tcode.CommonErr9">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.CE9Type}} </h3>
+                                    </div>
+                                    <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error1">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.BE1Type}} </h3>
+                                    </div>
+                                    <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error2">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.BE2Type}} </h3>
+                                    </div>
+                                    <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error4">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.BE4Type}} </h3>
+                                    </div>
+                                    <div class="section-title mt-3 ms-2" *ngIf="Tcode.Billtype_error5">
+                                        <h3 class="error-text">{{LableMsg.ObjectionC}} : {{LableMsg.BE5Type}} </h3>
+                                    </div>
+                                    <!-- <div class="section-title mt-3 ms-2" *ngIf="grant_valid">
+                                    <h3 class="error-text">{{LableMsg.GrantBilltype}} </h3>
+                                </div> -->
+                                </div>
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mb-2">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        Payment Details
+                                                        <div>
+                                                            <img width="20px" style="margin-left: 10px;"
+                                                                src="./assets/images/payment_details.svg" alt="">
+                                                        </div>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <form [formGroup]="BillEntryForm" class="p-3">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <mat-form-field appearance="legacy" class="w-100">
+                                                                <mat-label class="custom-input-lable">Pay
+                                                                    Month-Year</mat-label>
+                                                                <input matInput formControlName="BillMonth"
+                                                                    placeholder="Bill Month-Year">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <mat-form-field appearance="legacy" class="w-100">
+                                                                <mat-label class="custom-input-lable">Payment
+                                                                    Date</mat-label>
+                                                                <input matInput formControlName="toDate"
+                                                                    placeholder="MM/DD/YYYY">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <mat-form-field appearance="legacy" class="w-100">
+                                                                <mat-label class="custom-input-lable">Mode Of
+                                                                    Payment</mat-label>
+                                                                <input matInput formControlName="ECSNONECS"
+                                                                    placeholder="ECSNONECS">
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </div>
+                                </div>
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mb-2">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        Other Details
+                                                        <div>
+                                                            <img width="20px" style="margin-left: 10px;"
+                                                                src="./assets/images/other_details.svg" alt="">
+                                                        </div>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <form [formGroup]="BillEntryForm" class="p-3">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <mat-form-field appearance="legacy" class="w-100">
+                                                                <mat-label class="custom-input-lable">PD A/C
+                                                                    No.</mat-label>
+                                                                <input matInput formControlName="PdAcc"
+                                                                    placeholder="Placeholder">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <mat-form-field appearance="legacy" class="w-100">
+                                                                <mat-label
+                                                                    class="custom-input-lable">Division</mat-label>
+                                                                <input matInput formControlName="Division"
+                                                                    placeholder="Placeholder">
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </div>
+                                </div>
+
+
+                                <!-- <div class="accordion-item mb-2">
+                                <mat-accordion>
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title class="medium-font">
+                                                Salary Allowance
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <table mat-table [dataSource]="dataSource" class="w-100">
+                                            <ng-container matColumnDef="BudgetHead">
+                                                <th mat-header-cell *matHeaderCellDef class="table-col-padding">Allowance</th>
+                                                <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                    <p class="m-0">{{element.BudgetHead}}</p>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="ObjectHead">
+                                                <th mat-header-cell *matHeaderCellDef class="table-col-padding">Amount</th>
+                                                <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                    <p class="m-0">₹ {{element.ObjectHead}}</p>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="PnNP">
+                                                <th mat-header-cell *matHeaderCellDef class="table-col-padding">Amount</th>
+                                                <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                    <p class="m-0">₹ {{element.PnNP}}</p>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="VnC">
+                                                <th mat-header-cell *matHeaderCellDef class="table-col-padding">Amount</th>
+                                                <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                    <p class="m-0">₹ {{element.VnC}}</p>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="OfficeId">
+                                                <th mat-header-cell *matHeaderCellDef class="table-col-padding">Amount</th>
+                                                <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                    <p class="m-0">₹ {{element.OfficeId}}</p>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="Grossamt">
+                                                <th mat-header-cell *matHeaderCellDef class="table-col-padding">Amount</th>
+                                                <td mat-cell *matCellDef="let element" class="table-col-padding">
+                                                    <p class="m-0">₹ {{element.Grossamt}}</p>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                                            </tr>
+                                            <tr class="mat-row" *matNoDataRow>
+                                                <td class="mat-cell" colspan="4">
+                                                    No data matching the filter.
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div> -->
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mb-2 " *ngIf="Loan_flag">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        Loan Book Details
+                                                        <div>
+                                                            <img width="20px" style="margin-left: 10px;"
+                                                                src="./assets/images/more_heads.svg" alt="">
+                                                        </div>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <div class="overflow-auto">
+                                                    <table mat-table [dataSource]="LoanSource" class="w-100">
+                                                        <ng-container matColumnDef="DETAIL HEAD">
+                                                            <th mat-header-cell *matHeaderCellDef>DETAIL_HEAD</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.DETAIL_HEAD}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="EMP NAME">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                EMP_NAME</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.EMP_NAME}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="GPF POLICY No.">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                GPF_POLICY_NUMBER</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.GPF_POLICY_NUMBER}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="AUTHORITY NO.">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                AUTHORITY_NO</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.AUTHORITY_NO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="AMOUNT">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                AMOUNT </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">₹ {{element.AMOUNT}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedLoan"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedLoan"
+                                                            [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                                        <tr class="mat-row" *matNoDataRow>
+                                                            <td class="mat-cell" colspan="4">
+                                                                No data matching the filter.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </div>
+                                </div>
+
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mb-2 " *ngIf="RDCCD_Tableflag">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        RDCCD Book Details
+                                                        <div>
+                                                            <img width="20px" style="margin-left: 10px;"
+                                                                src="./assets/images/more_heads.svg" alt="">
+                                                        </div>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <div class="overflow-auto mt-8" *ngIf="RDCCD_Tableflag">
+                                                    <table mat-table [dataSource]="RDCCDSource" class="w-100">
+                                                        <ng-container matColumnDef="SR. No.">
+                                                            <th mat-header-cell *matHeaderCellDef>SR. No.</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SR_NO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Challan No">
+                                                            <th mat-header-cell *matHeaderCellDef>Challan No.</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.CHALLAN_NO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Challan Date">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Challan Date</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.CHALLAN_DATE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Amount">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Amount
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.AMOUNT}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="GRN">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                GRN
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.GRN}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedRDCCD"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedRDCCD"
+                                                            [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                                        <tr class="mat-row" *matNoDataRow>
+                                                            <td class="mat-cell" colspan="4">
+                                                                No data matching the filter.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </div>
+                                </div>
+
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mt-4" *ngIf="WorkITableflag">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        Work Invoice Detail
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <div class="overflow-auto mt-1">
+                                                    <table mat-table [dataSource]="WorkInvoiceSource" class="w-100">
+                                                        <ng-container matColumnDef="Invoice No">
+                                                            <th mat-header-cell *matHeaderCellDef>Invoice No.</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.INVOICE_NO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Invoice Date">
+                                                            <th mat-header-cell *matHeaderCellDef>Invoice Date</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.INVOICE_DATE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Work Order No">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Work Order No.</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.WORKORDER_NO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Work Order Date">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Work Order Date
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.WORKORDER_DATE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Party Name">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Party Name
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.PARTY_NAME}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedWorkInvoice"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedWorkInvoice"
+                                                            [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                                        <tr class="mat-row" *matNoDataRow>
+                                                            <td class="mat-cell" colspan="4">
+                                                                No data matching the filter.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </mat-expansion-panel>
+
+                                        </mat-accordion>
+
+                                    </div>
+                                </div>
+
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mt-4" *ngIf="ACBIllTableflag">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        Advance Contingency Block
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <div class="overflow-auto mt-8">
+                                                    <table mat-table [dataSource]="ACBillSource" class="w-100">
+                                                        <ng-container matColumnDef="Dc Pending">
+                                                            <th mat-header-cell *matHeaderCellDef>DC Pending</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.DCPENDING}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Sanction No">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Sanction No</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SANCTIONNO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Sanction Date">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Sanction Date
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SANCTIONDATE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Sanction Authority">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Sanction Authority
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SANCTIONAUTHORITY}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Purpose">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Purpose</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.REMARK}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedACBill"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedACBill"
+                                                            [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                                        <tr class="mat-row" *matNoDataRow>
+                                                            <td class="mat-cell" colspan="4">
+                                                                No data matching the filter.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </mat-expansion-panel>
+
+                                        </mat-accordion>
+
+                                    </div>
+                                </div>
+
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mt-4" *ngIf="GrantIn_Aid_Tableflag">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        Grant In Aid Bill
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+
+                                                <div class="overflow-auto mt-8">
+                                                    <table mat-table [dataSource]="GrantAidSource" class="w-100">
+                                                        <ng-container matColumnDef="UC Required">
+                                                            <th mat-header-cell *matHeaderCellDef>UC Required</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.UCREQUIRED}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Sanction No">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Sanction No</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SANCTIONNO}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Sanction Date">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Sanction Date
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SANCTIONDATE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Sanction Authrity">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Sanction
+                                                                Authrity
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.SANCTIONAUTHORITY}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Purpose">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Purpose</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.REMARK}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedGrant"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedGrant"
+                                                            [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                                        <tr class="mat-row" *matNoDataRow>
+                                                            <td class="mat-cell" colspan="4">
+                                                                No data matching the filter.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </mat-expansion-panel>
+
+                                        </mat-accordion>
+
+                                    </div>
+                                </div>
+
+                                <div class="accordions-input-container">
+                                    <div class="accordion-item mt-4" *ngIf="Insitituion_TabFlag">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [expanded]="true">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title class="medium-font">
+                                                        Instituion Record
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+
+                                                <div class="overflow-auto mt-8">
+                                                    <table mat-table [dataSource]="InsitituionSource" class="w-100">
+                                                        <ng-container matColumnDef="Insitituion Code">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Insititution Code</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.INSTITUTION_CODE}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Insitituion Name">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">
+                                                                Insitituion Name</th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.INSTITUTIION_NAME}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="Insitituion Amount">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="table-col-padding">Insitituion
+                                                                Amount
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="table-col-padding">
+                                                                <p class="m-0">{{element.AMOUNT}}</p>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedInsitituion"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedInsitituion"
+                                                            [ngClass]="[row.FLAG == 1 ? 'TableRowColor': '' ]"></tr>
+                                                        <tr class="mat-row" *matNoDataRow>
+                                                            <td class="mat-cell" colspan="4">
+                                                                No data matching the filter.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </mat-expansion-panel>
+
+                                        </mat-accordion>
+
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" *ngIf="IsOpen">
+                    <app-view-document [billNo]="RefNo" [DocFlag]="true"></app-view-document>
+                </div>  
+                <!-- <div class="col-lg-6" *ngIf="IsObjectionOpen">
+                <app-bill-entry-objection [ObjBillType]="IsObjectionBill"
+                    [Billcode]="BillvoucheList.billCode"></app-bill-entry-objection>
+            </div> -->
+
+            </div>
+        </div>
+        <div *ngIf="BillEntry_flag==3" class="pd-5">
+            <div class="col-lg-6" *ngIf="IsObjectionOpen">
+                <app-objectiondialog [ObjBillDetails]="IsObjectionBill" [IconFlag]="true"></app-objectiondialog>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="float-end mt-2" *ngIf="BillEntry_flag == 2">
+
+                    <div class="float-end" *ngIf="!BillEntryForm.invalid && ButtonDisable">
+
+                        <button (click)="Save_objectionDetails()" class="btn ml-2 ms-3" mat-stroked-button
+                            color="primary">Put Objection</button>
+
+                        <button (click)="Save()" class="btn ms-3" mat-raised-button color="primary">Submit</button>
+                    </div>
+                    <div class="float-end" *ngIf="BillEntry_flag == 2">
+                        <button class="btn" mat-stroked-button (click)="onReset()" color="primary">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </mat-card>
+
+
+</div>
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>

@@ -1,0 +1,509 @@
+<div class="container-fluid breadcrums-bar-container">
+    <div class="d-flex align-items-center px-3 py-2 overflow-auto text-nowrap">
+        <div class="back-btn-container position-sticky start-0">
+            <div class="raised-btn-component d-flex align-items-center">
+                <button mat-raised-button class="d-md-none px-0 me-3"
+                    (click)="drawer.toggle()"><mat-icon>menu</mat-icon></button>
+                <button mat-raised-button color="primary" class="big-btn-with-icon-padding">
+                    <mat-icon>chevron_left</mat-icon>
+                    Back
+                </button>
+            </div>
+        </div>
+        <div class="breadcrumbs-component ms-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#">Employee Management Information
+                            System</a></li> <mat-icon>keyboard_arrow_right</mat-icon>
+                    <li class="breadcrumb-item"><a href="#">Library</a></li> <mat-icon>keyboard_arrow_right</mat-icon>
+                    <li class="breadcrumb-item active" aria-current="page">Data (Treasury Test...)</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <mat-drawer-container class="ifms-sidebar-container" autosize>
+        <mat-drawer #drawer opened class="ifms-sidebar-sidenav" [mode]="isLargeScreen() ? 'side' : 'over'"
+            [opened]="isLargeScreen()">
+            <div class="sidebar" id="side-bar">
+                <mat-card class="side_card mt-2">
+                    <mat-card-content>
+                        <div class="toggle-btn-container d-flex justify-content-between align-items-center">
+                            <p class="w-100 mat-h3 font-weight-600 font-18 mb-0 text-white text-center heading_with_bg"
+                                color="primary">My Request</p>
+                            <button class="toggler-button p-0 d-none d-md-block" mat-button
+                                (click)="toggle_sm(1);rotate()">
+                                <mat-icon>chevron_left</mat-icon>
+                            </button>
+                        </div>
+                        <div class="card-body px-0 min-height-2 mt-2">
+                            <mat-nav-list class="list_item font-14 mb-5 list_item_two">
+
+                                <!-- Dashboard -->
+                                <a mat-list-item routerLinkActive="active-link" (click)="hideSidenavAfterClick()"
+                                    [routerLink]="['/Dashboard']"> <img class="ps-2 pe-3"
+                                        src="./assets/images/Management_icon.svg"><span
+                                        class="sidebar-direct-link">Dashboard</span> </a>
+
+                                <mat-accordion class="side-bar side-bar-menu-hover">
+
+                                    <!-- Token Processing -->
+                                    <mat-expansion-panel routerLinkActive #rla0="routerLinkActive"
+                                        [expanded]="rla0.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3"> Token Processing</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/TokenEntry']">Token
+                                                Entry</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/OnlineTokenEntry']">Bulk Token Entry</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/TokenUpdate']">Token
+                                                Edit/Delete</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/TokenDispatch']">Token Dispatch</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/ObjectedTokenEntry']">Objection Token Entry</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/TokenTrail']">Token
+                                                Trail</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/SignVerification']">DDO Sign View</a>
+
+
+                                        </mat-nav-list>
+                                    </mat-expansion-panel>
+
+                                    <!-- Bill Processing -->
+                                    <mat-expansion-panel routerLinkActive #rla1="routerLinkActive"
+                                        [expanded]="rla1.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3">Bill Processing</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+
+                                            <!-- Payment Panel -->
+                                            <mat-expansion-panel routerLinkActive #rla1A="routerLinkActive"
+                                                [expanded]="rla1A.isActive" (click)="toggle_menu($event)"
+                                                class="side-bar-font">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        <img src="./assets/images/Management_icon.svg">
+                                                        <span class="ms-3">Payment Panel</span>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <mat-nav-list>
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/OnLineBillList']">Token to be Bill</a>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/BillEntry']">Bill Entry (Online)</a>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/BillEntryOffline']">Bill Entry (Offline)</a>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/AccAuthorization']">Checker Authorization</a>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/TOAuthorization']">TO Authorization</a>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()" [routerLink]="['/PFMS']">SNA Sparsh</a>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/DigitalSign']">Digital Sign</a>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/VoucherEntry']">Voucher Entry</a>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/GrnMinusEntry']">Grn Minus Entry</a>
+
+                                                </mat-nav-list>
+                                            </mat-expansion-panel>
+
+
+
+                                            <!-- Receipt Panel -->
+                                            <mat-expansion-panel routerLinkActive #rla1B="routerLinkActive"
+                                                [expanded]="rla1B.isActive" (click)="toggle_menu($event)"
+                                                class="side-bar-font">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        <img src="./assets/images/Management_icon.svg">
+                                                        <span class="ms-3"> Receipt Panel</span>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <mat-nav-list>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/Challan_Entry']">Challan Entry</a>
+
+
+                                                </mat-nav-list>
+                                            </mat-expansion-panel>
+
+                                        </mat-nav-list>
+                                    </mat-expansion-panel>
+
+                                    <!-- Audit Panel -->
+                                    <mat-expansion-panel routerLinkActive #rla2="routerLinkActive"
+                                        [expanded]="rla2.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3">Audit Panel</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/BillEncashment']">Bill Encashment</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/BillCancel']">Bill
+                                                Cancel</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/ChequeCancel']">Cheque Cancel</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/ChequeCancelApproval']">Cheque Cancel Approval</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/BillAuthorization']">Bill Authorization</a>
+
+                                            <!-- <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/UpdatePayIds']">Pay & NonPayId Edit</a> -->
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/TE']">TE Voucher
+                                                Entry</a>
+
+
+                                        </mat-nav-list>
+                                    </mat-expansion-panel>
+
+                                    <!-- Cheque Panel -->
+                                    <mat-expansion-panel routerLinkActive #rla3="routerLinkActive"
+                                        [expanded]="rla3.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3">Cheque Panel</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/CheckMaster']">Cheque
+                                                Master</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/ChequeIssue']">Cheque
+                                                Issue</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/ChequePrint']">Cheque
+                                                Print</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/TransferDeleteCheque']">Cheque Issue Updation</a>
+
+                                        </mat-nav-list>
+                                    </mat-expansion-panel>
+
+                                    <!-- Report Panel -->
+                                    <mat-expansion-panel routerLinkActive #rla4="routerLinkActive"
+                                        [expanded]="rla4.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3">Report Panel</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/AutoBill']">Auto
+                                                Bills Report</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/BillObjection']">Bill
+                                                Objection Report</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/TrackOfTransactionReport']">Track Of Transaction
+                                                Report</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/TransctionDetailByTokenNo']">Transction Detail By
+                                                TokenNo</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/VoucherDetailReport']">Voucher Detail Report</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/AutomationBillReport']">Auto TXN Log Report</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/NewTokenReport']">New Token Report</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/ErrorLogReport']">Error Log Report</a>
+                                          
+                                            <!-- MIS Reports -->
+                                            <mat-expansion-panel routerLinkActive #rla4A="routerLinkActive"
+                                                [expanded]="rla4A.isActive" (click)="toggle_menu($event)"
+                                                class="side-bar-font">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        <img src="./assets/images/Management_icon.svg">
+                                                        <span class="ms-3">MIS Reports</span>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <mat-nav-list>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/pdReport']">Pd Reports</a>
+
+                                                   <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()" [routerLink]="['/LopReport']">LOP Report</a>
+        
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()" [routerLink]="['/LorReport']">LOR Report</a>
+
+                                                </mat-nav-list>
+                                            </mat-expansion-panel>
+
+                                            <!-- PFMS Reports -->
+                                            <mat-expansion-panel routerLinkActive #rla4B="routerLinkActive"
+                                                [expanded]="rla4B.isActive" (click)="toggle_menu($event)"
+                                                class="side-bar-font">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        <img src="./assets/images/Management_icon.svg">
+                                                        <span class="ms-3">PFMS Reports</span>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <mat-nav-list>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/PfmsReport']">PFMS Reports</a>
+
+                                                </mat-nav-list>
+                                            </mat-expansion-panel>
+
+                                            <!-- Other Reports -->
+                                            <mat-expansion-panel routerLinkActive #rla4C="routerLinkActive"
+                                                [expanded]="rla4C.isActive" (click)="toggle_menu($event)"
+                                                class="side-bar-font">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        <img src="./assets/images/Management_icon.svg">
+                                                        <span class="ms-3">Other Reports</span>
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <mat-nav-list>
+
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/OtherReports']">Other Reports</a>
+
+                                                        
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                    (click)="hideSidenavAfterClick()"
+                                                    [routerLink]="['/PaymentsReport']">Payment Reports</a>
+
+
+                                                    
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/MasterReport']">Master Reports</a>
+
+
+                                                     <a mat-list-item routerLinkActive="active-link"
+                                                        (click)="hideSidenavAfterClick()"
+                                                        [routerLink]="['/PfmsPaymentlogComponent']">PFMS Component Log</a>
+    
+    
+                                                        
+                                                    <a mat-list-item routerLinkActive="active-link"
+                                                            (click)="hideSidenavAfterClick()"
+                                                            [routerLink]="['/PaymentReconcilationlogComponent']">Payment Reconcilation Log</a>
+
+                                                </mat-nav-list>
+                                            </mat-expansion-panel>
+
+
+
+                                        </mat-nav-list>
+
+                                    </mat-expansion-panel>
+
+                                    <!-- Bank Panel -->
+                                    <mat-expansion-panel routerLinkActive #rla5="routerLinkActive"
+                                        [expanded]="rla5.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3"> Bank Panel</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/P2F']">P2F (Upload
+                                                Token Cheque)</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/PaymentScroll']">Upload Payment Scroll </a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/ReceiptScroll']">Upload Receipt Scroll </a>
+
+                                        </mat-nav-list>
+                                    </mat-expansion-panel>
+
+
+                                    <!-- Master Panel -->
+                                    <mat-expansion-panel routerLinkActive #rla6="routerLinkActive"
+                                        [expanded]="rla6.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3"> Master Panel</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/AGDivision']"> AG
+                                                Division Updation</a>
+ 
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/pdAcCreation']">New
+                                                PD Account Creation</a>
+
+                                        </mat-nav-list>
+                                    </mat-expansion-panel>
+
+
+                                    <!-- System Admin-->
+                                    <mat-expansion-panel routerLinkActive #rla7="routerLinkActive"
+                                        [expanded]="rla7.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3"> System Admin</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/MHeadUserMapping']">Functional User Mapping</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/CheckBudget']">Budget
+                                                Checking</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/FrmPdAccountCertification']">PD Account
+                                                Certification</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/PdAccountClosingStatus']">PD Account Closing Status</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/VoucherDateUpdation']"> Voucher Date Updation</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/DayClose']"> Treasury
+                                                Day Close</a>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()" [routerLink]="['/BankMaster']">Bank
+                                                Master Entry</a>
+
+                                        </mat-nav-list>
+                                    </mat-expansion-panel>
+
+                                    <!-- Miscellaneous -->
+                                    <mat-expansion-panel routerLinkActive #rla8="routerLinkActive"
+                                        [expanded]="rla8.isActive" (click)="toggle_menu($event)" class="side-bar-font">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <img src="./assets/images/Management_icon.svg">
+                                                <span class="ms-3"> Miscellaneous</span>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-nav-list>
+
+                                            <a mat-list-item routerLinkActive="active-link"
+                                                (click)="hideSidenavAfterClick()"
+                                                [routerLink]="['/EmployeeSignature']">Employee Signature</a>
+
+                                        </mat-nav-list>
+                                    </mat-expansion-panel>
+
+
+                                </mat-accordion>
+                            </mat-nav-list>
+                        </div>
+
+
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </mat-drawer>
+        <div class="ifms-sidebar-sidenav-content" style="background-color: #edf0f2;">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-drawer-container>
+
+</div>

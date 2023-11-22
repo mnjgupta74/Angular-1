@@ -1,0 +1,25 @@
+<div class="contaner">
+    <div class="row align-items-center">
+        <div class="col-8">
+            <mat-label><b>Bill Documents</b></mat-label>
+            <small> For Reference Number: {{billNumber}}</small>
+        </div>
+        <div class="col-4" *ngIf="Doc_Close!=true">
+            <button class="btn p-0 float-end" (click)="redirectToBack()"><img src="./assets/images/cross.svg"></button>
+        </div>
+    </div>
+    <div class="d-inline me-2" *ngFor="let base64data  of base64dataArray; let i = index">
+        <button class="mb-3 mt-2" mat-raised-button color="primary"
+            (click)="preview(base64dataArray[i])">{{doc_Type[i].Doc_Type}}: {{doc_Type[i].docId}} </button>
+    </div>
+    <!-- <iframe id="ifrm" style="width:100%; min-height:875px;" scrolling="no"></iframe> -->
+    <div *ngIf="message_data==true" class="empty-message mt-6">
+        <!-- <h3>No Document Found</h3> -->
+        <img src="./assets/images/NoDocumentFound_Img.jpg" width="60%" height="60%"   >
+    </div>
+    <div *ngIf="message_data==false">
+        <iframe mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" id="ifrm"
+            style="width:100%; min-height:875px;" scrolling="no"></iframe>
+    </div>
+
+</div>

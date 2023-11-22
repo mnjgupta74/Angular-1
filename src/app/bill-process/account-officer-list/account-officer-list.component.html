@@ -1,0 +1,422 @@
+<div appNoRightClick>
+    <div class="container-fluid">
+        <mat-card class="mb-3">
+            <mat-label> <b>Checker Authorization</b></mat-label>
+            <!-- <mat-expansion-panel  class="mt-2" *ngIf="AccountOffListdata.data.length > 0"> -->
+            <div [hidden]="AccountOffListdata.data.length <= 0">
+                <mat-expansion-panel class="mt-2">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title> Token Filter... </mat-panel-title>
+                        <button mat-icon-button variant="icon-button" (keydown.enter)="$event.stopPropagation();"
+                            (click)="$event.stopPropagation();">
+                            <!-- <mat-icon> vertical_align_bottom</mat-icon> -->
+                        </button>
+                    </mat-expansion-panel-header>
+                    <div class="col-md-12 col-12">
+
+                        <form [formGroup]="AccountOfficeForm" #options="ngForm">
+
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+
+                                    <!-- <p class="f-14" placeholder="Treasury" name="Treasury" (paste)="(false)">
+                                                <b>Treasury : </b>
+                                                {{this.GetAccountOfficeListModal.treasuryCode}} 
+                                            </p>   -->
+
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label> Treasury</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            (paste)="(false)" formControlName="TreasuryControl"
+                                            [matAutocomplete]="autoTreas" [(ngModel)]="ChooseOption">
+                                        <mat-icon class=""
+                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #autoTreas="matAutocomplete" [displayWith]="displayTreasFn">
+                                            <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                                {{option.TreasuryName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="AccountOfficeForm.invalid">Please Select Treasury !
+                                        </mat-error>
+                                    </mat-form-field>
+
+
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <!-- <p class="f-14" placeholder="Year" name="Year" (paste)="(false)"><b>Fin Year : </b>{{finYr}}</p> -->
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label> Fin Year</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            (paste)="(false)" formControlName="Year">
+                                    </mat-form-field>
+                                </div>
+
+
+                                <!-- </div>
+
+                                    <div class="row"> -->
+
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Token No.*</mat-label>
+
+                                        <input matInput type="tel" placeholder="Enter Token No. for Search"
+                                            name="Token Number" (paste)="(false)" formControlName="TokenNum"
+                                            NumberOnlyDirective />
+
+                                        <mat-error *ngIf="TokenNum && TokenNum.invalid &&  TokenNum.touched"
+                                            class="text-danger error_msg">
+                                            <!-- <div *ngIf="TokenNum.errors?.['Required'] as error">
+                                                        {{error}}
+                                                    </div> -->
+                                            <!-- <div *ngIf="TokenNum.errors?.['minLength'] as error">
+                                                        {{error}}
+                                                    </div> -->
+                                            <div *ngIf="TokenNum.errors?.['maxLength'] as error">
+                                                {{error}}
+                                            </div>
+                                            <div *ngIf="TokenNum.errors?.['Numeric'] as error">
+                                                {{error}}
+                                            </div>
+                                            <!-- <div *ngIf="TokenNum.errors?.['cannotContainSpace'] as error">
+                                                        {{error}}
+                                                    </div> -->
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                                    <mat-form-field class="w-100" appearance="legacy">
+                                        <mat-label>Auditor</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            (paste)="(false)" formControlName="AuditorControl" [matAutocomplete]="auto"
+                                            [(ngModel)]="SelectAuditor">
+                                        <mat-icon class=""
+                                            style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                                        </mat-icon>
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                            <mat-option *ngFor="let option of Auditoroptions | async" [value]="option"
+                                                (click)="OnAuditorSelected(SelectAuditor)">
+                                                {{option.EmployeeId}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="AccountOfficeForm.invalid">Please Select Auditor !
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                                    <div class="float-end">
+                                        <button mat-raised-button color="primary" (click)="GetAccountOfficeList()"
+                                            type="submit" [disabled]="!options.valid">Show</button>
+                                        <button mat-stroked-button color="primary" class="ms-3"
+                                            (click)="GetAccountOfficeListReset()" type="submit">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </mat-expansion-panel>
+            </div>
+
+        </mat-card>
+
+
+        <div class="col-md-12 col-12">
+
+            <!-- <div class="container">
+                        <mat-card>
+                            <mat-card-content> -->
+
+            <mat-card>
+
+                <!-- <div *ngIf="AccountOffListdata.data.length > 0; else emptyTableMsg"> -->
+
+                <div class="container-fluid" *ngIf="AccountOffListdata.data.length > 0;">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                            <mat-form-field appearance="standard" role="search" class="w-100">
+                                <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                                    (keyup)="applyFilter($any($event.target).value)">
+                                <mat-icon matSuffix>search</mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div *ngIf="loading | async" class="loader-container">
+                </div>
+
+                <!--  For Table Horizontal Scroll  -->
+                <div class="scroll-container" style="overflow: auto"
+                    *ngIf="AccountOffListdata.data.length > 0; else emptyTableMsg">
+                    <table mat-table matSort matTableExporter [dataSource]="AccountOffListdata"
+                        (matSortChange)="announceSortChange($event)" class="mat-elevation-z8" id="Test">
+
+
+                        <!-- #exporter="matTableExporter" -->
+                        <!-- Position Column -->
+
+                        <ng-container matColumnDef="SrNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by SrNo"
+                                class="OBListHdrFont">
+                                Sr. No.
+                            </th>
+                            <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                                (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="ViewDocs">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by CDE_Refno"> View Docs </th>
+                            <td mat-cell *matCellDef="let row">
+                                <!--<button mat-icon-button span class="material-icons opacity-half"> <img width="30px" src="./assets/images/icon_eye.svg" alt="" (click)="viewDocumentPopup(row)"></button>-->
+                                <button mat-icon-button span class="material-icons"
+                                    [ngClass]="[this.isViewDocs[row.BillCode] ? 'opacity-half': 'opacity-full']"
+                                    type="button" (click)="viewDocumentPopup(row)"><img width="30px"
+                                        src="./assets/images/icon_eye.svg" alt=""> </button>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="TokenNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by TokenNo" class="OBListHdrFont">
+                                Token No.
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.TokenNo}} </td>
+                        </ng-container>
+
+
+
+                        <ng-container matColumnDef="Ddocode">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by Ddocode" class="OBListHdrFont">
+                                DDO
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.Ddocode}}
+                            </td>
+                        </ng-container>
+
+
+
+                        <ng-container matColumnDef="Budgethead">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by Budgethead" class="OBListHdrFont">
+                                Budget Head
+                            </th>
+                            <td mat-cell *matCellDef="let element">{{element.Budgethead}} </td>
+                        </ng-container>
+
+
+
+                        <ng-container matColumnDef="ObjectHead">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by ObjectHead" class="OBListHdrFont">
+                                Object Head
+                            </th>
+                            <td mat-cell *matCellDef="let element">{{element.ObjectHead}} </td>
+                        </ng-container>
+
+
+
+                        <!-- <ng-container matColumnDef="BillTypeName">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                sortActionDescription="Sort by BillTypeName">
+                                                BillTypeName
+                                            </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.BillTypeName}} </td>
+                                        </ng-container> -->
+
+
+                        <!-- <ng-container matColumnDef="RefNo">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                sortActionDescription="Sort by RefNo">
+                                                RefNo
+                                            </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.RefNo}} </td>
+                                        </ng-container> -->
+
+
+
+                        <!-- <ng-container matColumnDef="DdoName">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                sortActionDescription="Sort by DdoName">
+                                                DdoName
+                                            </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.DdoName}} </td>
+                                        </ng-container> -->
+
+
+                        <ng-container matColumnDef="AuditDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by AuditDate" class="OBListHdrFont">
+                                Audit Date
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.AuditDate}} </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="AuditiorFlag">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by AuditiorFlag" class="OBListHdrFont">
+                                Remark
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.AuditiorFlag}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Paymentmode">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by Paymentmode" class="OBListHdrFont">
+                                Payment Mode
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.Paymentmode}} </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="GrossAmt">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by GrossAmt" class="OBListHdrFont">
+                                Gross Amt
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.GrossAmt}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="CashAmt">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                sortActionDescription="Sort by CashAmt" class="OBListHdrFont">
+                                Cash Amt
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.CashAmt}} </td>
+                        </ng-container>
+
+
+
+
+
+                        <!-- Checkbox Column Pass-->
+
+
+                        <ng-container matColumnDef="Chk_Pass">
+                            <th mat-header-cell *matHeaderCellDef class="OBListHdrFont">
+                                <!-- <mat-checkbox (change)="$event ? masterToggle($event) : null"
+                                            [checked]="Ischecked"
+                                            matTooltip="Checks Disable :- Reasons: Insufficient Budget !">
+                                        </mat-checkbox>  -->
+                                Pass
+                            </th>
+
+
+                           
+                            <td mat-cell *matCellDef="let row">
+ 
+                                 <!-- Please View Document First Code Commented -->
+                                 <!-- [disabled]="!isChkDisabled[row.BillCode]"
+                                 [matTooltip]="!isChkDisabled[row.BillCode] ? 'Please View Document First !' : 'Please Check for Forward !' " -->
+
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event.checked===true ? row.IsChecked = true : row.IsChecked = false"
+                                    [checked]="IscheckedArray[row.BillCode]=row.IsChecked">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+
+
+
+                        <!-- <ng-container matColumnDef="Chk_Revert">
+                                <th mat-header-cell *matHeaderCellDef class="OBListHdrFont">
+                                    Revert
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox (click)="$event.stopPropagation()"  [disabled]="!isChkDisabled[row.BillCode]" 
+                                        (change)="$event.checked===true ? row.IscheckedRevert = true : row.IscheckedRevert = false"
+                                        [checked]="IscheckedRevertArray[row.BillCode]= row.IscheckedRevert">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container> -->
+
+                        <!-- <ng-container matColumnDef="Clickme">
+                            <th mat-header-cell *matHeaderCellDef class="OBListHdrFont">
+                                Objection
+                            </th>
+
+                            <td mat-cell *matCellDef="let row">
+                                <button class="mat-raised-button auth-btn"
+                                    [ngClass]="[row.AuditiorFlag == 'Objection' ? 'showObjColor': '' || row.AuditiorFlag == 'Pass' ? 'showObj' : ''] || [this.isButtonDisabled[row.BillCode] == null ? 'BtnDisableCurser': 'BtnEnableCurser']"
+                                    (click)="openDialog(row)" type="button" [disabled]="!isButtonDisabled[row.BillCode]"
+                                    [matTooltip]="!isButtonDisabled[row.BillCode] ? 'Please View Document First !' : 'Click For Put Objection !' ">Objection</button>
+                            </td>
+
+                        </ng-container> -->
+
+                        <ng-container matColumnDef="Clickme">
+                            <th mat-header-cell *matHeaderCellDef class="OBListHdrFont">
+                                Objection
+                            </th>
+
+                            <td mat-cell *matCellDef="let row">
+
+                                 <!-- Please View Document First Code Commented -->
+                                 <!-- [disabled]="!isButtonDisabled[row.BillCode]"
+                                 [matTooltip]="!isButtonDisabled[row.BillCode] ? 'Please View Document First !' : 'Click for Put Objection !' " -->
+
+                                <button class="mat-raised-button auth-btn"
+                                    [ngClass]="[row.AuditiorFlag == 'Objection' ? 'showObjColor': '' || row.AuditiorFlag == 'Pass' ? 'showObj' : ''] || [this.isButtonDisabled[row.BillCode] == null ? 'BtnDisableCurser': 'BtnEnableCurser']"
+                                    (click)="openDialog(row)" type="button" 
+                                   >Objection</button>
+                            </td>
+                        </ng-container>
+                        <!-- [ngClass]="[row.AuditiorFlag == 'Objection' ? 'showObjColor': '' || row.AuditiorFlag == 'Pass' ? 'showObj' : 'hideObj disabled']" -->
+                        <!-- [ngClass]="[row.AuditiorFlag == 'Objection' ? 'showObjColor': '' || row.AuditiorFlag == 'Pass' ? 'showObj' : 'hideObj disabled' || this.isButtonDisabled[row.BillCode] == null ?'BtnDisableCurser': 'BtnEnableCurser']" -->
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <!-- <tr mat-row [ngClass]="{'flag-objection': row.AuditiorFlag == 'Objection'}"  *matRowDef="let row; columns: displayedColumns;"></tr>  -->
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns,"></tr>
+
+                    </table>
+                </div>
+
+
+                <div [hidden]="AccountOffListdata.data.length <= 0">
+                    <mat-paginator #myPaginator [length]="10" [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]"
+                        (page)="onChangePage($event)" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+
+
+                <!-- <div mat-dialog-actions align="end">
+                                        <button class="btn btn-primary" mat-raised-button (click)="TOBillForward()" color="primary">Forward</button>
+                           </div> -->
+
+
+
+                <div mat-dialog-actions *ngIf="showTab_BtnForward" class="d-flex justify-content-end">
+                    <button mat-raised-button color="primary" (click)="AcctForward_Submit()">Forward</button>
+                    <!-- <button  mat-raised-button (click)="TORevert_Submit()">Revert</button> -->
+                </div>
+
+                <!-- </div> -->
+
+
+                <ng-template #emptyTableMsg>
+                    <div class="empty-message">No Pendency Found !</div>
+                </ng-template>
+            </mat-card>
+
+
+
+        </div>
+
+        <div *ngIf="this.loader.getLoading()" class="cssload-container">
+            <div class="cssload-speeding-wheel"></div>
+        </div>
+    </div>
+</div>

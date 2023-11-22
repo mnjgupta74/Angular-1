@@ -1,0 +1,105 @@
+.Search-btn-position {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+  }
+  
+  .modal-ku {
+    /* width: 900px; */
+    width: auto;
+    margin: auto;
+  }
+  
+  .modal-btn {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    /* margin-block: 10px; */
+    height: 100px;
+  }
+  
+  .showDiv1 {
+    display: flex;
+    margin-block: 0px;
+    flex-direction: column;
+    margin-inline: 50px;
+  }
+  
+  .example-1 {
+    position: relative;
+    overflow-y: scroll;
+    height: 200px;
+    /* width: 100%; */
+  }
+
+  
+ /*-----------------------------*/
+/*Components - Toaster*/
+/*-----------------------------*/
+::ng-deep .toast-container {
+  --bs-toast-zindex: 1090 !important;
+  position: absolute !important;
+  z-index: var(--bs-toast-zindex);
+  width: auto;
+  max-width: 100% !important;
+  height: 12% !important;
+  pointer-events: none !important;
+}
+
+::ng-deep .toast-top-right {
+  top: 0px;
+  right: 0px;
+  left: 0px !important;
+  justify-content: center !important;
+  display: flex !important;
+  position: absolute !important;
+ 
+}
+
+
+
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.form-field-width {
+  width: 50%;
+}
+
+.loader-container{
+  position : absolute;
+  height: 100%;
+  width: 100%;
+  /* background: black;
+  opacity: 0.8; */
+  margin: 2em auto;
+  z-index: 99;
+}
+
+ 
+ /* For Table Horizontal Scroll */
+ .scroll-container{
+  // border: 2px solid silver;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+ 
+.thead-light{
+  background-color: #e4edfa;
+  color: #414141;
+  font-weight: 600;
+  font-size: 9pt;
+  padding: 0 12px;
+  white-space: nowrap;
+}

@@ -1,0 +1,574 @@
+<div class="container-fluid">
+  <mat-card>
+      <form [formGroup]="PfmsDNFileReportform" #options="ngForm">
+          <h2>PFMS DN Files</h2>
+          <div class="row mt-3">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                  <mat-form-field class="w-100" appearance="legacy">
+                      <input type="text" aria-label="Number" matInput (paste)="(false)" formControlName="treasuryval"
+                          [matAutocomplete]="auto" placeholder="Treasury">
+                      <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                      </mat-icon>
+                      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaytreasury">
+                          <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                              {{option.TreasuryName}}
+                          </mat-option>
+                      </mat-autocomplete>
+                      <mat-error *ngIf="PfmsDNFileReportform.invalid">Please Select Treasury ! </mat-error>
+                  </mat-form-field>
+              </div>
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field class="w-100" appearance="legacy">
+                      <input type="text" placeholder="FinYear" aria-label="Number" matInput (paste)="(false)"
+                          formControlName="finyear">
+                  </mat-form-field>
+              </div>
+
+
+
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <mat-radio-group  class="w-100 mt-4" appearance="legacy" aria-label="Select an option" formControlName="selectTypes" (change)="radioButtonGroupChange()">
+                  <mat-radio-button color="primary"  value="1">Summary
+                  </mat-radio-button>
+                  <mat-radio-button color="primary"  class="ms-3" value="2">Detail
+                  </mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+
+          </div>
+
+          <div>
+              <div class="row mt-3">
+                  <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+                      <mat-form-field class="w-100" appearance="legacy">
+                          <mat-label> From Date*</mat-label>
+                          <input matInput [max]="PfmsDNFileReportform.controls.toDate.value"
+                              [matDatepicker]="fromDatepicker" title="Date From" formControlName='fromDate'  (dateChange)="onChangeValidation()">
+                          <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                          <mat-datepicker #fromDatepicker ></mat-datepicker>
+                          <mat-error *ngIf="PfmsDNFileReportform.invalid">Please select the from date </mat-error>
+                      </mat-form-field>
+                  </div>
+
+                  <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+                      <mat-form-field class="w-100" appearance="legacy">
+                          <mat-label>To Date*</mat-label>
+                          <input matInput [min]="PfmsDNFileReportform.controls.fromDate.value"
+                              [matDatepicker]="picker2" formControlName="toDate"  (dateChange)="onChangeValidation()" >
+                          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                          <mat-datepicker #picker2 ></mat-datepicker>
+                          <mat-error *ngIf="PfmsDNFileReportform.invalid">Please select the to date </mat-error>
+                      </mat-form-field>
+                  </div>
+
+                  <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3" *ngIf="PfmsDNFileReportform.controls.selectTypes.value=='2'">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label>CDE Reference No.</mat-label>
+                        <input matInput formControlName="cde_refNo">
+                       </mat-form-field>
+                  </div>
+
+                  <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3" *ngIf="PfmsDNFileReportform.controls.selectTypes.value=='2'">
+                    <mat-form-field class="w-100" appearance="legacy">
+                        <mat-label> Reference No.</mat-label>
+                        <input matInput formControlName="referenceNo">
+                       </mat-form-field>
+                  </div>
+
+
+              </div>
+          </div>
+
+
+
+
+          <div class="d-flex justify-content-end gap-2">
+              <!-- <button class="btn btn-primary" mat-raised-button (click)="onShow()" color="primary">Show</button> -->
+              <button class="btn btn-primary" mat-raised-button (click)="pfmsdnFileDetails()" [disabled]="!options.valid" color="primary">Show</button>
+              <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+          </div>
+      </form>
+  </mat-card>
+  <mat-card class="mt-3" *ngIf="showpfmstrackTable">
+      <div class="row">
+          <div class="col-sm-6">
+              <mat-form-field appearance="standard" role="search" class="w-75">
+                  <input matInput type="search" placeholder="Enter For Search" aria-label="Search"
+                      (keyup)="applyFilter($any($event.target).value)">
+                  <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+          </div>
+      </div>
+      <div class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+          <button (click)="exportToPdf()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2">
+              <img alt="Download RBI Paymet Files Pdf Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+          </button>
+          <button mat-raised-button class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"
+          (click)="exportexcel(this.exportcompletedata, this.filename)">
+          <img alt="Download RBI Paymet Files Excel Report" src="./assets\images\icons8-export-excel-24.png"  matTooltip="Click here to export Excel"></button>
+      </div>
+
+
+      <div class="scroll-container tab-container mt-4" style="overflow: auto">
+          <table width="100%" mat-table matSort matTableExporter [dataSource]="Getpfmsdnfiledata"
+              class="mat-elevation-z8" style="width: 100%;" id="LIST" #LIST>
+              <ng-container matColumnDef="SrNo" *ngIf="PfmsDNFileReportform.getRawValue().selectTypes==2">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                      Sr No. {{PfmsDNFileReportform.getRawValue().selectTypes}}
+                  </th>
+                  <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                      (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+              </ng-container>
+
+              <!-- Position Column -->
+              <ng-container matColumnDef="SCHEME_CODE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                      SCHEME CODE
+                  </th> <td mat-cell *matCellDef="let element">{{element.SCHEME_CODE}}
+                          </td>
+              </ng-container>
+              <ng-container matColumnDef="BEN_FILE_NAME">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by BEN_FILE_NAME">
+                      BEN FILE NAME
+                  </th>
+                  <td mat-cell *matCellDef="let element">{{element.BEN_FILE_NAME}}
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="FILE_RCVD_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by FILE_RCVD_DATE">
+                      FILE RCVD DATE
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.FILE_RCVD_DATE}}
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="END_TO_END_ID">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by END_TO_END_ID">
+                      END TO END ID
+
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.END_TO_END_ID}}
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="SANCTION_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by SANCTION_NO">
+                      SANCTION NO
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.SANCTION_NO}}
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="AMOUNT_CENTER_SHARE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by AMOUNT_CENTER_SHARE">
+                      AMOUNT CENTER SHARE
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.AMOUNT_CENTER_SHARE}}
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="FILE_NAME">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by FILE_NAME">
+                      FILE NAME
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.FILE_NAME}}
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="SANCTION_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by SANCTION_DATE">
+                      SANCTION_DATE
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.SANCTION_DATE}}
+                  </td>
+              </ng-container>
+
+              <ng-container matColumnDef="PMT_INTF_ID">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by PMT_INTF_ID">
+                      PMT INTF ID
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.PMT_INTF_ID}}
+                  </td>
+              </ng-container>
+
+              <ng-container matColumnDef="TOTAL_AMT">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by TOTAL_AMT">
+                      TOTAL AMT
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.TOTAL_AMT}}
+                  </td>
+              </ng-container>
+
+              <ng-container matColumnDef="RE_INITIATED_TRAN_AMOUNT">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by RE_INITIATED_TRAN_AMOUNT">
+                      RE INITIATED TRAN AMOUNT
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                      {{element.RE_INITIATED_TRAN_AMOUNT}}
+                  </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+      </div>
+      <mat-paginator #myPaginator [length]="5" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]" showFirstLastButtons>
+      </mat-paginator>
+  </mat-card>
+
+  <mat-card class="mt-3" *ngIf="showpfmstrackNestedTable" >
+
+    <!-- demo code -->
+
+
+    <!-- End -->
+
+
+
+
+
+
+    <!-- <mat-expansion-panel (opened)="panelOpenState = true"
+    (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+      Self aware panel
+      </mat-panel-title>
+      <mat-panel-description>
+      Currently I am {{panelOpenState ? 'open' : 'closed'}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>I'm visible because I am open
+      <mat-icon>minimize</mat-icon> <mat-icon>add</mat-icon>
+    </p>
+  </mat-expansion-panel> -->
+
+    <!-- <table mat-table [dataSource]="USERS" multiTemplateDataRows matSort class="tableone" >
+
+
+       <ng-container matColumnDef="SrNo" >
+        <th mat-header-cell *matHeaderCellDef  class="first-table"></th>
+        <td mat-cell *matCellDef="let element"> <mat-icon
+          [class.example-element-row]="element.addresses?.length" [class.example-expanded-row]="element?.expanded"
+          (click)="element.expanded = !element?.expanded">{{element.expanded ?'minimize':'add'}}</mat-icon> </td>
+      </ng-container>
+
+     <ng-container matColumnDef="FILE_NAME" >
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header class="first-table"> FILE_NAME </th>
+        <td mat-cell *matCellDef="let element"> {{element["FILE_NAME"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="SLSSCHCD" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> SLSSCHCD </th>
+        <td mat-cell *matCellDef="let element"> {{element["SLSSCHCD"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="CSSSCHCD" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> CSSSCHCD </th>
+        <td mat-cell *matCellDef="let element"> {{element["CSSSCHCD"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="SANCTIONNO" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> SANCTIONNO </th>
+        <td mat-cell *matCellDef="let element"> {{element["SANCTIONNO"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="SANCTIONDATE" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> SANCTIONDATE </th>
+        <td mat-cell *matCellDef="let element"> {{element["SANCTIONDATE"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="MOTHERSANCTIONNO" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> MOTHERSANCTIONNO </th>
+        <td mat-cell *matCellDef="let element"> {{element["MOTHERSANCTIONNO"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="MOTHERSANCTIONDATE" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> MOTHERSANCTIONDATE </th>
+        <td mat-cell *matCellDef="let element"> {{element["MOTHERSANCTIONDATE"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="CTRLSUM" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table"> CTRLSUM </th>
+        <td mat-cell *matCellDef="let element"> {{element["CTRLSUM"]}}</td>
+      </ng-container>
+
+
+
+
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+
+
+          <div class="example-element-detail"  [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"  *ngIf="element?.expanded">
+
+
+            <div style="width: 100%;" *ngIf="element.addresses?.length">
+
+              <table mat-table [dataSource]="element.addresses" class="tabletwo" multiTemplateDataRows matSort >
+                <ng-container matColumnDef="{{innerColumn}}" *ngFor="let innerColumn of innerDisplayedColumns">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="second-table" > {{innerColumn}} </th>
+                  <td mat-cell *matCellDef="let address" > {{address[innerColumn]}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="expandedExpandedDetail">
+                  <td mat-cell *matCellDef="let address" [attr.colspan]="innerInnerDisplayedColumns.length">
+                    <div class="example-element-detail" [@detailExpand]="element == address ? 'expanded' : 'collapsed' " *ngIf="address?.expanded">
+                      <div style="width: 100%;">
+
+                    <table style="width: 100%;" class="tablethree" #inneTables mat-table #innrSort="matSort"
+                          [dataSource]="address?.comments" matSort>
+
+                          <ng-container matColumnDef="{{col}}" *ngFor="let col of innerInnerDisplayedColumns">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="third-table"> {{col}} </th>
+                            <td mat-cell *matCellDef="let comment"> {{comment[col]}} </td>
+                          </ng-container>
+
+
+                          <tr mat-header-row *matHeaderRowDef="innerInnerDisplayedColumns"></tr>
+                          <tr mat-row *matRowDef="let comment; columns: innerInnerDisplayedColumns;">
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="innerDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let address; columns: innerDisplayedColumns;"
+                  [class.example-element-row]="address.comments?.length" [class.example-expanded-row]="address?.expanded"
+                  >
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedExpandedDetail']" class="example-detail-row">
+                </tr>
+              </table>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+
+
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;">
+      </tr>
+
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table> -->
+
+    <div class="container-fluid" *ngIf="showpfmstrackNestedTable">
+      <div class="row">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4" >
+              <mat-form-field appearance="standard"  role="search" class="w-100">
+                  <input matInput type="search" placeholder="Enter For Search"
+                      aria-label="Search" (keyup)="applyFilternew($any($event.target).value)">
+                  <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+          </div>
+      </div>
+
+     <div class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+      <button (click)="exportToPdf()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2">
+            <img alt="Download RBI Paymet Files Pdf Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+        </button>
+        <button mat-raised-button class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"
+        (click)="exportexcel(this.exportcompletedata, this.filename)">
+        <img alt="Download RBI Paymet Files Excel Report" src="./assets\images\icons8-export-excel-24.png"  matTooltip="Click here to export Excel"></button>
+    </div>
+
+  </div>
+  <div class="scroll-container card" style="overflow: auto">
+    <table mat-table [dataSource]="USERS" multiTemplateDataRows matSort class="tableone"
+          style="width:100%" (matSortChange)="announceSortChange($event)" matSort
+          class="mat-elevation-z8" id="test">
+
+
+    <!-- <table mat-table [dataSource]="USERS" multiTemplateDataRows matSort class="tableone"> -->
+
+      <ng-container matColumnDef="SrNo" *ngIf="PfmsDNFileReportform.getRawValue().selectTypes==2">
+        <th  mat-header-cell *matHeaderCellDef  class="first-table"> </th>
+
+        <td  mat-cell *matCellDef="let element"  > <mat-icon
+          [class.example-element-row]="element.addresses?.length" [class.example-expanded-row]="element?.expanded"
+          (click)="element.expanded = !element?.expanded">{{element.expanded ?'minimize':'add'}}</mat-icon> </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="SrNo" *ngIf="PfmsDNFileReportform.getRawValue().selectTypes==1">
+        <th  mat-header-cell *matHeaderCellDef  class="first-table"> </th>
+
+        <td  mat-cell *matCellDef="let element"  > </td>
+
+      </ng-container>
+
+     <ng-container matColumnDef="FILE_NAME" >
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header class="first-table">DN File</th>
+        <td mat-cell *matCellDef="let element"> {{element["FILE_NAME"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="SLSSCHCD" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table">SLS Scheme</th>
+        <td mat-cell *matCellDef="let element"> {{element["SLSSCHCD"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="CSSSCHCD" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table">SLS Code</th>
+        <td mat-cell *matCellDef="let element"> {{element["CSSSCHCD"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="SANCTIONNO" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table">Saction No.</th>
+        <td mat-cell *matCellDef="let element"> {{element["SANCTIONNO"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="SANCTIONDATE" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table">Saction Date</th>
+        <td mat-cell *matCellDef="let element"> {{element["SANCTIONDATE"] | date: 'dd/MM/yyyy'}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="MOTHERSANCTIONNO" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table">Mother Saction No.</th>
+        <td mat-cell *matCellDef="let element"> {{element["MOTHERSANCTIONNO"]}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="MOTHERSANCTIONDATE" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table">Mother Saction Date</th>
+        <td mat-cell *matCellDef="let element"> {{element["MOTHERSANCTIONDATE"] | date: 'dd/MM/yyyy'}}</td>
+      </ng-container>
+
+     <ng-container matColumnDef="CTRLSUM" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="first-table">Total Amount</th>
+        <td mat-cell *matCellDef="let element"> {{element["CTRLSUM"]}}</td>
+      </ng-container>
+
+      <!-- <ng-container [matColumnDef]="column" *ngFor="let column of columnsToDisplay">
+        <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+        <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+          <div class="example-element-detail" [@detailExpand]="element?.expanded"  *ngIf="element?.expanded">
+            <div class="card border-bottom-0" style="width: 100%;">
+
+              <table mat-table [dataSource]="element.addresses" multiTemplateDataRows matSort class="tabletwo" style="background-color: #dee2e74d !important;">
+
+                <ng-container matColumnDef="SrNo1" >
+                  <th mat-header-cell *matHeaderCellDef  class="second-table"></th>
+                  <!-- <td mat-cell *matCellDef="let element"> {{element["REFNO"]}}</td> -->
+             <td mat-cell *matCellDef="let element"> <mat-icon
+                [class.example-element-row]="element.addresses?.length" [class.example-expanded-row]="element?.expanded"
+                (click)="element.expanded = !element?.expanded">{{element.expanded ?'minimize':'add'}}</mat-icon> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="REFNO" >
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="second-table">Payment Ref.NO.</th>
+                  <td mat-cell *matCellDef="let element"> {{element["REFNO"]}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="BENFILENAME" >
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="second-table"> Payment File </th>
+                  <td mat-cell *matCellDef="let element"> {{element["BENFILENAME"]}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="ENDTOENDID" >
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="second-table"> End To End </th>
+                  <td mat-cell *matCellDef="let element"> {{element["ENDTOENDID"]}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="TOTALAMT" >
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="second-table"> Total Amount </th>
+                  <td mat-cell *matCellDef="let element"> {{element["TOTALAMT"]}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="AMOUNTCENTERSHARE" >
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="second-table"> Amount Center Share </th>
+                  <td mat-cell *matCellDef="let element"> {{element["AMOUNTCENTERSHARE"]}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="FILERCVDDATE" >
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="second-table"> File Received Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element["FILERCVDDATE"] | date: 'dd/MM/yyyy'}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="STATUS" >
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="second-table"> Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element["STATUS"]}}</td>
+                </ng-container>
+
+
+
+
+                <!-- <ng-container matColumnDef="{{innerColumn}}" *ngFor="let innerColumn of innerDisplayedColumns">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{innerColumn}} </th>
+                  <td mat-cell *matCellDef="let address"> {{address[innerColumn]}} </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="expandedExpandedDetail">
+                  <td mat-cell *matCellDef="let address" [attr.colspan]="innerInnerDisplayedColumns.length">
+                    <div class="example-element-detail" [@detailExpand]="address?.expanded" *ngIf="address?.expanded">
+                      <div class="card border-bottom-0" style="width: 100%;">
+
+                        <table style="width: 100%; background-color: antiquewhite !important;" #inneTables mat-table #innrSort="matSort"
+                          [dataSource]="address?.comments" matSort class="tablethree">
+                          <ng-container matColumnDef="{{col}}" *ngFor="let col of innerInnerDisplayedColumns">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="third-table"> {{col}} </th>
+                            <td mat-cell *matCellDef="let comment"> {{comment[col]}} </td>
+                          </ng-container>
+
+
+                          <tr mat-header-row *matHeaderRowDef="innerInnerDisplayedColumns"></tr>
+                          <tr mat-row *matRowDef="let comment; columns: innerInnerDisplayedColumns;">
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="innerDisplayedColumns"></tr>
+
+                <tr mat-row *matRowDef="let address; columns: innerDisplayedColumns;">
+                </tr>
+                <!-- <tr mat-row *matRowDef="let address; columns: innerDisplayedColumns;"
+                  [class.example-element-row]="address.comments?.length" [class.example-expanded-row]="address?.expanded"
+                  (click)="address.expanded = !address?.expanded">
+                </tr> -->
+                <tr mat-row *matRowDef="let row; columns: ['expandedExpandedDetail']" class="example-detail-row">
+                </tr>
+              </table>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <!-- <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
+        [class.example-element-row]="element.addresses?.length" [class.example-expanded-row]="element?.expanded"
+        (click)="element.expanded = !element?.expanded">
+      </tr> -->
+      <tr mat-row *matRowDef="let element; columns: columnsToDisplay;">
+      </tr>
+
+
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+    <!-- </table> -->
+    </div>
+
+
+
+    </mat-card>
+
+
+</div>
+
+<!-- <mat-spinner color="warn"></mat-spinner> -->
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+  <div class="cssload-speeding-wheel"></div>
+</div>

@@ -1,0 +1,19 @@
+// .thead-light{
+//     background-color: #e4edfa;
+//     color: #414141;
+//     font-weight: 600;
+//     padding: 0 12px;
+//     white-space: nowrap;
+//   }
+//   // .OBListHdrFont{
+//   //     font-size: 10pt;
+//   //     font-weight: bold;
+//   //     color: black;
+//   //      }
+.isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+    text-decoration: none;
+  }

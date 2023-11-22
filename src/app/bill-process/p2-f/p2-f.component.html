@@ -1,0 +1,365 @@
+<div class="container-fluid">
+  <mat-card class="mb-3">
+    <mat-label> <b>P2F (Upload Token Cheque)</b></mat-label>
+
+    <div class="col-md-12 col-12">
+      <form
+        [formGroup]="P2FForm"
+        #options="ngForm"
+        (ngSubmit)="chequeValidateToken()"
+      >
+        <div class="row mt-4">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 col-xxl-3">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Treasury</mat-label>
+              <input
+                type="text"
+                placeholder="Pick one"
+                aria-label="Number"
+                matInput
+                (paste)="(false)"
+                formControlName="TreasuryControl"
+                [matAutocomplete]="autoTreas"
+                [(ngModel)]="ChooseOption"
+                (ngModelChange)="getTreasuryCode($event)"
+              />
+              <mat-icon
+                class=""
+                style="position: absolute; right: 2px; top: 0px"
+                >arrow_drop_down
+              </mat-icon>
+              <mat-autocomplete
+                #autoTreas="matAutocomplete"
+                [displayWith]="displayTreasFn"
+              >
+                <mat-option
+                  *ngFor="let option of Treasuryoptions | async"
+                  [value]="option"
+                >
+                  {{ option.TreasuryName }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="P2FForm.invalid"
+                >Please Select Treasury !
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Treasury Code</mat-label>
+              <input
+                type="text"
+                placeholder="Treasury Code"
+                aria-label="Number"
+                matInput
+                (paste)="(false)"
+                formControlName="treasuryCode"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label> Fin Year</mat-label>
+              <input
+                type="text"
+                placeholder="fin Year"
+                aria-label="Number"
+                matInput
+                (paste)="(false)"
+                formControlName="finYear"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>TOken No.</mat-label>
+
+              <input
+                matInput
+                type="text"
+                (input)="onInput($event)"
+                placeholder="Enter Token No."
+                name="Token Number"
+                (paste)="(false)"
+                formControlName="tokenNumber"
+                NumberOnlyDirective
+                maxlength="6"
+                minlength="6"
+              />
+              <mat-error *ngIf="P2FForm.get('tokenNumber').touched">
+                <!-- Please Enter Token Number -->
+
+                <div
+                  class="text-danger error_msg"
+                  *ngIf="P2FForm.get('tokenNumber').errors?.required"
+                >
+                  Please Enter Token Number
+                </div>
+                <div
+                  class="text-danger error_msg"
+                  *ngIf="P2FForm.get('tokenNumber').errors?.minlength"
+                >
+                  Please Enter 6 Digit Token Number
+                </div>
+
+                <!-- <div class="text-danger error_msg" *ngIf="P2FForm.get('tokenNumber').errors.maxLength">
+                Please Enter 6 Digit Token Number
+            </div> -->
+
+                <div
+                  class="text-danger error_msg"
+                  *ngIf="P2FForm.get('tokenNumber').errors?.pattern"
+                >
+                  Please Enter Numerical value
+                </div>
+              </mat-error>
+              <!-- <mat-error *ngIf="P2FForm.get('tokenNumber').errors?.pattern">
+                Please Enter nubmeric value
+                </mat-error> -->
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 col-xxl-3">
+            <mat-form-field appearance="legacy" class="w-100">
+              <mat-label class="custom-input-lable">Scroll Date </mat-label>
+              <input
+                matInput
+                formControlName="scrollDate" (dateChange)="onDateSelected($event)"
+                [matDatepicker]="scrollDate"
+                placeholder="MM/DD/YYYY"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="scrollDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #scrollDate></mat-datepicker>
+
+              <mat-error
+                *ngIf="
+                  P2FForm.get('scrollDate').error ||
+                  (!P2FForm.get('scrollDate').valid &&
+                    P2FForm.get('scrollDate').touched)
+                "
+              >
+                Date Required</mat-error
+              >
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+            <mat-form-field class="w-100" appearance="legacy">
+              <mat-label>Cheque No.</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Enter Cheque Number."
+                name="Cheque Number"
+                (paste)="(false)"
+                formControlName="chequeNumber"
+                NumberOnlyDirective
+              />
+              <mat-error> </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+            <mat-label>Select File</mat-label>
+            <input
+              type="file"
+              (change)="onFileChange($event)"
+              formControlName="file"
+            />
+          </div>
+
+          <!-- <div class="file-uploder-container d-flex flex-column mt-2">
+            <label for="inputGroupFile" class="upload-lable-text btn py-3"
+              >Drag & drop or <span class="file-browse"> browse </span></label
+            >
+            <div class="input-group custom-file-button">
+              <input
+                type="file"  formControlName="file" (change)="onFileChange($event)"
+                class="form-control file-upload-input hidden"
+                id="inputGroupFile"
+
+              />
+            </div>
+          </div> -->
+
+
+          <div class="row">
+            <mat-label>
+              <!-- <button mat-button (click)="openImportDialog()">Close</button> -->
+              <a
+                href="javascript:void(0);"
+                class="underlined-link"
+                (click)="openImportDialog()"
+                >Important Instructions...</a
+              >
+            </mat-label>
+          </div>
+
+          <div
+            class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"
+          >
+            <div class="float-end">
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="!options.valid"
+                type="submit"
+              >
+                Submit
+              </button>
+              <button
+                mat-stroked-button
+                color="primary"
+                class="ms-3"
+                (click)="Reset()"
+
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+        <mat-form-field appearance="legacy" class="w-100">
+          <mat-label class="custom-input-lable">Search Date </mat-label>
+          <input
+            matInput  [(ngModel)]="searchDatevalue"
+
+            [matDatepicker]="searchDate"
+            placeholder="MM/DD/YYYY"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="searchDate"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #searchDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 col-xxl-2">
+        <button mat-raised-button color="primary" (click)="searchVoucherScroll()">
+          Search
+        </button>
+      </div>
+    </div>
+
+
+
+    </div>
+  </mat-card>
+
+  <mat-card class="mt-3" *ngIf="voucherData.data.length>0">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4" >
+                <mat-form-field appearance="standard"  role="search" class="w-100">
+                    <input matInput type="search" placeholder="Enter For Search"
+                        aria-label="Search" (keyup)="applyFilter($any($event.target).value)">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-container" style="overflow: auto">
+        <table mat-table matSort matTableExporter [dataSource]="voucherData"
+            style="width:100%" (matSortChange)="announceSortChange($event)" matSort
+            class="mat-elevation-z8" id="test">
+
+
+            <ng-container matColumnDef="SrNo">
+                <th mat-header-cell *matHeaderCellDef   mat-sort-header
+                    sortActionDescription="Sort by SrNo" >
+                    SrNo
+                </th>
+                <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                    (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="treasuryRefNo">
+            <th mat-header-cell *matHeaderCellDef   mat-sort-header
+                sortActionDescription="Sort by treasuryRefNo">
+                Treasury RefNo.
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.treasuryRefNo}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tokenno">
+          <th mat-header-cell *matHeaderCellDef   mat-sort-header
+              sortActionDescription="Sort by tokenno">
+              Token No.
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.tokenno}}
+          </td>
+      </ng-container>
+
+        <ng-container matColumnDef="scrolldate">
+          <th mat-header-cell *matHeaderCellDef   mat-sort-header
+              sortActionDescription="Sort by scrolldate">
+              Scroll Date
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.scrolldate | date: 'dd-MMM-yyyy'}}
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef   mat-sort-header
+            sortActionDescription="Sort by image">
+            Preview Image
+        </th>
+        <td mat-cell *matCellDef="let element">  <a href="javascript: void(0);" (click)="onclickImage(element)"> <img src="./assets/images/Management_icon.svg"></a>
+        </td>
+    </ng-container>
+
+      <ng-container matColumnDef="Action">
+        <th mat-header-cell *matHeaderCellDef   mat-sort-header
+            sortActionDescription="Sort by Action">
+            Action
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <!-- {{element.tokenno}} -->
+
+            <button *ngIf="element.verified=='N'" mat-raised-button color="primary" (click)="voucherUpdateScroll(element.treasuryRefNo,'Y',element.scrolldate)">
+              Finalized
+            </button>
+            <button *ngIf="element.verified=='N'" mat-raised-button color="primary" class="ms-3" (click)="voucherUpdateScroll(element.treasuryRefNo,'D',element.scrolldate)">
+              Deleted
+            </button>
+
+            <button *ngIf="element.verified=='D'" mat-raised-button color="primary"  [disabled]="true">
+              Deleted
+            </button>
+
+            <button *ngIf="element.verified=='Y'" mat-raised-button color="primary"  [disabled]="true">
+              Finalized
+            </button>
+
+
+
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+    </div>
+
+    <mat-paginator #myPaginator [length]="5" [pageSize]="5"
+    [pageSizeOptions]="[5,10,15,20]" showFirstLastButtons>
+
+</mat-paginator>
+
+</mat-card>
+
+
+
+
+</div>

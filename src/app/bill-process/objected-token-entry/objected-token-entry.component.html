@@ -1,0 +1,165 @@
+<div appNoRightClick>
+  <div class="container-fluid">
+      <mat-card class="mb-3">
+          <mat-label> <b>Objection Token Entry</b></mat-label>
+              <div class="col-md-12 col-12">
+            <form class="p-3" [formGroup]="ObjectionTokenFormControl" (ngSubmit)="objectionTokenEnterForm_ShowDetail()"> 
+              
+              <div class="row">
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">Token No </mat-label>
+                    <input matInput type="text" placeholder="Token No" name="tokenNo" (keyup)="onInput($event,1)" 
+                      formControlName="tokenNo" NumberOnlyDirective maxlength="6" minlength="1" />
+                    <mat-error *ngIf="tokenNo && tokenNo.invalid && tokenNo.touched" class="text-danger error_msg">
+                      <!-- <div *ngIf="tokenNo.errors?.['Required'] as error">
+                        {{ error }}
+                      </div> -->
+                      <div *ngIf="tokenNo.errors?.['minLength'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="tokenNo.errors?.['maxLength'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="tokenNo.errors?.['Numeric'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="tokenNo.errors?.['cannotContainSpace'] as error">
+                        {{ error }}
+                      </div>
+                    </mat-error>
+
+                  </mat-form-field>
+                </div>
+                 /
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                  <mat-form-field appearance="legacy" class="w-100">
+                    <mat-label class="custom-input-lable">CDRefNo </mat-label>
+                    <input matInput type="text" placeholder="CDRefNo" name="CD Reference No" (input)="onInput($event,2)" 
+                      formControlName="CDRefNo" NumberOnlyDirective maxlength="16" minlength="1" />
+                    <mat-error *ngIf="CDRefNo && CDRefNo.invalid && CDRefNo.touched" class="text-danger error_msg">
+                      <!-- <div *ngIf="CDRefNo.errors?.['Required'] as error">
+                        {{ error }}
+                      </div> -->
+                      <div *ngIf="CDRefNo.errors?.['minLength'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="CDRefNo.errors?.['maxLength'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="CDRefNo.errors?.['Numeric'] as error">
+                        {{ error }}
+                      </div>
+                      <div *ngIf="CDRefNo.errors?.['cannotContainSpace'] as error">
+                        {{ error }}
+                      </div>
+                    </mat-error>
+
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"> 
+                   <br>
+                   <div style="color:#5757db;">
+                      ** Either Token Or Reference No. is Compulsory !
+                    </div>
+                  
+
+                  <div class="float-end">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="enableShowBtn"> Show </button>
+                    <button mat-raised-button color="primary" class="ms-3" type="button" (click)="Fun_Reset()"> Reset</button>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </mat-card>
+ 
+      <mat-card class="mt-3" *ngIf="showTab_Table">
+        <form class="p-3" [formGroup]="ObjectionTokenFormData" (ngSubmit)="objectionTokenEntryFormSubmit()"
+          #optionsdata="ngForm">
+          <div class="row">
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field appearance="legacy" class="w-100">
+                <mat-label>Date</mat-label>
+                <input matInput formControlName="Date" placeholder="Date" />
+              </mat-form-field>
+            </div>
+
+
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field appearance="legacy" class="w-100">
+                <mat-label>DDO Code </mat-label>
+                <input matInput formControlName="ddoCode" placeholder="DDO Code" />
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field appearance="legacy" class="w-100">
+                <mat-label>DDO Name </mat-label>
+                <input matInput formControlName="ddoName" placeholder="DDO Name" />
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+
+                <mat-label>Select Bill Type</mat-label>
+                <mat-select formControlName="BillType">
+                  <mat-option *ngFor="let option of BillTypeOptions"
+                    value="{{option.Ncode}}">{{option.BillType}}</mat-option>
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+
+
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field class="w-100" appearance="legacy">
+
+                <mat-label>Select Major Head</mat-label>
+                <mat-select formControlName="majorHead">
+                  <mat-option *ngFor="let option of majorHeadlist"
+                    value="{{option.MajorHeadCode}}">{{option.MajorHeadCodeName}}</mat-option>
+                </mat-select>
+
+
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field appearance="legacy" class="w-100">
+                <mat-label class="custom-input-lable">Net Amount</mat-label>
+                <input matInput formControlName="netAmount" placeholder="Net Amount" />
+              </mat-form-field>
+            </div>
+
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+              <mat-form-field appearance="legacy" class="w-100">
+                <mat-label class="custom-input-lable">Gross Amount</mat-label>
+                <input matInput formControlName="grossAmount" placeholder="Gross Amount" />
+              </mat-form-field>
+            </div>
+
+            <div class="float-end mt-2">
+              <div class="float-end">
+                <button mat-raised-button color="primary" type="Submit" [disabled]="enableSubmitBtn"> Submit</button>
+              </div>
+            </div>
+
+
+          </div>
+        </form>
+      </mat-card>
+ 
+</div>
+
+</div>
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+  <div class="cssload-speeding-wheel"></div>
+</div>

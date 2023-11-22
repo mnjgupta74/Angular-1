@@ -1,0 +1,282 @@
+<div class="container-fluid" appNoRightClick>
+    <div class="fieldset">
+        <mat-card class="mb-3">
+            <mat-label><b>Bill-Objection-List</b></mat-label>
+            <form [formGroup]="billobjectionGroup" #options="ngForm">
+                <div class="row mt-4">
+                    
+                    
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                       
+                        <!-- <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Treasury*</mat-label>
+
+                            <input matInput type="tel" placeholder="Treasury" name="FrmTreasuryCode" (paste)="(false)"
+                                formControlName="FrmTreasuryCode" />
+                        </mat-form-field> -->
+                      
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label> Treasury</mat-label>
+                            <input type="text" placeholder="Pick one" aria-label="Number" matInput (paste)="(false)"
+                                formControlName="TreasuryControl" [matAutocomplete]="auto" [(ngModel)]="ChooseOption">
+                            <mat-icon class="" style=" position: absolute;right:2px; top:0px">arrow_drop_down
+                            </mat-icon>
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let option of Treasuryoptions | async" [value]="option">
+                                    {{option.TreasuryName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="billobjectionGroup.invalid">Please Select Treasury ! </mat-error>
+                        </mat-form-field>
+                        
+                    </div>
+
+ 
+
+                     <!--<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Year</mat-label>
+                            <mat-select [formControl]="FrmFinYear" placeholder=" Select A Year" name="Select Year">
+                                <mat-option>--Select--</mat-option>
+                                <mat-option [value]="year" *ngFor="let year of Years">
+                                    {{year}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>-->
+  
+
+
+
+                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                          <mat-label>FinYear</mat-label>
+                          <input  type="tel" placeholder="Select FinYear" aria-label="Number" matInput (paste)="(false)"  formControlName="FrmFinYear" [matAutocomplete]="autoFinYear"/>
+                          <mat-icon style="position: absolute; right: 2px; top: 0px">
+                            arrow_drop_down
+                          </mat-icon>
+                          <mat-autocomplete #autoFinYear="matAutocomplete">
+                            <mat-option [value]="year" *ngFor="let year of Years"> {{ year }} </mat-option>
+                        </mat-autocomplete>
+                          <mat-error *ngIf=" billobjectionGroup.get('FrmFinYear').hasError('required') || billobjectionGroup.get('FrmFinYear').touched">
+                            FinYear is required 
+                          </mat-error>
+                        </mat-form-field>
+                      </div> 
+
+
+                   
+                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                        <mat-form-field class="w-100" appearance="legacy">
+                            <mat-label>Token No.*</mat-label>
+
+                            <input matInput type="tel" placeholder="Enter Token No" name="Token Number"
+                                (paste)="(false)" formControlName="FrmToken" NumberOnlyDirective />
+
+                            <mat-error *ngIf="FrmToken && FrmToken.invalid &&  FrmToken.touched" class="text-danger error_msg"> 
+                                  <div *ngIf="FrmToken.errors?.['Required'] as error">
+                                    {{error}}
+                                </div>  
+                                 <div *ngIf="FrmToken.errors?.['minLength'] as error">
+                                    {{error}}
+                                </div> 
+                                <div *ngIf="FrmToken.errors?.['maxLength'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="FrmToken.errors?.['Numeric'] as error">
+                                    {{error}}
+                                </div>
+                                <div *ngIf="FrmToken.errors?.['cannotContainSpace'] as error">
+                                    {{error}}
+                                </div> 
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+
+                </div>
+
+
+                <div class="d-flex justify-content-end gap-2 mt-2">
+                    <button class="btn btn-primary" mat-raised-button color="primary" (click)="onsubmit()" [disabled]="!options.valid">Show</button>
+                    <button mat-stroked-button color="primary" class="ms-3" (click)="onReset()">Reset</button>
+                </div>
+            </form>
+        </mat-card>
+
+
+        <mat-card class="mt-3" *ngIf="ShowbillObjectionList">
+           <!-- <div class=" mt-2  d-flex justify-content-end">
+                 <button mat-raised-button color="primary" (click)="makePdf()">
+                    pdf </button> 
+                    <button mat-raised-button color="primary" class="ms-3"
+                    (click)="exportPdf()">
+                    Export pdf </button>
+            </div>-->
+            <div id="LIST" #LIST>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <mat-form-field appearance="standard" role="search" class="w-75">
+                            <input matInput type="Search" placeholder="Enter For Search" aria-label="Search"
+                                (keyup)="Filter($any($event.target).value)">
+                            <mat-icon matSuffix>search</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 text-end px-4 d-flex justify-content-end align-items-center">
+                    <button (click)="exportPdf()" class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"> 
+                        <img alt="Download Bill Objection list Pdf Report" src="./assets/images/pdf.png" matTooltip="Click here to export pdf">
+                    </button>
+                    <button mat-raised-button class="btn btn_custome_r d-inline me-2 align-items-center justify-content-center mb-1 px-2"
+                    (click)="exportexcel(this.billObjectionList, this.filename)">
+                    <img alt="Download Bill Objection list Excel Report" src="./assets\images\icons8-export-excel-24.png"  matTooltip="Click here to export Excel"></button>
+                </div>
+        
+                <div class="mt-2 scroll-container" style="overflow: auto">
+                    <table width="100%" mat-table matSort matTableExporter [dataSource]="billObjection"
+                        class="mat-elevation-z8" id="test">
+                        <ng-container matColumnDef="SrNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                Sr No.
+                            </th>
+                            <td mat-cell *matCellDef="let item; let j = index"> {{ (j+1) +
+                                (myPaginator.pageIndex * myPaginator.pageSize) }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="TokenNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                Token No
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.TokenNo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="DDO">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                DDO
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.Ddocode}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Billtype">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                BillType
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.Billtype}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="ObjectionName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                Objection Name
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.ObjectionName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Auditor">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                Auditor
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.Auditor}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Accountant">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                Accountant
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.Accountant}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="TO">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="OBListHdrFont">
+                                TO
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{element.TO_}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator #myPaginator [length]="10" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]" showFirstLastButtons>
+                </mat-paginator>
+            </div>
+        </mat-card>
+
+        <!-- <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 col-xxl-12">
+                            <div class="mt-5 container">
+                                <table class="table" *ngIf="billObjectionList.length>0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">Sr.no</th>
+                                            <th scope="col">Objection Name</th>
+                                            <th scope="col">Auditor </th>
+                                            <th scope="col">Accountant</th>
+                                            <th scope="col">To</th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let OBJList of billObjectionList; let indexOfelement=index;">
+                                            <td>{{indexOfelement+1}} </td>
+                                            <td>{{ OBJList.ObjectionName }}</td>
+                                            <td>{{ OBJList.Auditor }}</td>
+                                            <td>{{ OBJList.Accountant }}</td>
+                                            <td>{{ OBJList.TO }}</td>
+                                           
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p *ngIf="billObjectionList.length==0" style="text-align: center; font-size: 400;">No
+                                    Data Found</p>
+
+                            </div>
+                        </div>
+                    </div> -->
+
+
+
+
+        <!-- <div class="row">
+                        <table mat-table matSort matTableExporter [dataSource]="OBListdata"
+                        class="mat-elevation-z8" id="test"> 
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div> -->
+
+
+
+
+
+    </div>
+</div>
+<div *ngIf="this.loader.getLoading()" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
+</div>
+
+<!-- <div class="container-fluid" *ngIf="billObjectionList.length>0">
+
+    <mat-card class="mt-3">
+        <div class="row mt-1">
+            <div class="mt-2 container">
+                <div class="scroll-container" style="overflow: auto">
+                    <table class="table" *ngIf="billObjectionList.length>0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Sr.no</th>
+                                <th scope="col">Objection Name</th>
+                                <th scope="col">Auditor </th>
+                                <th scope="col">Accountant</th>
+                                <th scope="col">To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let OBJList of billObjectionList; let indexOfelement=index;">
+                                <td>{{indexOfelement+1}} </td>
+                                <td>{{ OBJList.ObjectionName }}</td>
+                                <td>{{ OBJList.Auditor }}</td>
+                                <td>{{ OBJList.Accountant }}</td>
+                                <td>{{ OBJList.TO }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p *ngIf="billObjectionList.length==0" style="text-align: center; font-size: 400;">No
+                        Data Found</p>
+                </div>
+
+            </div>
+        </div>
+</div> -->

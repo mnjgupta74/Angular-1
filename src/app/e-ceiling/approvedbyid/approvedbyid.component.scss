@@ -1,0 +1,117 @@
+table {
+    width: 100%;
+}
+
+.table-container {
+    overflow: auto;
+}
+
+.mat-form-field {
+    font-size: 14px;
+}
+
+.table-col-padding {
+    padding: 8px 20px;
+    white-space: nowrap;
+}
+
+.mat-header-cell {
+    border-bottom: 1px solid #5a9cff;
+    font-size: 14px;
+    font-weight: 600 !important;
+    color: #414141;
+    font-family: "Poppins-m";
+    background-color: #eef5ff;
+}
+
+.btn-style-reverted {
+    background-color: #ffeeee;
+    color: #fc635d;
+    border-radius: 6px;
+}
+
+.btn-style-pending {
+    background-color: #fff5cb;
+    color: #f49753;
+    border-radius: 6px;
+}
+
+.btn-style-approved {
+    background-color: #eaf8f5;
+    color: #52bb9c;
+    border-radius: 6px;
+}
+
+.action-icon img {
+    width: 30px;
+}
+
+table th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type {
+    padding-left: 10px !important;
+}
+
+.filter-close-icon {
+    cursor: pointer !important;
+}
+
+.filter-button .mat-select {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.filter-button {
+    position: relative;
+}
+
+::ng-deep .custom-chip-list .mat-chip.mat-standard-chip .mat-chip-remove {
+    color: #5a9cff;
+}
+
+::ng-deep.mat-standard-chip .mat-chip-remove.mat-icon,
+.mat-standard-chip .mat-chip-remove .mat-icon {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 20px !important;
+}
+
+::ng-deep .custom-chip-list .mat-chip.mat-standard-chip {
+    background-color: #f4f4f4;
+    border-radius: 5px;
+}
+
+::ng-deep .mat-pseudo-checkbox {
+    width: 20px !important;
+    height: 20px !important;
+    // border: 2px solid #BFCCE2 !important;
+    border-radius: 0.25rem !important;
+}
+
+::ng-deep .mat-pseudo-checkbox-checked::after {
+    top: 3.9px !important;
+    left: 3px !important;
+    width: 9px !important;
+}
+
+::ng-deep .mat-pseudo-checkbox-checked,
+.mat-pseudo-checkbox-indeterminate,
+.mat-accent .mat-pseudo-checkbox-checked,
+.mat-accent .mat-pseudo-checkbox-indeterminate {
+    background: #2a6dd9 !important;
+}
+
+::ng-deep .mat-option-text {
+    font-size: 16px;
+}
+
+::ng-deep .mat-select-panel {
+    overflow: auto;
+    min-height: 356px !important;
+    margin-top: 30px !important;
+    min-width: auto !important;
+}

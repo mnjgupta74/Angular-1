@@ -1,0 +1,141 @@
+.btn_custome_r{ background-color:#ff150059 !important;}
+.btn_custome_r:hover{filter: grayscale(100%);}
+
+
+//nested Table
+
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: #ccc;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  //background: #cce5ff;
+  background: #2A6DD9;
+  //background: primary  !important;
+  color: #000 !important;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.td.example-element-row:not(.example-expanded-row)::marker {
+  background: #fcfcfd59 !important;
+  color: #eef1eb !important;
+
+}
+
+.example-expanded-row{  background: #fcfcfd59 !important;  color: red !important;}
+
+
+.tabletwo .example-expanded-row{  background: #c5cedd !important;  color: red !important;}
+
+.example-element-diagram {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.inner-table {
+  width: 100%;
+}
+
+.inner-table mat-form-field {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  box-shadow: 10px 50px 50px 50px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%) !important;
+}
+
+
+tr.mat-header-row {
+  height: 5px !important;
+}
+
+.first-table{
+  background-color: #EEF5FF  !important;
+  color: #414141 !important;
+  font-weight: 600 !important;
+  padding: 0 12px !important;
+  white-space: nowrap !important;
+  height:56px !important;
+}
+
+.second-table{
+  background-color: #EEF5FF   !important;
+  color: #414141 !important;
+  font-weight: 600 !important;
+  padding: 0 10px !important;
+  white-space: nowrap !important;
+  height:46px!important;
+}
+
+.third-table{
+  background-color: #EEF5FF  !important;
+  color: #414141 !important;
+  font-weight: 600 !important;
+  padding: 0 8px !important;
+  white-space: nowrap !important;
+  height:46px !important;
+  width:100% !important;
+}
+
+
+tr.hide-table-padding td {
+  padding: 0;
+  }
+
+  .expand-button {
+    position: relative;
+  }
+
+  .accordion-toggle .expand-button:after
+  {
+    position: absolute;
+    left:.75rem;
+    top: 50%;
+    transform: translate(0, -50%);
+    content: '-';
+  }
+  .accordion-toggle.collapsed .expand-button:after
+  {
+    content: '+';
+  }
+
+
+
+//End
